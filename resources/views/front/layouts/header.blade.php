@@ -25,39 +25,11 @@
     <link rel="stylesheet" href="{{ asset('front/css/animations.css') }}">
     <link rel="stylesheet" href="{{ asset('front/css/search.css') }}">
 </head>
-<?php
-// Site-wide search index (products, articles, main pages) used by js/search.js
-$site_search_index = (function () {
-    $items = [];
-    include __DIR__ . '/../products-data.blade.php';
-    include __DIR__ . '/../blog-data.blade.php';
-    foreach ($products as $p) {
-        $items[] = ['t' => $p[0], 'u' => url('/product-detail') . '?p=' . urlencode($p[0]), 'k' => 'Product'];
-    }
-    if (!empty($blog_featured)) {
-        $items[] = ['t' => $blog_featured['title'], 'u' => url('/blog-detail') . '?post=' . urlencode($blog_featured['title']), 'k' => 'Article'];
-    }
-    foreach ($blog_posts as $b) {
-        $items[] = ['t' => $b['title'], 'u' => url('/blog-detail') . '?post=' . urlencode($b['title']), 'k' => 'Article'];
-    }
-    $pages = [
-        ['About Us', url('/about'), 'company founder vision mission'],
-        ['All Products', url('/products'), 'catalogue range'],
-        ['Events & Exhibitions', url('/news-events'), 'news exhibition show'],
-        ['Blogs', url('/blog'), 'articles'],
-        ['Technical Brochure', url('/technical-brochure'), 'datasheet pdf download'],
-        ['Contact Us', url('/contact'), 'address phone email branches locate'],
-    ];
-    foreach ($pages as $pg) {
-        $items[] = ['t' => $pg[0], 'u' => $pg[1], 'k' => 'Page', 'x' => $pg[2]];
-    }
-    return $items;
-})();
-?>
+
 <header id="header">
     <nav class="navbar navbar-expand-lg ">
         <div class="container-fluid">
-            <a class="navbar-brand brand_lockup" href="{{ url('/') }}">
+            <a class="navbar-brand brand_lockup" href="{{ route('home') }}">
                 <img src="{{ asset('front/img/pratham-logo.png') }}" alt="Pratham Filter Industries" class="logo_img">
                 <img src="{{ asset('front/img/flo-logo.png') }}" alt="FLO" class="brand_flo_logo">
             </a>
@@ -68,7 +40,7 @@ $site_search_index = (function () {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/about') }}">About Us</a>
+                        <a class="nav-link" href="{{ route('about') }}">About Us</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle no-caret" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -78,26 +50,26 @@ $site_search_index = (function () {
                         </svg>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ url('/product-detail?p=Spun+Filter+Cartridge') }}">Spun Filter Cartridge</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/product-detail?p=Filter+Bags') }}">Filter Bags</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/product-detail?p=Pleated+PP+High+Efficiency') }}">Pleated PP High Efficiency</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/product-detail?p=Activated+Carbon+Cartridge') }}">Activated Carbon Cartridge</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/product-detail?p=Washable+Cartridge') }}">Washable Cartridge</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/product-detail?p=SS+Filter+Cartridge') }}">SS Filter Cartridge</a></li>
+                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Spun Filter Cartridge']) }}">Spun Filter Cartridge</a></li>
+                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Filter Bags']) }}">Filter Bags</a></li>
+                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Pleated PP High Efficiency']) }}">Pleated PP High Efficiency</a></li>
+                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Activated Carbon Cartridge']) }}">Activated Carbon Cartridge</a></li>
+                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Washable Cartridge']) }}">Washable Cartridge</a></li>
+                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'SS Filter Cartridge']) }}">SS Filter Cartridge</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="{{ url('/products') }}">All Products</a></li>
+                            <li><a class="dropdown-item" href="{{ route('products') }}">All Products</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/news-events') }}">Events</a>
+                        <a class="nav-link" href="{{ route('news.events') }}">Events</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/blog') }}">Blogs</a>
+                        <a class="nav-link" href="{{ route('blog') }}">Blogs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/contact') }}">Contact Us</a>
+                        <a class="nav-link" href="{{ route('contact') }}">Contact Us</a>
                     </li>
                 </ul>
                 <div class="header_actions ms-lg-4">
@@ -109,7 +81,7 @@ $site_search_index = (function () {
     </nav>
     <div class="search_panel" id="searchPanel" aria-hidden="true">
         <div class="container-fluid">
-            <form class="search_form" action="{{ url('/products') }}" method="get" role="search">
+            <form class="search_form" action="{{ route('products') }}" method="get" role="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="search" name="q" id="siteSearchInput" placeholder="Search products, articles, pages..." autocomplete="off" aria-label="Search the site">
                 <button type="button" class="search_close js-close-search" aria-label="Close search"><i class="fa-solid fa-xmark"></i></button>
@@ -117,7 +89,7 @@ $site_search_index = (function () {
             <ul class="search_results" id="searchResults" role="listbox"></ul>
         </div>
     </div>
-    <script>window.SITE_SEARCH = <?php echo json_encode($site_search_index, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;</script>
+   
 </header>
 
 <body>

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start">
-                    <a href="{{ url('/') }}" class="brand_lockup justify-content-center justify-content-md-start">
+                    <a href="{{ route('home') }}" class="brand_lockup justify-content-center justify-content-md-start">
                         <img src="{{ asset('front/img/footer-pratham-logo.png') }}" alt="Pratham Filter Industries" class="logo_img">
                         <img src="{{ asset('front/img/footer-flo-logo.png') }}" alt="FLO" class="brand_flo_logo">
                     </a>
@@ -57,19 +57,19 @@
             <div class="ft_main_row">
                <div class="ft_col">
                     <ul class="footer_menu">
-                       <li><a href="{{ url('/') }}">Home</a></li>
-                       <li><a href="{{ url('/about') }}">About Us</a></li>
-                       <li><a href="{{ url('/products') }}">Products</a></li>
-                       <li><a href="{{ url('/technical-brochure') }}">Technical Brochure</a></li>
+                       <li><a href="{{ route('home') }}">Home</a></li>
+                       <li><a href="{{ route('about') }}">About Us</a></li>
+                       <!-- <li><a href="{{ route('products') }}">Products</a></li> -->
+                       <li><a href="{{ route('technical.brochure') }}">Technical Brochure</a></li>
                     </ul>
                </div>
                <span class="ft_divider"></span>
                <div class="ft_col">
                     <ul class="footer_menu">
-                       <li><a href="{{ url('/news-events') }}">Events</a></li>
-                       <li><a href="{{ url('/blog') }}">Blog</a></li>
-                       <li><a href="#" class="js-open-quote">Get a Quote</a></li>
-                       <li><a href="{{ url('/contact') }}">Contact Us</a></li>
+                       <li><a href="{{ route('news.events') }}">Events</a></li>
+                       <li><a href="{{ route('blog') }}">Blog</a></li>
+                       <!-- <li><a href="#" class="js-open-quote">Get a Quote</a></li> -->
+                       <li><a href="{{ route('contact') }}">Contact Us</a></li>
                     </ul>
                </div>
                <span class="ft_divider"></span>

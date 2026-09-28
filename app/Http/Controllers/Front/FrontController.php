@@ -8,39 +8,57 @@ use Illuminate\Http\Request;
 class FrontController extends Controller
 {
     public function home(Request $requesr){
-        return view('front.home');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.home', compact('metaTitle', 'metaDescription'));
     }
 
     public function about(Request $requesr){
-        return view('front.about');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.about', compact('metaTitle', 'metaDescription'));
     }
 
     public function getBlogs(Request $requesr){
-        return view('front.blogs');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.blogs', compact('metaTitle', 'metaDescription'));
     }
 
     public function blogDetails(Request $requesr){
-        return view('front.blog-details');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.blog-details', compact('metaTitle', 'metaDescription'));
     }
 
     public function contact(Request $requesr){
-        return view('front.contact');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.contact', compact('metaTitle', 'metaDescription'));
     }
 
     public function getNewsEvent(Request $requesr){
-        return view('front.news-event');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.news-event', compact('metaTitle', 'metaDescription'));
     }
 
     public function technicalBrochure(Request $requesr){
-        return view('front.technical-brochure');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.technical-brochure', compact('metaTitle', 'metaDescription'));
     }
 
     public function productList(Request $requesr){
-        return view('front.product-list');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.product-list', compact('metaTitle', 'metaDescription'));
     }
 
     public function productDetails(Request $requesr){
-        return view('front.product-details');
+        $metaTitle = '';
+        $metaDescription = '';
+        return view('front.product-details', compact('metaTitle', 'metaDescription'));
     }
 
     
