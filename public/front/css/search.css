@@ -1,0 +1,78 @@
+/* =========================================================================
+   SITE SEARCH - icon button in the header + a full-width panel that drops
+   down under it with live suggestions. Works on desktop, tablet and mobile.
+   ========================================================================= */
+
+/* ---------- Toggle buttons ---------- */
+.search_toggle{
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    width: 48px; height: 48px; padding: 0; border-radius: 50%;
+    border: 1px solid var(--wb-purple); background: transparent; color: var(--wb-purple);
+    font-size: 17px; cursor: pointer;
+    transition: background-color .3s ease, color .3s ease;
+}
+.search_toggle:hover, .search_toggle[aria-expanded="true"]{ background: var(--wb-purple); color: #fff; }
+.search_toggle_mobile{ display: none; }
+
+/* ---------- Panel ---------- */
+.search_panel{
+    position: absolute; left: 0; right: 0; top: 100%;
+    background: #fff; border-top: 1px solid #E5E5E5; border-bottom: 1px solid #E5E5E5;
+    padding: 22px 0 26px;
+    opacity: 0; visibility: hidden; translate: 0 -10px; pointer-events: none;
+    transition: opacity .3s ease, translate .3s ease, visibility .3s ease;
+}
+.search_panel.open{ opacity: 1; visibility: visible; translate: 0 0; pointer-events: auto; }
+
+.search_form{
+    display: flex; align-items: center; gap: 16px;
+    max-width: 900px; margin: 0 auto; padding: 0 4px 12px;
+    border-bottom: 2px solid var(--wb-purple);
+}
+.search_form > i{ color: var(--wb-purple); font-size: 20px; }
+.search_form input{
+    flex: 1 1 auto; min-width: 0; border: none; outline: none; background: transparent;
+    font-family: var(--wb-body-typography-font-family); font-size: 22px; line-height: 1.3; color: var(--wb-black);
+}
+.search_form input::placeholder{ color: #9A9A9A; }
+.search_form input::-webkit-search-cancel-button{ display: none; }
+.search_close{
+    flex: 0 0 auto; width: 40px; height: 40px; border: none; border-radius: 50%; background: transparent;
+    color: var(--wb-black); font-size: 20px; cursor: pointer; transition: background-color .2s ease;
+}
+.search_close:hover{ background: var(--wb-grey); }
+
+/* ---------- Suggestions ---------- */
+.search_results{ list-style: none; max-width: 900px; margin: 10px auto 0; padding: 0; max-height: 55vh; overflow-y: auto; }
+.search_results li a{
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 13px 8px; border-bottom: 1px solid #EEEEEE; color: var(--wb-black); text-decoration: none;
+    font-family: var(--wb-body-typography-font-family); font-size: 17px; line-height: 1.3;
+    transition: background-color .2s ease, padding-left .2s ease;
+}
+.search_results li a:hover, .search_results li a.active{ background: #F6F5FB; padding-left: 14px; }
+.search_results mark{ background: none; padding: 0; margin: 0; color: var(--wb-purple); font-weight: 600; }
+.search_badge{
+    flex: 0 0 auto; padding: 3px 12px; border-radius: 20px; background: #EFEDFA; color: var(--wb-purple);
+    font-size: 12px; font-weight: 500; letter-spacing: .02em;
+}
+.search_empty{ padding: 18px 8px; color: #666; font-size: 16px; }
+.search_empty a{ color: var(--wb-purple); font-weight: 600; }
+
+/* ---------- Responsive ---------- */
+@media only screen and (max-width: 991px) {
+    /* the desktop icon lives inside the collapsed menu, so use the top-bar one */
+    .search_toggle_desktop{ display: none; }
+    .search_toggle_mobile{ display: inline-flex; margin-left: auto; margin-right: 10px; width: 44px; height: 44px; }
+    .search_panel{ padding: 16px 0 18px; }
+}
+@media only screen and (max-width: 575px) {
+    .search_form{ gap: 10px; }
+    .search_form input{ font-size: 18px; }
+    .search_form > i{ font-size: 18px; }
+    .search_results li a{ font-size: 16px; padding: 12px 4px; }
+    .search_results{ max-height: 60vh; }
+}
+@media (prefers-reduced-motion: reduce){
+    .search_panel{ transition: none; translate: none; }
+}
