@@ -19,11 +19,31 @@ $(document).ready(function () {
                 { data: 'id', name: 'id' },
                 { data: 'title', name: 'title' },
                 { data: 'location', name: 'location' },
-                { data: 'date', name: 'date' },
+                { data: 'event_date', name: 'event_date', searchable: false },
                 { data: 'image', name: 'image', orderable: false, searchable: false },
-                { data: 'status', name: 'status' },
+                { data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]
+        });
+
+        // Toggle status (switch on the list page)
+        $('#events_table').on('change', '.toggle-status', function () {
+            var $switch = $(this);
+            var id = $switch.data('id');
+
+            $.ajax({
+                url: window.APP_URLS.toggleEventStatus.replace(':id', id),
+                type: 'POST',
+                data: { _token: window.APP_URLS.csrfToken },
+                success: function (response) {
+                    showMessage(response.message || 'Status updated successfully.', 'success');
+                },
+                error: function () {
+                    // request failed: put the switch back to its old state
+                    $switch.prop('checked', !$switch.prop('checked'));
+                    showMessage('Something went wrong while updating the status.', 'danger');
+                }
+            });
         });
 
         // Delete event

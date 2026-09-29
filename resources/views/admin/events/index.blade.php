@@ -49,6 +49,7 @@
     window.APP_URLS = window.APP_URLS || {};
     window.APP_URLS.getEventsData = "{{ route('getEventsData') }}";
     window.APP_URLS.deleteEvents  = "{{ route('events.destroy', [':id']) }}";
+    window.APP_URLS.toggleEventStatus = "{{ route('events.toggle-status', [':id']) }}";
     window.APP_URLS.csrfToken     = "{{ csrf_token() }}";
 </script>
 

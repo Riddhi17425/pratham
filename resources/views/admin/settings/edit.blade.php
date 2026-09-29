@@ -11,8 +11,7 @@
         <div class="row align-items-center">
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
-                    <h3 class="fw-bold mb-0">Edit Setting</h3>
-                    <a href="{{ route('settings.index') }}" class="btn btn-primary btn-set-task">Back</a>
+                    <h3 class="fw-bold mb-0">Settings</h3>
                 </div>
             </div>
         </div>
@@ -22,7 +21,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
 
-                        <form id="settingForm" novalidate action="{{ route('settings.update', $setting->id) }}" method="POST">
+                        <form id="settingForm" novalidate action="{{ route('settings.update') }}" method="POST">
                             @csrf
                             @method('PUT')
 
@@ -114,7 +113,7 @@
                             </div>
 
                             <div class="text-end mt-4">
-                                <button type="submit" class="btn btn-primary">Update Setting</button>
+                                <button type="submit" class="btn btn-primary">Update Settings</button>
                             </div>
 
                         </form>

@@ -47,6 +47,7 @@
     window.APP_URLS = {
         getBlogsData: "{{ route('getBlogsData') }}",
         deleteblogs: "{{ route('blogs.destroy', [':id']) }}",
+        toggleBlogStatus: "{{ route('blogs.toggle-status', [':id']) }}",
         csrfToken: "{{ csrf_token() }}"
     };
 </script>

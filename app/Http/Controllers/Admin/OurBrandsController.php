@@ -39,8 +39,10 @@ class OurBrandsController extends Controller
                 return '<img src="' . $url . '" alt="' . e($row->icon_alt) . '" style="max-width:60px;max-height:60px;">';
             })
             ->addColumn('status', function ($row) {
-                $badge = $row->status === 'Active' ? 'success' : 'secondary';
-                return '<span class="badge bg-' . $badge . '">' . $row->status . '</span>';
+                $checked = $row->status === 'Active' ? 'checked' : '';
+    return '<div class="form-check form-switch">
+                <input class="form-check-input toggle-status" type="checkbox" data-id="' . $row->id . '" ' . $checked . '>
+            </div>';
             })
             ->addColumn('action', function ($row) {
                 $editUrl = route('our-brands.edit', $row->id);
@@ -118,12 +120,27 @@ class OurBrandsController extends Controller
         return response()->json(['success' => true, 'message' => 'Brand deleted successfully.']);
     }
 
+     public function toggleStatus($id)
+{
+    $brand = OurBrand::findOrFail($id);
+
+    $brand->status = $brand->status === 'Active' ? 'In-Active' : 'Active';
+    $brand->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Status updated successfully.',
+        'status'  => $brand->status,
+    ]);
+}
+
+
     /**
      * Server-side validation rules.
      */
     protected function rules(?OurBrand $brand = null): array
     {
-        $image = 'image|mimes:jpg,jpeg,png,webp,svg|max:2048';
+        $image = 'file|mimes:jpg,jpeg,png,webp,svg|max:2048';
 
         return [
             'icon'     => ($brand ? 'nullable|' : 'required|') . $image,

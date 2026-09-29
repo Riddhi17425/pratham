@@ -1,35 +1,39 @@
 /**
- * Our Brands module scripts (list page + add/edit pages).
+ * Products module scripts (list page + add/edit pages).
  * Needs: jQuery. List page also needs DataTables.
+ * Add/Edit pages need jQuery Validate + Summernote.
  */
 
 $(document).ready(function () {
 
     // ---------------------------------------------------------------
-    // 1. DataTable (only on the list page, where #brands_table exists)
+    // 1. DataTable (only on the list page, where #products_table exists)
     // ---------------------------------------------------------------
-    if ($('#brands_table').length && typeof window.APP_URLS !== 'undefined') {
+    if ($('#products_table').length && typeof window.APP_URLS !== 'undefined') {
 
-        var brandsTable = $('#brands_table').DataTable({
+        var productsTable = $('#products_table').DataTable({
             processing: true,
             serverSide: true,
             order: [[0, 'desc']],
-            ajax: window.APP_URLS.getOurBrandsData,
+            ajax: window.APP_URLS.getProductsData,
             columns: [
                 { data: 'id', name: 'id' },
-                { data: 'icon', name: 'icon', orderable: false, searchable: false },
+                { data: 'image', name: 'image', orderable: false, searchable: false },
+                { data: 'category', name: 'category', orderable: false, searchable: false },
+                { data: 'title', name: 'title' },
+                { data: 'name', name: 'name' },
                 { data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]
         });
 
         // Toggle status (switch on the list page)
-        $('#brands_table').on('change', '.toggle-status', function () {
+        $('#products_table').on('change', '.toggle-status', function () {
             var $switch = $(this);
             var id = $switch.data('id');
 
             $.ajax({
-                url: window.APP_URLS.toggleOurBrandStatus.replace(':id', id),
+                url: window.APP_URLS.toggleProductStatus.replace(':id', id),
                 type: 'POST',
                 data: { _token: window.APP_URLS.csrfToken },
                 success: function (response) {
@@ -43,35 +47,59 @@ $(document).ready(function () {
             });
         });
 
-        // Delete brand
-        $('#brands_table').on('click', '.btn-delete-brand', function () {
+        // Delete product
+        $('#products_table').on('click', '.btn-delete-product', function () {
             var id = $(this).data('id');
 
-            if (!confirm('Are you sure you want to delete this brand?')) {
+            if (!confirm('Are you sure you want to delete this product?')) {
                 return;
             }
 
             $.ajax({
-                url: window.APP_URLS.deleteOurBrands.replace(':id', id),
+                url: window.APP_URLS.deleteProducts.replace(':id', id),
                 type: 'DELETE',
                 data: { _token: window.APP_URLS.csrfToken },
                 success: function (response) {
-                    showMessage(response.message || 'Brand deleted successfully.', 'success');
-                    brandsTable.ajax.reload(null, false);
+                    showMessage(response.message || 'Product deleted successfully.', 'success');
+                    productsTable.ajax.reload(null, false);
                 },
                 error: function () {
-                    showMessage('Something went wrong while deleting the brand.', 'danger');
+                    showMessage('Something went wrong while deleting the product.', 'danger');
                 }
             });
         });
     }
 
     // ---------------------------------------------------------------
-    // 2. Image preview (add / edit pages)
+    // 2. Summernote editor for technical details (add / edit pages)
     // ---------------------------------------------------------------
-    $(document).on('change', '#brand_icon', function () {
+    if ($('#product_technical_details').length && $.fn.summernote) {
+        $('#product_technical_details').summernote({
+            height: 300,
+            placeholder: 'Enter Technical Details',
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link']],
+                ['view', ['codeview']]
+            ],
+            callbacks: {
+                // keep the hidden textarea in sync
+                onChange: function (contents) {
+                    $('#product_technical_details').val(contents);
+                }
+            }
+        });
+    }
+
+    // ---------------------------------------------------------------
+    // 3. Image preview (add / edit pages)
+    // ---------------------------------------------------------------
+    $(document).on('change', '#product_image', function () {
         var input = this;
-        var $preview = $('#preview_brand_icon');
+        var $preview = $('#preview_product_image');
 
         if (input.files && input.files[0]) {
             var reader = new FileReader();

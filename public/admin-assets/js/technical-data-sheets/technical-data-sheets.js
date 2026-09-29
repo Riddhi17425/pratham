@@ -1,35 +1,37 @@
 /**
- * Our Brands module scripts (list page + add/edit pages).
- * Needs: jQuery. List page also needs DataTables.
+ * Technical Data Sheets module scripts (list page + add/edit pages).
+ * Needs: jQuery. List page also needs DataTables. Add/Edit pages need jQuery Validate.
  */
 
 $(document).ready(function () {
 
     // ---------------------------------------------------------------
-    // 1. DataTable (only on the list page, where #brands_table exists)
+    // 1. DataTable (only on the list page, where #sheets_table exists)
     // ---------------------------------------------------------------
-    if ($('#brands_table').length && typeof window.APP_URLS !== 'undefined') {
+    if ($('#sheets_table').length && typeof window.APP_URLS !== 'undefined') {
 
-        var brandsTable = $('#brands_table').DataTable({
+        var sheetsTable = $('#sheets_table').DataTable({
             processing: true,
             serverSide: true,
             order: [[0, 'desc']],
-            ajax: window.APP_URLS.getOurBrandsData,
+            ajax: window.APP_URLS.getSheetsData,
             columns: [
                 { data: 'id', name: 'id' },
-                { data: 'icon', name: 'icon', orderable: false, searchable: false },
+                { data: 'category', name: 'category', orderable: false, searchable: false },
+                { data: 'brochure', name: 'brochure', orderable: false, searchable: false },
+                { data: 'pdf', name: 'pdf', orderable: false, searchable: false },
                 { data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]
         });
 
         // Toggle status (switch on the list page)
-        $('#brands_table').on('change', '.toggle-status', function () {
+        $('#sheets_table').on('change', '.toggle-status', function () {
             var $switch = $(this);
             var id = $switch.data('id');
 
             $.ajax({
-                url: window.APP_URLS.toggleOurBrandStatus.replace(':id', id),
+                url: window.APP_URLS.toggleSheetStatus.replace(':id', id),
                 type: 'POST',
                 data: { _token: window.APP_URLS.csrfToken },
                 success: function (response) {
@@ -43,44 +45,28 @@ $(document).ready(function () {
             });
         });
 
-        // Delete brand
-        $('#brands_table').on('click', '.btn-delete-brand', function () {
+        // Delete data sheet
+        $('#sheets_table').on('click', '.btn-delete-sheet', function () {
             var id = $(this).data('id');
 
-            if (!confirm('Are you sure you want to delete this brand?')) {
+            if (!confirm('Are you sure you want to delete this technical data sheet?')) {
                 return;
             }
 
             $.ajax({
-                url: window.APP_URLS.deleteOurBrands.replace(':id', id),
+                url: window.APP_URLS.deleteSheets.replace(':id', id),
                 type: 'DELETE',
                 data: { _token: window.APP_URLS.csrfToken },
                 success: function (response) {
-                    showMessage(response.message || 'Brand deleted successfully.', 'success');
-                    brandsTable.ajax.reload(null, false);
+                    showMessage(response.message || 'Technical data sheet deleted successfully.', 'success');
+                    sheetsTable.ajax.reload(null, false);
                 },
                 error: function () {
-                    showMessage('Something went wrong while deleting the brand.', 'danger');
+                    showMessage('Something went wrong while deleting the technical data sheet.', 'danger');
                 }
             });
         });
     }
-
-    // ---------------------------------------------------------------
-    // 2. Image preview (add / edit pages)
-    // ---------------------------------------------------------------
-    $(document).on('change', '#brand_icon', function () {
-        var input = this;
-        var $preview = $('#preview_brand_icon');
-
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $preview.attr('src', e.target.result).show();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    });
 
     // ---------------------------------------------------------------
     // Helper: show a dismissible message in the #message-pop-up alert

@@ -11,10 +11,10 @@
 
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
-                    <h3 class="fw-bold mb-0">Partners</h3>
+                    <h3 class="fw-bold mb-0">Products</h3>
                     <div class="col-auto d-flex w-sm-100">
-                        <a href="{{ route('partners.create') }}" class="btn btn-primary btn-set-task w-sm-100">
-                            <i class="bi bi-plus-circle me-2"></i>Add Partner
+                        <a href="{{ route('products.create') }}" class="btn btn-primary btn-set-task w-sm-100">
+                            <i class="bi bi-plus-circle me-2"></i>Add Product
                         </a>
                     </div>
                 </div>
@@ -25,11 +25,14 @@
             <div class="col-sm-12">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <table id="partners_table" class="table table-hover align-middle mb-0" style="width:100%">
+                        <table id="products_table" class="table table-hover align-middle mb-0" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Icon</th>
+                                    <th>Image</th>
+                                    <th>Category</th>
+                                    <th>Title</th>
+                                    <th>Name</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -44,10 +47,10 @@
 
 <script>
     window.APP_URLS = window.APP_URLS || {};
-    window.APP_URLS.getPartnersData = "{{ route('getPartnersData') }}";
-    window.APP_URLS.deletePartners  = "{{ route('partners.destroy', [':id']) }}";
-    window.APP_URLS.toggleStatus = "{{ route('partners.toggle-status', [':id'])}}";
-    window.APP_URLS.csrfToken       = "{{ csrf_token() }}";
+    window.APP_URLS.getProductsData     = "{{ route('getProductsData') }}";
+    window.APP_URLS.deleteProducts      = "{{ route('products.destroy', [':id']) }}";
+    window.APP_URLS.toggleProductStatus = "{{ route('products.toggle-status', [':id']) }}";
+    window.APP_URLS.csrfToken           = "{{ csrf_token() }}";
 </script>
 
 @push('styles')
@@ -57,6 +60,6 @@
 @push('scripts')
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
-<script src="{{ asset('admin-assets/js/partners/partners.js') }}"></script>
+<script src="{{ asset('admin-assets/js/products/products.js') }}"></script>
 @endpush
 @endsection
