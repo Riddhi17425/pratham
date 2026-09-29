@@ -118,7 +118,7 @@
             <div class="collage_col collage_col_title">
                 <div class="collage_title_card">
                     <h2 class="title mb-0">Manufactured for ETP,<br>RO, and Beyond </h2>
-                    <button class="purple-btn" type="submit">Explore Products</button>
+                    <!-- <button class="purple-btn" type="submit">Explore Products</button> -->
                 </div>
             </div>
         </div>

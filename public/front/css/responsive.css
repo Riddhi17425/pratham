@@ -83,7 +83,7 @@
 
 /* max-width: 1920px - Large Desktop (native Figma canvas) */
 @media only screen and (max-width: 1920px) {
-    .container { max-width: 1400px; }
+    .container { max-width: 1400px;}
 }
 
 /* max-width: 1601px - Desktop */
@@ -157,6 +157,20 @@
 .contact_info_value {
     font-size: 20px;
 }
+
+.footer_heading{margin:0 0 20px;color:#000;font-size:24px;font-weight:700;line-height:1;}
+.ft_col_links .footer_menu li a{font-size: 16px;}
+.solution_icon{height: 40px;flex: 0 0 43px;font-size: 14px;}
+.solutions_menu li a{font-size: 16px;}
+.footer_menu p .contact_icon {height: 42px;flex: 0 0 43px;font-size: 14px;}
+.footer_menu p a{font-size: 16px;}
+.ft_border::after{height: 80%;}
+.ft_col_quote{padding: 22px 29px;}
+.quote_accent{width: 45px;height: 2px;margin-bottom: 18px;}
+.ft_col_quote h5{margin: 0px 0 20px;font-size: 24px;line-height: 1;}
+.ft_col_quote p{margin: 0 0 14px;font-size: 16px;}
+.quote_footer_button{gap: 4px;min-height: 45px;padding: 0 16px;font-size: 16px;}
+.footer_bottom_inner p{font-size: 16px;}
 
 }
 
@@ -350,10 +364,11 @@
     .filter_card .overlay p { font-size: 15px; }
     .collage_title_card{ padding: 30px 0px; }
 
-    .ft_main_row { flex-wrap: wrap; row-gap: 30px; }
+    .ft_main_row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 24px; }
     .ft_divider { display: none; }
-    .ft_col { flex-shrink: 1; min-width: 0; max-width: 100%; }
-    .ft_col_contact, .ft_col_quote { width: 100%; max-width: 100%; }
+    .ft_col { min-width: 0; max-width: none; width: auto; }
+    .ft_col_contact, .ft_col_quote { width: auto; max-width: none; }
+    .footer_heading { font-size: 24px; }
     .articles_row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 0; }
     .articles_card, .articles_card + .articles_card { width: auto; margin-left: 0; }
     .articles_card:nth-child(even) { margin-left: -7px; }
@@ -578,11 +593,18 @@ img:not([class]) { height: auto; }
     .about_ring_col .about_item .item4 h6{ font-size: 28px; }
 }
 
-/* Footer menus: two columns side by side (4 + 4) on mobile */
+/* Footer menus: two columns side by side on mobile */
 @media only screen and (max-width: 575px) {
-    .ft_main_row{ column-gap: 0; }
-    .ft_main_row > .ft_col:nth-of-type(-n+2){ width: 50%; flex: 0 0 50%; }
-    .ft_main_row .footer_menu li{ margin-bottom: 16px; }
+    .ft_main_row{ grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; row-gap: 26px; }
+    .ft_main_row > .ft_col_contact, .ft_main_row > .ft_col_quote{ grid-column: 1 / -1; }
+    .ft_col_links, .ft_col_solutions{ padding-right: 14px; }
+    .ft_main_row .footer_menu li{ margin-bottom: 14px; }
+    .footer_heading{ font-size: 21px; margin-bottom: 14px; }
+    .footer_tagline{ display: none; }
+    .ft_col_quote{ padding: 28px 24px; }
+    .ft_col_quote h5{ font-size: 26px; }
+    .footer_bottom_inner{ flex-direction: column; align-items: flex-start; justify-content: center; gap: 8px; padding-top: 18px; padding-bottom: 18px; }
+    .footer_bottom_inner p+p{ padding: 0; border: 0; }
 }
 
 /* Footer brand + social icons: scale down on tablet / mobile */

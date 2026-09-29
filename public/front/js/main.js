@@ -54,6 +54,7 @@ $(document).ready(function () {
 
 // About page: company demo video lightbox
 $(document).ready(function () {
+    const CloseVideo = document.getElementById("CloseVideo");
     var $backdrop = $('#videoModalBackdrop');
     var $modal = $('#videoModal');
     var player = document.getElementById('videoModalPlayer');
@@ -78,9 +79,9 @@ $(document).ready(function () {
     }
 
     $(document).on('click', '.js-open-video', openVideoModal);
-    $(document).on('click', '.js-close-video', closeVideoModal);
+    $(CloseVideo).on('click', closeVideoModal);
     $backdrop.on('click', closeVideoModal);
-    $(document).on('keydown', function (e) {
+    $(CloseVideo).on('keydown', function (e) {
         if (e.key === 'Escape') closeVideoModal();
     });
 });
