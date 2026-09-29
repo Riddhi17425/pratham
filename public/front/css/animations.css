@@ -114,11 +114,6 @@ html{ scroll-behavior: smooth; }
     .footer_social a{ transition: translate .3s cubic-bezier(.22,.61,.36,1), scale .3s cubic-bezier(.22,.61,.36,1); }
     .footer_social a path, .footer_social a rect{ transition: fill .3s ease; }
     .footer_social a:hover{ translate: 0 -5px; scale: 1.15; }
-    .footer_social a:nth-child(1):hover path[fill="#181818"], .footer_social a:nth-child(1):hover path[fill="black"]{ fill: #0A66C2; }
-    .footer_social a:nth-child(3):hover path[fill="#181818"], .footer_social a:nth-child(3):hover path[fill="black"]{ fill: #25D366; }
-    .footer_social a:nth-child(4):hover path[fill="#181818"], .footer_social a:nth-child(4):hover path[fill="black"]{ fill: #1877F2; }
-    .footer_social a:nth-child(5):hover path[fill="#181818"], .footer_social a:nth-child(5):hover path[fill="black"]{ fill: #E4405F; }
-    .footer_social a:nth-child(2):hover path[fill="#181818"], .footer_social a:nth-child(2):hover path[fill="black"]{ fill: var(--wb-purple); }
 }
 
 /* Smart header: hides on scroll down, returns on scroll up (js/main.js) */

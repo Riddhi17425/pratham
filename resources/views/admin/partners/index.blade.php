@@ -46,6 +46,7 @@
     window.APP_URLS = window.APP_URLS || {};
     window.APP_URLS.getPartnersData = "{{ route('getPartnersData') }}";
     window.APP_URLS.deletePartners  = "{{ route('partners.destroy', [':id']) }}";
+    window.APP_URLS.toggleStatus = "{{ route('partners.toggle-status', [':id'])}}";
     window.APP_URLS.csrfToken       = "{{ csrf_token() }}";
 </script>
 

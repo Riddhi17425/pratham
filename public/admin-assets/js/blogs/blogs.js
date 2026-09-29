@@ -41,9 +41,29 @@ $(document).ready(function () {
                 { data: 'id', name: 'id' },
                 { data: 'title', name: 'title' },
                 { data: 'front_image', name: 'front_image', orderable: false, searchable: false },
-                { data: 'status', name: 'status' },
+                { data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]
+        });
+
+        // Toggle status (switch on the list page)
+        $('#blogs_table').on('change', '.toggle-status', function () {
+            var $switch = $(this);
+            var id = $switch.data('id');
+
+            $.ajax({
+                url: window.APP_URLS.toggleBlogStatus.replace(':id', id),
+                type: 'POST',
+                data: { _token: window.APP_URLS.csrfToken },
+                success: function (response) {
+                    showMessage(response.message || 'Status updated successfully.', 'success');
+                },
+                error: function () {
+                    // request failed: put the switch back to its old state
+                    $switch.prop('checked', !$switch.prop('checked'));
+                    showMessage('Something went wrong while updating the status.', 'danger');
+                }
+            });
         });
 
         // Delete blog
@@ -92,7 +112,49 @@ $(document).ready(function () {
     }
 
     // ---------------------------------------------------------------
-    // 3. Dynamic FAQ rows (question + answer with Summernote editor)
+    // 3. Auto-generate URL from the title (ADD page only)
+    //    - typing the title fills the URL automatically
+    //    - once you type in the URL field yourself, auto-fill stops
+    //    - if you clear the URL field, auto-fill starts working again
+    //    - the edit page is never touched, so saved URLs don't change by accident
+    // ---------------------------------------------------------------
+    var $blogForm = $('#blogForm');
+    var $titleInput = $blogForm.find('input[name="title"]');
+    var $urlInput = $blogForm.find('input[name="url"]');
+    var isEditPage = $blogForm.find('input[name="_method"]').length > 0;
+
+    if ($blogForm.length && $titleInput.length && $urlInput.length && !isEditPage) {
+
+        // If the URL already has a value (e.g. form came back with errors), keep it as is
+        var urlEditedManually = $.trim($urlInput.val()) !== '';
+
+        $urlInput.on('input', function () {
+            urlEditedManually = $.trim($(this).val()) !== '';
+        });
+
+        $titleInput.on('input', function () {
+            if (urlEditedManually) {
+                return;
+            }
+
+            $urlInput.val(makeSlug($(this).val()));
+
+            // clear a leftover "required" error as soon as the URL gets filled
+            if ($urlInput.hasClass('is-invalid') && $blogForm.data('validator')) {
+                $urlInput.valid();
+            }
+        });
+    }
+
+    function makeSlug(text) {
+        return $.trim(text)
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')   // spaces & symbols => hyphen
+            .replace(/^-+|-+$/g, '');       // trim hyphens from both ends
+    }
+
+    // ---------------------------------------------------------------
+    // 4. Dynamic FAQ rows (question + answer with Summernote editor)
     // ---------------------------------------------------------------
     $(document).on('click', '#addFaq', function () {
         // A fresh row comes from the hidden <template>, so no editor is cloned by mistake

@@ -45,7 +45,8 @@
 <script>
     window.APP_URLS = window.APP_URLS || {};
     window.APP_URLS.getOurBrandsData = "{{ route('getOurBrandsData') }}";
-    window.APP_URLS.deleteOurBrands  = "{{ route('our-brands.destroy', [':id']) }}";
+    window.APP_URLS.deleteOurBrands  = "{{ route('our-brands.destroy', [':id'])}}";
+    window.APP_URLS.toggleStatus = "{{ route('our-brands.toggle-status', [':id'])}}";
     window.APP_URLS.csrfToken        = "{{ csrf_token() }}";
 </script>
 

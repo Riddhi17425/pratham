@@ -11,8 +11,7 @@
         <div class="row align-items-center">
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
-                    <h3 class="fw-bold mb-0">Edit Setting</h3>
-                    <a href="{{ route('settings.index') }}" class="btn btn-primary btn-set-task">Back</a>
+                    <h3 class="fw-bold mb-0">Settings</h3>
                 </div>
             </div>
         </div>
@@ -22,7 +21,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
 
-                        <form id="settingForm" novalidate action="{{ route('settings.update', $setting->id) }}" method="POST">
+                        <form id="settingForm" novalidate action="{{ route('settings.update') }}" method="POST">
                             @csrf
                             @method('PUT')
 
@@ -49,6 +48,14 @@
                                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                             value="{{ old('email', $setting->email) }}" placeholder="Enter Email">
                                         @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Office Number</label>
+                                        <input type="text" name="office_number" class="form-control @error('office_number') is-invalid @enderror"
+                                            value="{{ old('office_number', $setting->office_number) }}" placeholder="e.g. 0261-1234567, 0261-7654321">
+                                        <small class="text-muted">Multiple numbers ko comma (,) se alag karein.</small>
+                                        @error('office_number')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
                                 </div>
@@ -106,7 +113,7 @@
                             </div>
 
                             <div class="text-end mt-4">
-                                <button type="submit" class="btn btn-primary">Update Setting</button>
+                                <button type="submit" class="btn btn-primary">Update Settings</button>
                             </div>
 
                         </form>
@@ -130,6 +137,7 @@
             address: { required: true, maxlength: 500 },
             phone: { required: true, phoneNumber: true },
             email: { required: true, email: true, maxlength: 255 },
+            office_number: { officeNumbers: true, maxlength: 255 },
             linkedin_url: { url: true, maxlength: 255 },
             instagram_url: { url: true, maxlength: 255 },
             twitter_url: { url: true, maxlength: 255 },
@@ -141,6 +149,7 @@
             address: { required: 'Please enter the address.', maxlength: 'The address may not be greater than 500 characters.' },
             phone: { required: 'Please enter the phone number.' },
             email: { required: 'Please enter the email.', email: 'Please enter a valid email address.' },
+            office_number: { maxlength: 'The office number may not be greater than 255 characters.' },
             linkedin_url: { url: urlMsg },
             instagram_url: { url: urlMsg },
             twitter_url: { url: urlMsg },

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class BannersController extends Controller
@@ -27,7 +29,7 @@ class BannersController extends Controller
      */
     public function getBannersData()
     {
-        $banners = Banner::select('banners.*');
+        $banners = Banner::with('category')->select('banners.*');
 
         return DataTables::of($banners)
             ->addIndexColumn()
@@ -38,6 +40,7 @@ class BannersController extends Controller
                 $url = asset($this->imagePath . $row->image);
                 return '<img src="' . $url . '" alt="' . e($row->image_alt) . '" style="max-width:80px;max-height:60px;">';
             })
+            ->addColumn('category', fn ($row) => e($row->category->title ?? '-'))
             ->editColumn('title', function ($row) {
                 return e($row->title);
             })
@@ -45,8 +48,10 @@ class BannersController extends Controller
                 return e(Str::limit(strip_tags($row->description), 80));
             })
             ->addColumn('status', function ($row) {
-                $badge = $row->status === 'Active' ? 'success' : 'secondary';
-                return '<span class="badge bg-' . $badge . '">' . $row->status . '</span>';
+                $checked = $row->status === 'Active' ? 'checked' : '';
+                return '<div class="form-check form-switch">
+                            <input class="form-check-input toggle-status" type="checkbox" data-id="' . $row->id . '" ' . $checked . '>
+                        </div>';
             })
             ->addColumn('action', function ($row) {
                 $editUrl = route('banners.edit', $row->id);
@@ -64,7 +69,9 @@ class BannersController extends Controller
      */
     public function create()
     {
-        return view('admin.banners.create');
+        $categories = $this->categoryOptions();
+
+        return view('admin.banners.create', compact('categories'));
     }
 
     /**
@@ -88,7 +95,9 @@ class BannersController extends Controller
     {
         $banner = Banner::findOrFail($id);
 
-        return view('admin.banners.edit', compact('banner'));
+        $categories = $this->categoryOptions($banner);
+
+        return view('admin.banners.edit', compact('banner', 'categories'));
     }
 
     /**
@@ -127,6 +136,23 @@ class BannersController extends Controller
     }
 
     /**
+     * Switch Active / In-Active from the list page (ajax).
+     */
+    public function toggleStatus($id)
+    {
+        $banner = Banner::findOrFail($id);
+
+        $banner->status = $banner->status === 'Active' ? 'In-Active' : 'Active';
+        $banner->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully.',
+            'status'  => $banner->status,
+        ]);
+    }
+
+    /**
      * Server-side validation rules.
      */
     protected function rules(?Banner $banner = null): array
@@ -134,12 +160,37 @@ class BannersController extends Controller
         $image = 'image|mimes:jpg,jpeg,png,webp|max:2048';
 
         return [
+            'category_id' => [
+                'required',
+                Rule::exists('categories', 'id')->where(function ($query) use ($banner) {
+                    // only Active categories (plus the one already saved on this banner)
+                    $query->where(function ($q) use ($banner) {
+                        $q->where('status', 'Active');
+
+                        if ($banner?->category_id) {
+                            $q->orWhere('id', $banner->category_id);
+                        }
+                    });
+                }),
+            ],
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
             'image'       => ($banner ? 'nullable|' : 'required|') . $image,
             'image_alt'   => 'required|string|max:255',
             'status'      => 'required|in:Active,In-Active',
         ];
+    }
+
+    /**
+     * Categories for the dropdown: all Active ones, plus the banner's current
+     * category (so an In-Active one still shows while editing).
+     */
+    protected function categoryOptions(?Banner $banner = null)
+    {
+        return Category::where('status', 'Active')
+            ->when($banner?->category_id, fn ($q) => $q->orWhere('id', $banner->category_id))
+            ->orderBy('title')
+            ->get(['id', 'title']);
     }
 
     /**

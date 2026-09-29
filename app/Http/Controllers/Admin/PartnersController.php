@@ -39,8 +39,10 @@ class PartnersController extends Controller
                 return '<img src="' . $url . '" alt="' . e($row->icon_alt) . '" style="max-width:60px;max-height:60px;">';
             })
             ->addColumn('status', function ($row) {
-                $badge = $row->status === 'Active' ? 'success' : 'secondary';
-                return '<span class="badge bg-' . $badge . '">' . $row->status . '</span>';
+                $checked = $row->status === 'Active' ? 'checked' : '';
+    return '<div class="form-check form-switch">
+                <input class="form-check-input toggle-status" type="checkbox" data-id="' . $row->id . '" ' . $checked . '>
+            </div>';
             })
             ->addColumn('action', function ($row) {
                 $editUrl = route('partners.edit', $row->id);
@@ -119,13 +121,27 @@ class PartnersController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Partner deleted successfully.']);
     }
+     
+    public function toggleStatus($id)
+{
+    $partner = Partner::findOrFail($id);
+
+    $partner->status = $partner->status === 'Active' ? 'In-Active' : 'Active';
+    $partner->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Status updated successfully.',
+        'status'  => $partner->status,
+    ]);
+}
 
     /**
      * Server-side validation rules.
      */
     protected function rules(?Partner $partner = null): array
     {
-        $image = 'image|mimes:jpg,jpeg,png,webp|max:2048';
+        $image = 'file|mimes:jpg,jpeg,png,webp,svg|max:2048';
 
         return [
             'icon'     => ($partner ? 'nullable|' : 'required|') . $image,

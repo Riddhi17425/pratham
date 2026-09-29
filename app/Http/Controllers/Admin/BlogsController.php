@@ -42,8 +42,10 @@ class BlogsController extends Controller
                 return '<img src="' . $url . '" alt="' . e($row->front_image_alt) . '" style="max-width:60px;max-height:60px;">';
             })
             ->addColumn('status', function ($row) {
-                $badge = $row->status === 'Active' ? 'success' : 'secondary';
-                return '<span class="badge bg-' . $badge . '">' . $row->status . '</span>';
+                $checked = $row->status === 'Active' ? 'checked' : '';
+    return '<div class="form-check form-switch">
+                <input class="form-check-input toggle-status" type="checkbox" data-id="' . $row->id . '" ' . $checked . '>
+            </div>';
             })
             ->addColumn('action', function ($row) {
                 $editUrl = route('blogs.edit', $row->id);
@@ -143,6 +145,23 @@ class BlogsController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Blog deleted successfully.']);
     }
+
+    /**
+ * Switch Active / In-Active from the list page (ajax).
+ */
+public function toggleStatus($id)
+{
+    $blog = Blog::findOrFail($id);
+
+    $blog->status = $blog->status === 'Active' ? 'In-Active' : 'Active';
+    $blog->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Status updated successfully.',
+        'status'  => $blog->status,
+    ]);
+}
 
     /**
      * Server-side validation rules (keep in sync with blogs/_scripts.blade.php).

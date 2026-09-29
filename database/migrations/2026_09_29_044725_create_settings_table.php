@@ -14,6 +14,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
+            $table->string('office_number')->nullable(); // comma separated
 
             // Social links
             $table->string('linkedin_url')->nullable();

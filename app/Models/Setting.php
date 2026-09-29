@@ -13,6 +13,7 @@ class Setting extends Model
         'address',
         'phone',
         'email',
+        'office_number',
         'linkedin_url',
         'instagram_url',
         'twitter_url',

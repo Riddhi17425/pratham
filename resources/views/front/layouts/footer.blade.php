@@ -53,49 +53,50 @@
     </div>
     
         <div class="ft_content">
-            <div class="container">
+          <div class="container">
             <div class="ft_main_row">
-               <div class="ft_col">
-                    <ul class="footer_menu">
-                       <li><a href="{{ route('home') }}">Home</a></li>
-                       <li><a href="{{ route('about') }}">About Us</a></li>
-                       <!-- <li><a href="{{ route('products') }}">Products</a></li> -->
-                       <li><a href="{{ route('technical.brochure') }}">Technical Brochure</a></li>
-                    </ul>
-               </div>
-               <span class="ft_divider"></span>
-               <div class="ft_col">
-                    <ul class="footer_menu">
-                       <li><a href="{{ route('news.events') }}">Events</a></li>
-                       <li><a href="{{ route('blog') }}">Blog</a></li>
-                       <!-- <li><a href="#" class="js-open-quote">Get a Quote</a></li> -->
-                       <li><a href="{{ route('contact') }}">Contact Us</a></li>
-                    </ul>
-               </div>
-               <span class="ft_divider"></span>
-               <div class="ft_col ft_col_contact">
-                    <div class="footer_menu">
-                        <p><span><i class="fa-solid fa-location-dot"></i></span> <a href="#">K 12 A, Ansa Indl Estate, Saki Vihar Road, Andheri (E), Mumbai-400072.</a> </p>
-                        <p><span><i class="fa-solid fa-phone"></i></span> <a href="tel:+919820246044">+91 98 202 46044</a></p>
-                        <p><span><i class="fa-solid fa-envelope"></i></span><a href="mailto:ajay@prathamfilter.com">ajay@prathamfilter.com</a></p>
-                    </div>
-               </div>
-               <span class="ft_divider"></span>
-               <div class="ft_col ft_col_quote">
-                    <h5 class="f_18">Request A Quote</h5>
-                    <p>Get in touch with our team for a solution built around your needs.</p>
-                    <button class="dark-btn js-open-quote" type="button">Request A Quote</button>
-               </div>
+              <div class="ft_col ft_col_links ft_border">
+                <h5 class="footer_heading">Quick Links</h5>
+                <ul class="footer_menu">
+                  <li><a href="{{ route('home') }}">Home <svg class="footer_chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                  <li><a href="{{ route('about') }}">About Us <svg class="footer_chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                  <li><a href="{{ route('technical.brochure') }}">Technical Brochure <svg class="footer_chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                  <li><a href="{{ route('news.events') }}">Events <svg class="footer_chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                  <li><a href="{{ route('blog') }}">Blog <svg class="footer_chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                  <li><a href="{{ route('contact') }}">Contact Us <svg class="footer_chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+                </ul>
+              </div>
+              <div class="ft_col ft_col_solutions ft_border">
+                <h5 class="footer_heading">Our Solutions</h5>
+                <ul class="footer_menu solutions_menu">
+                  <li><a href="#"><span class="solution_icon"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>Water Filters</a></li>
+                  <li><a href="#"><span class="solution_icon"><i class="fa-solid fa-water" aria-hidden="true"></i></span>Water Treatment</a></li>
+                  <li><a href="#"><span class="solution_icon"><i class="fa-solid fa-recycle" aria-hidden="true"></i></span>Waste Water Treatment</a></li>
+                  <li><a href="#"><span class="solution_icon"><i class="fa-solid fa-wind" aria-hidden="true"></i></span>Air Filters</a></li>
+                </ul>
+              </div>
+              <div class="ft_col ft_col_contact">
+                <h5 class="footer_heading">Get In Touch</h5>
+                <div class="footer_menu contact_menu">
+                  <p><span class="contact_icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span><a href="#">K 12 A, Ansa Indl Estate, Saki Vihar Road, Andheri (E), Mumbai-400072.</a></p>
+                  <p><span class="contact_icon"><i class="fa-solid fa-phone" aria-hidden="true"></i></span><a href="tel:+919820246044">+91 98 202 46044</a></p>
+                  <p><span class="contact_icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span><a href="mailto:ajay@prathamfilter.com">ajay@prathamfilter.com</a></p>
+                </div>
+              </div>
+              <div class="ft_col ft_col_quote">
+                <span class="quote_accent" aria-hidden="true"></span>
+                <h5>Request A Quote</h5>
+                <p>Get in touch with our team for a solution built around your needs.</p>
+                <button class="quote_footer_button js-open-quote" type="button">Request A Quote <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </div>
             </div>
-            </div>
+          </div>
         </div>
-       <div class="container-fluid">
-       <div class="row pb-3">
-            <div class="ym_copyright text-center">
-            <p class="mb-0">Copyright ©2026 Pratham Filter Industries. All rights reserved.</p>
+        <div class="footer_bottom">
+          <div class="container footer_bottom_inner client_border">
+            <p>Copyright ©2026 Pratham Filter Industries. All rights reserved.</p>
+          </div>
         </div>
-            </div>
-       </div>
 
 </footer>
 

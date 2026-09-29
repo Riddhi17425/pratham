@@ -31,6 +31,7 @@
                                     <th>Id</th>
                                     <th>Image</th>
                                     <th>Title</th>
+                                    <th>Category</th>
                                     <th>Description</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -48,6 +49,7 @@
     window.APP_URLS = window.APP_URLS || {};
     window.APP_URLS.getBannersData = "{{ route('getBannersData') }}";
     window.APP_URLS.deleteBanners  = "{{ route('banners.destroy', [':id']) }}";
+    window.APP_URLS.toggleBannerStatus = "{{ route('banners.toggle-status', [':id']) }}";
     window.APP_URLS.csrfToken      = "{{ csrf_token() }}";
 </script>
 
