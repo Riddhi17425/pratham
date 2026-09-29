@@ -471,6 +471,12 @@
 .event_card_body {
     padding: 24px;
 }
+
+.ft_border::after
+{
+    display: none;
+}
+
 }
 
 @media only screen and (max-width: 760px) {
@@ -597,7 +603,7 @@ img:not([class]) { height: auto; }
 @media only screen and (max-width: 575px) {
     .ft_main_row{ grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; row-gap: 26px; }
     .ft_main_row > .ft_col_contact, .ft_main_row > .ft_col_quote{ grid-column: 1 / -1; }
-    .ft_col_links, .ft_col_solutions{ padding-right: 14px; }
+    .ft_col_links, .ft_col_solutions{ padding-right: 0px; }
     .ft_main_row .footer_menu li{ margin-bottom: 14px; }
     .footer_heading{ font-size: 21px; margin-bottom: 14px; }
     .footer_tagline{ display: none; }
