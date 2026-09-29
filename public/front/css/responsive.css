@@ -172,11 +172,19 @@
 .quote_footer_button{gap: 4px;min-height: 45px;padding: 0 16px;font-size: 16px;}
 .footer_bottom_inner p{font-size: 16px;}
 
+.contact_grid_divider {
+    left: 54.2%;
+}
+
 }
 
 /* max-width: 1441px - Small Desktop */
 @media only screen and (max-width: 1441px) {
     .container { max-width: 1200px; }
+
+        .contact_info_value {
+        font-size: 19px;
+    }
 }
 
 /* =========================================================================

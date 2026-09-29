@@ -286,14 +286,6 @@ body{font-family: var(--wb-body-typography-font-family); color: var(--wb-light-b
 .about_video_play img{width: 40px; height: 40px;}
 .about_video_play:hover{transform: translate(-50%,-50%) scale(1.08);}
 
-.video_modal_backdrop{position: fixed; inset: 0; background: rgba(24,24,24,0.85); opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; z-index: 1050;}
-.video_modal_backdrop.active{opacity: 1; visibility: visible;}
-.video_modal{position: fixed; top: 50%; left: 50%; transform: translate(-50%,-48%); width: min(1000px, 90vw); z-index: 1060; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;}
-.video_modal.active{opacity: 1; visibility: visible; transform: translate(-50%,-50%);}
-.video_modal_box{position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; overflow: hidden;}
-.video_modal_box video{width: 100%; height: 100%; display: block;}
-.video_modal_close{position: absolute; top: 8px; right: 8px; width: 40px; height: 40px; border: none; background: transparent; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2;}
-
 .vmp_title{margin-bottom: 40px;}
 .vmp_tab{color: #BBBBBB; cursor: pointer; transition: color 0.2s ease;}
 .vmp_tab.active, .vmp_tab:hover{color: var(--wb-black);}
@@ -382,6 +374,7 @@ body.thank-you-page main{min-height:calc(100svh - 120px);}
 .branch_card_title{font-family: var(--wb-heading-typography-font-family); font-size: 20px; font-weight: 700; color: var(--wb-black); text-transform: uppercase; margin-bottom: 12px;}
 .branch_card_address{font-family: var(--wb-body-typography-font-family); font-size: 16px; line-height: 26px; color: var(--wb-light-black);}
 .branch_card_phone, .branch_card_email{font-family: var(--wb-body-typography-font-family); font-size: 16px; line-height: 26px; color: var(--wb-light-black); margin: 14px 0 0; display: flex; align-items: center; justify-content: center; gap: 14px;}
+.branch_card_phone a, .branch_card_email a{color: var(--wb-light-black);}
 .branch_card_phone img, .branch_card_email img{width: 18px; height: 18px; object-fit: contain;}
   /***** End contact page *****/
 

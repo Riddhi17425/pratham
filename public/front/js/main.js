@@ -52,40 +52,6 @@ $(document).ready(function () {
     });
 });
 
-// About page: company demo video lightbox
-$(document).ready(function () {
-    const CloseVideo = document.getElementById("CloseVideo");
-    var $backdrop = $('#videoModalBackdrop');
-    var $modal = $('#videoModal');
-    var player = document.getElementById('videoModalPlayer');
-    if (!$modal.length) return;
-
-    function openVideoModal(e) {
-        if (e) e.preventDefault();
-        var src = $(this).data('video');
-        if (src && player.getAttribute('src') !== src) {
-            player.setAttribute('src', src);
-        }
-        $backdrop.addClass('active');
-        $modal.addClass('active');
-        $('body').css('overflow', 'hidden');
-        player.play();
-    }
-    function closeVideoModal() {
-        $backdrop.removeClass('active');
-        $modal.removeClass('active');
-        $('body').css('overflow', '');
-        player.pause();
-    }
-
-    $(document).on('click', '.js-open-video', openVideoModal);
-    $(CloseVideo).on('click', closeVideoModal);
-    $backdrop.on('click', closeVideoModal);
-    $(CloseVideo).on('keydown', function (e) {
-        if (e.key === 'Escape') closeVideoModal();
-    });
-});
-
 // Technical Brochure page: category filter dropdown
 $(document).ready(function () {
     var $items = $('.brochure_filter_item');

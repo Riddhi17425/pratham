@@ -85,7 +85,7 @@
                     <div class="contact_info_label">
                         <img src="{{ asset('front/img/figma/contact/icon-office-lines.svg') }}" alt=""><span>Office Lines</span>
                     </div>
-                    <p class="contact_info_value">+91 22 352 31803 &nbsp;|&nbsp; +91 22 356 16243</p>
+                    <p class="contact_info_value"> <a href="tel:+912235231803">+91 22 352 31803</a> &nbsp;|&nbsp; <a href="tel:+912235616243">+91 22 356 16243</a></p>
                 </div>
             </div>
         </div>
@@ -124,8 +124,8 @@
                 <div class="branch_card_body">
                     <h3 class="branch_card_title"><?php echo $b[0]; ?></h3>
                     <p class="branch_card_address"><?php echo $b[1]; ?></p>
-                    <p class="branch_card_phone"><img src="{{ asset('front/img/figma/contact/icon-branch-phone.svg') }}" alt=""> <?php echo $b[2]; ?></p>
-                    <p class="branch_card_email"><img src="{{ asset('front/img/figma/contact/icon-email.svg') }}" alt=""> <?php echo $b[3]; ?></p>
+                    <p class="branch_card_phone"><img src="{{ asset('front/img/figma/contact/icon-branch-phone.svg') }}" alt=""> <a href="tel:<?php echo $b[2]; ?>"><?php echo $b[2]; ?></a></p>
+                    <p class="branch_card_email"><img src="{{ asset('front/img/figma/contact/icon-email.svg') }}" alt=""> <a href="mailto:<?php echo $b[3]; ?>"><?php echo $b[3]; ?></a></p>
                 </div>
             </div>
             <?php endforeach; ?>

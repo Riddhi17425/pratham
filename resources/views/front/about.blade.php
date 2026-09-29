@@ -25,9 +25,9 @@
 
         <div class="about_video_wrap">
             <img src="{{ asset('front/img/figma/about/about-video-bg.webp') }}" alt="Pratham Filter Industries facility" class="w-100">
-            <button class="about_video_play js-open-video" type="button" aria-label="Play video" data-video="{{ asset('front/img/figma/about/aboutvideo.mp4') }}">
+            <a class="about_video_play" href="{{ asset('front/img/figma/about/aboutvideo.mp4') }}" data-fancybox="company-video" data-width="1280" data-height="720" aria-label="Play company video">
                 <img src="{{ asset('front/img/figma/about/video-play-icon.png') }}" alt="">
-            </button>
+            </a>
            
         </div>
 
@@ -135,18 +135,22 @@
 </section>
 @endif
 
-<!-- Company demo video lightbox -->
-<div class="video_modal_backdrop" id="videoModalBackdrop"></div>
-<div class="video_modal" id="videoModal" role="dialog" aria-modal="true">
-    <button class="video_modal_close js-close-video" type="button" aria-label="Close video" id="CloseVideo">
-        <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.7882 10.7878C11.4577 10.1183 12.5431 10.1183 13.2126 10.7878L24.0004 21.5756L34.7882 10.7878C35.4577 10.1183 36.5431 10.1183 37.2126 10.7878C37.8821 11.4573 37.8821 12.5427 37.2126 13.2122L26.4248 24L37.2126 34.7878C37.8821 35.4573 37.8821 36.5427 37.2126 37.2122C36.5431 37.8817 35.4577 37.8817 34.7882 37.2122L24.0004 26.4244L13.2126 37.2122C12.5431 37.8817 11.4577 37.8817 10.7882 37.2122C10.1188 36.5427 10.1188 35.4573 10.7882 34.7878L21.5761 24L10.7882 13.2122C10.1188 12.5427 10.1188 11.4573 10.7882 10.7878Z" fill="currentColor"/>
-        </svg>
-    </button>
-    <div class="video_modal_box">
-        <video id="videoModalPlayer" controls playsinline class="position-relative"> </video>
-    </div>
-</div>
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.umd.js"></script>
+<script>
+    Fancybox.bind('[data-fancybox="company-video"]', {
+        Carousel: {
+            Video: {
+                autoplay: true
+            }
+        }
+    });
+</script>
+@endpush
 
 
 @endsection
