@@ -15,6 +15,7 @@ Route::get('thank-you', [FrontController::class, 'thankYou'])->name('contact.tha
 Route::get('news-event', [FrontController::class, 'getNewsEvent'])->name('news.events');
 Route::get('technical-brochure', [FrontController::class, 'technicalBrochure'])->name('technical.brochure');
 Route::get('products', [FrontController::class, 'productList'])->name('products');
+Route::get('category/{categoryUrl}', [FrontController::class, 'categoryProducts'])->name('category.products');
 Route::get('product', [FrontController::class, 'productDetails'])->name('product.details');
 
 // ===== Login (guests only) =====

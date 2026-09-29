@@ -50,12 +50,11 @@
                         </svg>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Spun Filter Cartridge']) }}">Spun Filter Cartridge</a></li>
-                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Filter Bags']) }}">Filter Bags</a></li>
-                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Pleated PP High Efficiency']) }}">Pleated PP High Efficiency</a></li>
-                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Activated Carbon Cartridge']) }}">Activated Carbon Cartridge</a></li>
-                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'Washable Cartridge']) }}">Washable Cartridge</a></li>
-                            <li><a class="dropdown-item" href="{{ route('product.details', ['p' => 'SS Filter Cartridge']) }}">SS Filter Cartridge</a></li>
+                            @forelse ($productCategories as $productCategory)
+                            <li><a class="dropdown-item" href="{{ route('category.products', $productCategory->category_url) }}">{{ $productCategory->title }}</a></li>
+                            @empty
+                            <li><span class="dropdown-item text-muted">No categories available</span></li>
+                            @endforelse
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

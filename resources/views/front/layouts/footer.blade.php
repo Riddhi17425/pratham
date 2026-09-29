@@ -69,10 +69,11 @@
               <div class="ft_col ft_col_solutions ft_border">
                 <h5 class="footer_heading">Our Solutions</h5>
                 <ul class="footer_menu solutions_menu">
-                  <li><a href="#"><span class="solution_icon"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>Water Filters</a></li>
-                  <li><a href="#"><span class="solution_icon"><i class="fa-solid fa-water" aria-hidden="true"></i></span>Water Treatment</a></li>
-                  <li><a href="#"><span class="solution_icon"><i class="fa-solid fa-recycle" aria-hidden="true"></i></span>Waste Water Treatment</a></li>
-                  <li><a href="#"><span class="solution_icon"><i class="fa-solid fa-wind" aria-hidden="true"></i></span>Air Filters</a></li>
+                  @forelse ($productCategories as $productCategory)
+                  <li><a href="{{ route('category.products', $productCategory->category_url) }}"><span class="solution_icon"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>{{ $productCategory->title }}</a></li>
+                  @empty
+                  <li><a href="{{ route('products') }}"><span class="solution_icon"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>All Products</a></li>
+                  @endforelse
                 </ul>
               </div>
               <div class="ft_col ft_col_contact">
@@ -132,4 +133,3 @@
         <button class="purple-btn quote_modal_submit" type="submit">Get A Quote</button>
     </form>
 </div>
-
