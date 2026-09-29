@@ -23,7 +23,7 @@
     @yield('page_styles')
     @stack('styles')
 </head>
-<body>
+<body class="@yield('body_class')">
     @include('front.layouts.header')
 
     <main>
