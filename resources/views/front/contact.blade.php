@@ -31,11 +31,32 @@
             <span class="vmp_border_side vmp_border_right"></span>
             <span class="contact_grid_divider"></span>
 
-            <form class="contact_form">
-                <div class="contact_field"><input type="text" placeholder="Name" required></div>
-                <div class="contact_field"><input type="email" placeholder="Email ID" required></div>
-                <div class="contact_field"><input type="tel" placeholder="Phone Number"></div>
-                <div class="contact_field"><textarea placeholder="Message" rows="4"></textarea></div>
+            <form class="contact_form" id="contactForm" action="{{ route('contact.submit') }}" method="post" novalidate>
+                @csrf
+                <div class="contact_input_group">
+                    <div class="contact_field">
+                        <input type="text" name="name" placeholder="Name" value="{{ old('name') }}" minlength="2" maxlength="120" required>
+                    </div>
+                    @error('name')<small class="contact_error">{{ $message }}</small>@enderror
+                </div>
+                <div class="contact_input_group">
+                    <div class="contact_field">
+                        <input type="email" name="email" placeholder="Email ID" value="{{ old('email') }}" maxlength="255" required>
+                    </div>
+                    @error('email')<small class="contact_error">{{ $message }}</small>@enderror
+                </div>
+                <div class="contact_input_group">
+                    <div class="contact_field">
+                        <input type="tel" name="phone" placeholder="Phone Number" value="{{ old('phone') }}" maxlength="30">
+                    </div>
+                    @error('phone')<small class="contact_error">{{ $message }}</small>@enderror
+                </div>
+                <div class="contact_input_group">
+                    <div class="contact_field">
+                        <textarea name="message" placeholder="Message" rows="4" minlength="10" maxlength="5000" required>{{ old('message') }}</textarea>
+                    </div>
+                    @error('message')<small class="contact_error">{{ $message }}</small>@enderror
+                </div>
                 <div class="contact_field border-0"><button class="purple-btn" type="submit">Contact us</button></div>
             </form>
 
@@ -112,5 +133,55 @@
     </div>
 </section>
 
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.22.1/dist/jquery.validate.min.js"></script>
+<script>
+$.validator.addMethod('phonePattern', function (value, element) {
+    return this.optional(element) || /^[0-9+().\s-]{7,30}$/.test(value);
+}, 'Enter a valid phone number.');
+$.validator.addMethod('namePattern', function (value, element) {
+    return this.optional(element) || /^[\p{L}\p{M}][\p{L}\p{M}0-9\s.'\u2019-]{1,119}$/u.test(value.trim());
+}, 'Enter a valid name.');
+
+$('#contactForm').validate({
+    errorElement: 'small',
+    errorClass: 'contact_error',
+    rules: {
+        name: { required: true, minlength: 2, maxlength: 120, namePattern: true },
+        email: { required: true, email: true, maxlength: 255 },
+        phone: { phonePattern: true },
+        message: { required: true, minlength: 10, maxlength: 5000 }
+    },
+    messages: {
+        name: {
+            required: 'Please enter your name.',
+            minlength: 'Name must be at least 2 characters.',
+            maxlength: 'Name cannot exceed 120 characters.',
+            namePattern: 'Enter a valid name using letters, numbers, spaces, apostrophes, periods, or hyphens.'
+        },
+        email: {
+            required: 'Please enter your email address.',
+            email: 'Please enter a valid email address.',
+            maxlength: 'Email cannot exceed 255 characters.'
+        },
+        message: {
+            required: 'Please enter a message.',
+            minlength: 'Message must be at least 10 characters.',
+            maxlength: 'Message cannot exceed 5000 characters.'
+        }
+    },
+    errorPlacement: function (error, element) {
+        error.insertAfter(element.closest('.contact_field'));
+    },
+    submitHandler: function (form) {
+        var $submitButton = $(form).find('button[type="submit"]');
+        $submitButton.prop('disabled', true).addClass('is-submitting').text('Submitting...');
+        HTMLFormElement.prototype.submit.call(form);
+        return false;
+    }
+});
+</script>
+@endpush
 
 @endsection

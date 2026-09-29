@@ -10,6 +10,8 @@ Route::get('about', [FrontController::class, 'about'])->name('about');
 Route::get('blogs', [FrontController::class, 'getBlogs'])->name('blog');
 Route::get('blog', [FrontController::class, 'blogDetails'])->name('blog.details');
 Route::get('contact', [FrontController::class, 'contact'])->name('contact');
+Route::post('contact', [FrontController::class, 'submitContact'])->name('contact.submit');
+Route::get('thank-you', [FrontController::class, 'thankYou'])->name('contact.thank-you');
 Route::get('news-event', [FrontController::class, 'getNewsEvent'])->name('news.events');
 Route::get('technical-brochure', [FrontController::class, 'technicalBrochure'])->name('technical.brochure');
 Route::get('products', [FrontController::class, 'productList'])->name('products');
