@@ -262,9 +262,9 @@
                     <div class="articles_card">
                         <img src="{{ asset('front/img/figma/article-card-frame.svg') }}" alt="" class="articles_frame">
                         <p class="articles_date">{{ $blog->date ? \Carbon\Carbon::parse($blog->date)->format('F j, Y') : $blog->created_at->format('F j, Y') }}</p>
-                        <h3 class="articles_title">{{ $blog->title }}</h3>
+                        <a href="{{route('blog.details')}}"><h3 class="articles_title">{{ $blog->title }}</h3></a>
                         @if ($blog->front_image)
-                        <img src="{{ asset('admin-assets/blogs/front_image/' . $blog->front_image) }}" alt="{{ $blog->front_image_alt ?: $blog->title }}" class="articles_photo">
+                        <a href="{{route('blog.details')}}"><img src="{{ asset('admin-assets/blogs/front_image/' . $blog->front_image) }}" alt="{{ $blog->front_image_alt ?: $blog->title }}" class="articles_photo"></a>
                         @endif
                     </div>
                     @endforeach

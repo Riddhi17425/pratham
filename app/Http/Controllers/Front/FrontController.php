@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Blog;
+use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Event;
 use App\Models\OurBrand;
 use App\Models\Partner;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -118,7 +120,28 @@ class FrontController extends Controller
     public function productList(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        return view('front.product-list', compact('metaTitle', 'metaDescription'));
+        $category = null;
+        $products = Product::with('category')
+            ->where('status', 'Active')
+            ->orderBy('name')
+            ->get();
+
+        return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
+    }
+
+    public function categoryProducts(string $categoryUrl)
+    {
+        $category = Category::where('category_url', $categoryUrl)
+            ->where('status', 'Active')
+            ->firstOrFail();
+        $products = Product::where('category_id', $category->id)
+            ->where('status', 'Active')
+            ->orderBy('name')
+            ->get();
+        $metaTitle = $category->meta_title ?: $category->title;
+        $metaDescription = $category->meta_description ?: $category->description;
+
+        return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
     }
 
     public function productDetails(Request $requesr){
