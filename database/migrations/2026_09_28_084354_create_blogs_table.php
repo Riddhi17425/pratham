@@ -36,7 +36,7 @@ return new class extends Migration
             $table->longText('schema_json')->nullable();
 
             // All FAQs for this blog are stored together here as a JSON array,
-            // e.g. [{"faq_title":"...","question":"...","answer":"..."}, ...]
+            // e.g. [{"faq_title":"...","faq_description":"..."}, ...]
             $table->json('faqs')->nullable();
 
             $table->enum('status', ['Active', 'In-Active'])->default('Active');
