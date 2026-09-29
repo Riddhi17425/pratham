@@ -1,0 +1,759 @@
+/* =========================================================================
+   BASE LAYER — this project is authored on a 1920px canvas (Figma source).
+   Everything below is written "desktop-first": the rules with no media
+   query (or the widest ones) represent the true/large-desktop design, and
+   every @media block from here on uses max-width ONLY, ordered from the
+   largest breakpoint down to the smallest. Each tier simply relaxes the
+   layout further as the viewport shrinks - there is no min-width anywhere
+   in this file, so the whole cascade reads top-to-bottom in one direction.
+   ========================================================================= */
+
+.container{ max-width: 1480px; }
+
+#header .container-fluid,
+.hero_area .container-fluid,
+.footer .container-fluid {
+    padding-left: 110px;
+    padding-right: 110px;
+}
+.hero_area .row{ flex-wrap: nowrap; }
+.hero_area .row > .col-lg-6:first-child{ flex: 0 0 914px; max-width: 914px; }
+.hero_area .row > .col-lg-6:last-child{ flex: 1 1 auto; max-width: none; }
+
+.container_flush{ padding-left: 0; padding-right: 0; }
+
+/* Product collage grid (Manufactured for ETP, RO and Beyond) is now a fluid
+   CSS Grid defined in style.css with aspect-ratio-driven row heights and
+   %-based image positions, so it no longer needs fixed-px overrides here. */
+
+/* Figma About Us - text column 644px + values ring 693px, gap 64px */
+.about_row{ display: flex; flex-wrap: nowrap; align-items: center; gap: 64px; margin: 0; }
+.about_row > .about_text_col{ flex: 0 0 644px; max-width: 644px; padding: 0; }
+.about_row > .about_ring_col{  max-width: 693px; padding: 0; }
+
+/* Figma We Represent - title 294px fixed, logos row fills remainder */
+.we_represent_row{ display: flex; flex-wrap: nowrap; margin: 0; }
+.we_represent_row > .we_represent_title{ flex: 0 0 294px; max-width: 294px; padding: 0; }
+.we_represent_row > .we_represent_logos{ flex: 1 1 0; min-width: 0; max-width: none; padding: 0 0 0 24px; overflow: hidden; }
+
+/* Desktop nav: hover-driven Products dropdown + full-width spacing. The
+   max-width:1399.98px tier further down resets this back to a normal
+   click-to-open Bootstrap collapse menu for the hamburger nav. */
+.dropdown > .dropdown-menu {
+    display: block;
+    margin-top: 0;
+    top: calc(100% + 14px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+}
+.dropdown:hover > .dropdown-menu,
+.dropdown.open > .dropdown-menu,
+.dropdown > .dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+/* Invisible bridge over the gap between the link and the menu so the
+   hover isn't lost while the cursor travels down to the items. */
+@media (min-width: 992px) {
+    .dropdown > .dropdown-menu::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -16px;
+        height: 16px;
+    }}
+.container-fluid { padding-right: calc(var(--bs-gutter-x)* 2.5); padding-left: calc(var(--bs-gutter-x)* 2.5); }
+.logo_img{ width: 186px; }
+.brand_flo_logo{ width: 81px; }
+.navbar-nav{ gap: 30px; }
+.nav-link{ font-size: 18px; }
+.dark-btn{ padding: 12px 40px; }
+
+/* =========================================================================
+   RESPONSIVE LADDER — every named tier, largest to smallest. Nothing below
+   uses min-width; each block only needs to state what's DIFFERENT from the
+   tier above it, since max-width blocks keep cascading down.
+   ========================================================================= */
+
+/* max-width: 1920px - Large Desktop (native Figma canvas) */
+@media only screen and (max-width: 1920px) {
+    .container { max-width: 1400px; }
+}
+
+/* max-width: 1601px - Desktop */
+@media only screen and (max-width: 1601px) {
+    .container { max-width: 1320px; }
+    .navbar-nav{ gap: 20px; }
+    /* The fixed 914px hero text column only reads well on the true 1920
+       canvas - below that let the two columns share space normally so the
+       product image doesn't get squeezed into a shrinking leftover strip. */
+    .hero_area .row{ flex-wrap: wrap; }
+    .hero_area .row > .col-lg-6:first-child{ flex: 0 0 50%; max-width: 50%; }
+    .hero_area .row > .col-lg-6:last-child{ flex: 0 0 50%; max-width: 50%; }
+
+    /* The 600px fixed form + 120px gap only fits the true wide canvas -
+       let both columns share the row and shrink together below that. */
+    .contact_grid{ gap: 60px; }
+    .contact_form{ flex: 1 1 420px; max-width: 600px; min-width: 320px; }
+    .contact_info{ flex: 1 1 320px; min-width: 280px; }
+}
+
+/* max-width: 1537px - Desktop Medium */
+@media only screen and (max-width: 1537px) {
+    .container { max-width: 1260px; }
+    #header .container-fluid, .hero_area .container-fluid, .footer .container-fluid {
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+.purple-btn-solid {
+    padding: 12px 35px;
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.nav_search 
+{
+    display: none;
+}
+
+.hero_content {
+    gap: 20px;
+}
+
+.title {
+    font-size: clamp(26px, 1.6vw + 16px, 60px);
+}
+
+.purple-btn {
+    font-size: 18px;
+    padding: 10px 40px;
+}
+
+.footer {
+    padding-top: 40px;
+}
+
+.page_hero_title 
+{
+    font-size: 46px;
+}
+
+.section_padding {
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.contact_info_row {
+    gap: 25px;
+}
+
+.contact_info_value {
+    font-size: 20px;
+}
+
+}
+
+/* max-width: 1441px - Small Desktop */
+@media only screen and (max-width: 1441px) {
+    .container { max-width: 1200px; }
+}
+
+/* =========================================================================
+   HEADER / NAVBAR — the nav switches to a hamburger + slide-down panel
+   on tablet and mobile only, below 992px (navbar-expand-lg in header.php).
+   Above that the real horizontal desktop nav is used, compacted for
+   992-1399px so logo + links + quote button fit on one row.
+   ========================================================================= */
+@media all and (max-width: 1399.98px) {
+
+    .product_cta_btn_outline,.product_cta_btn_solid {
+    padding: 14px 40px;
+    font-size: 16px;
+}
+
+    .product_cta_banner {
+    padding: 70px 0;
+}
+
+        .page_hero_title {
+        font-size: 36px;
+    }
+}
+
+@media all and (min-width: 992px) and (max-width: 1399.98px) {
+    #header .container-fluid{ padding-left: 24px; padding-right: 24px; }
+    .logo_img{ width: 130px; }
+    .brand_flo_logo{ width: 58px; }
+    .navbar-nav{ gap: 2px; }
+    .nav-link{ font-size: 16px; padding: 8px 8px; }
+    .purple-btn-solid{ padding: 10px 20px; font-size: 15px; }
+}
+
+@media all and (max-width: 991.98px) {
+    .logo_img{ width: 150px; }
+    .brand_flo_logo{ width: 68px; }
+    .navbar-nav{ gap: 4px; }
+    .nav-link{ font-size: 18px; padding: 10px 4px; }
+    .dark-btn{ padding: 8px 24px; font-size: 16px;}
+    .container-fluid { padding-right: var(--bs-gutter-x); padding-left: var(--bs-gutter-x); }
+    .navbar-toggler{ font-size: 20px; padding: 6px 10px; }
+    .navbar-collapse{
+        background: #fff;
+        padding: 20px 4px 28px;
+        border-top: 1px solid var(--wb-grey);
+        margin-top: 16px;
+    }
+    .dropdown-menu{ box-shadow: none; border: 1px solid var(--wb-grey); margin: 4px 0 8px; }
+    /* Undo the hover-driven dropdown from the base layer so the collapsed
+       menu uses Bootstrap's normal click-to-open .show toggle instead. */
+    .dropdown > .dropdown-menu {
+        display: none;
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: none;
+        transition: none;
+    }
+    .dropdown > .dropdown-menu.show { display: block; }
+    .header_actions{ flex-direction: column; align-items: stretch; gap: 12px; margin-top: 16px; }
+    .nav_search{ width: 100%; }
+    .header_actions .dark-btn, .header_actions .purple-btn-solid{ justify-content: center; white-space: nowrap; width: 100%; }
+}
+
+/* max-width: 1370px - Laptop */
+@media only screen and (max-width: 1370px) {
+    .container { max-width: 1140px; }
+}
+
+/* About ring (1282-1919px): text column stays 644px, the ring takes whatever
+   is left and scales with it. Below 1282px the block underneath takes over. */
+@media only screen and (max-width: 1919px) and (min-width: 1282px) {
+    .about_row > .about_ring_col{ flex: 1 1 0; min-width: 0; max-width: 693px; container-type: inline-size; }
+    .about_item{ column-gap: 9.5cqw; row-gap: 5cqw; }
+    .about_item h6{ font-size: clamp(13px, 3.46cqw, 24px); }
+    .item4 h6{ font-size: clamp(22px, 5.8cqw, 40px); }
+    .about_item img{ width: 5.5cqw; min-width: 20px; height: auto; }
+    .ring_wrapper{ scale: 1; width: 48.6cqw; left: 20.1cqw; top: calc(2% + 7.2cqw); }
+    .ring_wrapper svg{ width: 100%; height: auto; aspect-ratio: 421.3 / 500; }
+}
+
+/* Latest Articles cards (desktop): type and spacing scale with the row so
+   titles never get cut off between 992px and 1919px */
+@media only screen and (max-width: 1919px) and (min-width: 992px) {
+    .articles_row{ container-type: inline-size; }
+    .articles_card{ padding: 0; }
+    .articles_card > .articles_date, .articles_card > .articles_title, .articles_card > .articles_photo{ margin-left: 2.44cqw; margin-right: 2.44cqw; }
+    .articles_card > .articles_photo{ width: calc(100% - 4.88cqw); }
+    .articles_card > .articles_date{ margin-top: 2.44cqw; margin-bottom: 2cqw; font-size: clamp(13px, 1.29cqw, 18px); line-height: 1.45; }
+    .articles_card > .articles_title{ margin-bottom: 2.65cqw; font-size: clamp(16px, 1.72cqw, 24px); line-height: 1.17; }
+}
+
+/* Hero dots line up with the hero content padding below 1538px */
+@media only screen and (max-width: 1537px) {
+    .hero_dots{ left: 60px; }
+}
+
+/* max-width: 1281px - Small Laptop
+   About Us: same side-by-side layout as the Figma desktop, but the values
+   ring column becomes a size container so every part of it (labels, gaps,
+   pointers, rotating ring) scales together with its width via cqw units. */
+@media only screen and (max-width: 1281px) and (min-width: 992px) {
+    .about_container{ padding-left: 40px; padding-right: 40px; }
+    .about_row{ gap: 40px; }
+    .about_row > .about_text_col{ flex: 1 1 0; max-width: none; min-width: 0; }
+    .about_row > .about_ring_col{ flex: 0 0 46%; width: 46%; max-width: 693px; container-type: inline-size; }
+    .about_item{ column-gap: 9.5cqw; row-gap: 5cqw; }
+    .about_item h6{ font-size: clamp(13px, 3.46cqw, 24px); }
+    .item4 h6{ font-size: clamp(22px, 5.8cqw, 40px); }
+    .about_item img{ width: 5.5cqw; min-width: 20px; height: auto; }
+    .ring_wrapper{ scale: 1; width: 48.6cqw; left: 20.1cqw; top: calc(2% + 7.2cqw); }
+    .ring_wrapper svg{ width: 100%; height: auto; aspect-ratio: 421.3 / 500; }
+}
+
+/* Footer: let the columns shrink/wrap instead of pushing the quote column off-screen */
+@media only screen and (max-width: 1281px) and (min-width: 992px) {
+    .ft_main_row{ gap: 24px; }
+    .ft_col{ flex-shrink: 1; min-width: 0; }
+    .ft_col_contact{ flex: 1 1 0; }
+    .ft_col_quote{ flex: 0 1 236px; }
+}
+
+/* Tablet and mobile: We Represent stacks title above the logo slider */
+@media only screen and (max-width: 991px) {
+    .we_represent_row{ flex-wrap: wrap; padding-left: 24px; padding-right: 24px; row-gap: 20px; }
+    .we_represent_row > .we_represent_title,
+    .we_represent_row > .we_represent_logos{ flex: 0 0 100%; max-width: 100%; width: 100%; padding-left: 0; }
+}
+@media only screen and (max-width: 575px) {
+    .we_represent_row{ padding-left: 16px; padding-right: 16px; }
+}
+
+/* Tablet and mobile: stack text above the values list */
+@media only screen and (max-width: 991px) {
+    .about_container{ padding-left: 24px; padding-right: 24px; }
+    .about_row{ flex-wrap: wrap; gap: 32px; }
+    .about_row > .about_text_col,
+    .about_row > .about_ring_col{ flex: 0 0 100%; max-width: 100%; width: 100%; }
+    .about_item h6{ font-size: 20px; }
+    .item4 h6{ font-size: 32px; }
+}
+
+@media only screen and (max-width: 575px) {
+    .about_container{ padding-left: 16px; padding-right: 16px; }
+    .about_item{ column-gap: 16px; row-gap: 22px; }
+    .about_item h6{ font-size: 17px; }
+    .item4 h6{ font-size: 28px; }
+    .about_item img{ width: 30px; height: auto; }
+}
+
+/* max-width: 1024px - Tablet Landscape */
+@media only screen and (max-width: 1024px) {
+    .container { max-width: 860px; }
+    .section_padding { padding-top: 70px; padding-bottom: 70px; }
+    .section_padding_top { padding-top: 70px; }
+}
+
+/* max-width: 991px - page/component layout breakpoint used throughout the
+   site (Bootstrap's own lg breakpoint, kept for the many .col-md-* grids) */
+@media only screen and (max-width: 991px) {
+    .section_padding_top{ padding-top: 50px; }
+    .section_padding{ padding-top: 50px; padding-bottom: 50px; }
+
+    /* Below Bootstrap's own lg breakpoint the hero text/image columns stack
+       full-width instead of staying forced side-by-side at 50/50. */
+    .hero_area .row > .col-lg-6:first-child,
+    .hero_area .row > .col-lg-6:last-child{ flex: 0 0 100%; max-width: 100%; }
+
+    /* The rotating ring is purely decorative and needs wide horizontal space
+       to surround its items without clipping - simplify to a plain 2-column
+       list of values below md instead. */
+    .ring_wrapper { display: none; }
+    .about_ring_col { min-height: 0; }
+    .about_item {
+        grid-template-areas: none;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 30px;
+        row-gap: 28px;
+    }
+    .item1, .item2, .item3, .item4, .item5, .item6, .item7 { grid-area: auto; }
+    .item4, .item7 { grid-column: 1 / -1; }
+    .client_title{ line-height: 28px; font-size: 26px; }
+
+    .filter_card .overlay p { font-size: 15px; }
+    .collage_title_card{ padding: 30px 0px; }
+
+    .ft_main_row { flex-wrap: wrap; row-gap: 30px; }
+    .ft_divider { display: none; }
+    .ft_col { flex-shrink: 1; min-width: 0; max-width: 100%; }
+    .ft_col_contact, .ft_col_quote { width: 100%; max-width: 100%; }
+    .articles_row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 0; }
+    .articles_card, .articles_card + .articles_card { width: auto; margin-left: 0; }
+    .articles_card:nth-child(even) { margin-left: -7px; }
+
+    .page_hero{ height: auto; padding: 40px 0; }
+    .page_hero_content{ height: auto; gap: 12px; }
+    .vmp_title{ font-size: 24px; margin-bottom: 26px;}
+    .vmp_card{ padding: 25px; }
+    .vmp_panel_title{ font-size: 34px; line-height: 40px; margin-bottom: 20px; }
+    .vmp_panel_body{ flex-direction: column; align-items: flex-start; gap: 25px; }
+    .vmp_panel_art{ flex: 0 0 auto; max-width: 260px; }
+    .vmp_next_btn{ bottom: 15px; right: 15px; }
+    .founder_row{ flex-direction: column-reverse; gap: 25px; }
+    .founder_details{ flex: 0 0 auto; max-width: 100%; }
+    .founder_visual{ width: 100%; max-width: 100%; }
+
+    .contact_grid{ flex-direction: column; gap: 40px; padding: 40px 24px; }
+    .contact_grid_divider{ display: none; }
+    .contact_form{ flex: 0 0 auto; max-width: 100%; width: 100%; }
+    .contact_info_value{ font-size: 20px; }
+    .contact_info_label{ font-size: 20px; }
+    .branch_grid{ grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+    .product_grid_list{ grid-template-columns: 1fr; }
+    .products_header{ flex-direction: column; align-items: flex-start; }
+    .products_search{ width: 100%; }
+    .product_list_img_wrap{ height: 320px; }
+    .product_img_center img{ width: auto; max-width: 60%; height: 100%; }
+    .product_cta_title{ font-size: 30px; }
+
+    .product_detail_hero_title{ font-size: 36px; line-height: 44px; }
+    .product_detail_feature{ grid-template-columns: 1fr; gap: 30px; }
+    .product_detail_visual{ max-width: 100%; width: 100%; height: auto; overflow: hidden; }
+    .product_detail_visual img{ max-height: 420px; }
+    .spec_table{ overflow-x: auto; }
+    .spec_table_header, .spec_table_row{ grid-template-columns: 160px 120px 100px 140px 130px; min-width: 650px; font-size: 14px; gap: 10px; }
+    .related_products_row{ grid-template-columns: repeat(2, 1fr); }
+
+    .blog_featured_card{ height: auto; min-height: 420px; }
+    .blog_featured_content{ left: 24px; right: 24px; bottom: 50px; gap: 10px; }
+    .blog_featured_title{ font-size: 30px; line-height: 1.2; max-width: 100%; }
+    .blog_featured_excerpt{ max-width: 100%; font-size: 14px; }
+    .blog_featured_arrow{ right: 24px; bottom: 15px; width: 44px; height: 44px; }
+
+    .event_grid{ grid-template-columns: 1fr; }
+    .event_card_img_wrap{ height: 260px; }
+
+    .brochure_grid{ grid-template-columns: repeat(3, 1fr); gap: 30px 20px; }
+    .brochure_header{ flex-direction: column; align-items: flex-start; }
+
+    .hero_area{ height: auto; min-height: calc(100vh - var(--header-h, 90px)); min-height: calc(100dvh - var(--header-h, 90px)); overflow-y: visible; }
+    .hero_slider.slick-initialized .hero_slide{ min-height: calc(100vh - var(--header-h, 90px)); min-height: calc(100dvh - var(--header-h, 90px)); padding: 40px 0 60px; }
+    .hero_img_wrap img{ max-height: 45vh; }
+    .hero_dots{ position: static; margin: 20px 0 0 24px; }
+}
+
+@media only screen and (max-width: 900px) {
+    .container { max-width: 700px; }
+    .section_padding { padding-top: 60px; padding-bottom: 60px; }
+    .section_padding_top { padding-top: 60px; }
+
+    /* Touch targets: anything tappable stays comfortably above the ~44px
+       accessibility minimum once we're in phone/tablet territory. */
+    .nav-link, .dropdown-item, .footer_menu a, .dark-btn, .purple-btn, .purple-btn-solid {
+        /* min-height: 44px; */
+        display: inline-flex;
+        align-items: center;
+    }
+    .footer_social a { min-width: 44px; min-height: 44px; }
+    .navbar-toggler { min-width: 44px; min-height: 44px; }
+}
+
+@media only screen and (max-width: 767px) {
+    .quote_modal{ width: 100%; padding: 40px 24px; }
+    .quote_modal_title{ font-size: 36px; }
+    .section_padding_bot {
+    padding-bottom: 50px;
+}
+
+.about_video_play {
+    width: 80px;
+    height: 80px;
+}
+
+.product_spec_note {
+    margin: 24px 0 24px;
+}
+
+}
+
+/* max-width: 768px - Mobile Large */
+@media only screen and (max-width: 768px) {
+    .section_padding { padding-top: 50px; padding-bottom: 50px; }
+    .section_padding_top { padding-top: 50px; }
+
+    .brochure_header {
+    margin-bottom: 30px;
+}
+
+.event_card_body {
+    padding: 24px;
+}
+}
+
+@media only screen and (max-width: 760px) {
+    .articles_row { grid-template-columns: 1fr; }
+    .articles_card:nth-child(even) { margin-left: 0; }
+
+    .brands_slider .brand_item {
+margin: 0 10px;
+    }
+
+    .products_header
+ {
+    margin-bottom: 50px;
+}
+
+.product_list_info {
+    padding: 20px;
+}
+
+}
+
+@media only screen and (max-width: 600px) {
+    .section_padding { padding-top: 40px; padding-bottom: 40px; }
+    .container, .container-fluid { padding-left: 16px; padding-right: 16px; }
+}
+
+@media only screen and (max-width: 575px) {
+    .ft_col { width: 100%; }
+    .ft_main_row { row-gap: 24px; }
+    .about_item { column-gap: 20px; }
+    .about_item h6 { font-size: 18px; }
+    .item4 h6 { font-size: 28px; }
+    .breadcrumb_row{ font-size: 15px; }
+    .branch_grid{ grid-template-columns: 1fr; }
+    .contact_info_row{ flex-direction: column; gap: 24px; }
+    .related_products_row{ grid-template-columns: 1fr; }
+    .product_detail_actions{ flex-direction: column; align-items: stretch; }
+    .product_download_btn, .product_enquire_btn{ justify-content: center; }
+    .brochure_grid{ grid-template-columns: repeat(2, 1fr); }
+}
+
+@media only screen and (max-width: 430px) {
+    .client_title { text-align: center; margin-bottom: 20px; }
+    .client_border::before{ left: 0px; }
+}
+
+/* max-width: 400px - Mobile Small */
+@media only screen and (max-width: 400px) {
+    /* .section_padding { padding-top: 32px; padding-bottom: 32px; } */
+    .container, .container-fluid { padding-left: 14px; padding-right: 14px; }
+    .purple-btn, .purple-btn-solid { padding-left: 30px; padding-right: 30px; }
+}
+
+@media only screen and (max-width: 320px){
+}
+
+/* Fluid images/media everywhere - never overflow their box. Images that
+   deliberately fill a fixed-aspect card via object-fit (product photos,
+   article thumbnails, etc.) already size themselves with width/height:100%
+   further up in style.css, so this only constrains free-flowing content
+   images and media embeds that don't set their own sizing. */
+img, video, svg, iframe { max-width: 100%; }
+img:not([class]) { height: auto; }
+
+
+/* =========================================================================
+   Mobile / tablet polish (QA pass)
+   ========================================================================= */
+@media only screen and (max-width: 991px) {
+    /* the 60px desktop side padding leaves no room for logo + menu button */
+    #header .container-fluid, .hero_area .container-fluid, .footer .container-fluid{ padding-left: 24px; padding-right: 24px; }
+    .hero_dots{ left: auto; margin-left: 24px; }
+    .hero_img_wrap{ margin-top: 28px; }
+    .articles_head{ flex-wrap: wrap; gap: 16px; }
+}
+@media only screen and (max-width: 575px) {
+    #header .container-fluid, .hero_area .container-fluid, .footer .container-fluid{ padding-left: 16px; padding-right: 16px; }
+    .hero_dots{ margin-left: 16px; }
+    .we_represent_title .sub_text_p16{ text-align: center; }
+}
+
+@media only screen and (max-width: 991px) {
+    /* footer top: logo and social icons stack, centred */
+    .footer .row > .col-md-6{ flex: 0 0 100%; max-width: 100%; width: 100%; text-align: center !important; }
+    .footer .row > .col-md-6 + .col-md-6{ margin-top: 20px; }
+    .footer .brand_lockup{ justify-content: center !important; }
+    .footer_social{ justify-content: center; }
+    /* Vision / Mission card: keep the next arrow clear of the text */
+    .vmp_card{ padding-bottom: 76px; }
+    /* tablet 2-col articles: even cards keep the row height of their neighbour */
+    .articles_card:nth-child(even){ aspect-ratio: auto; }
+    /* Our Brands (static, about page): two per row */
+}
+
+/* Collage title block: don't force it into a square on mobile (left big gaps) */
+@media only screen and (max-width: 767px) {
+    .collage_col.collage_col_title{ aspect-ratio: auto; height: auto; }
+    .collage_title_card{ padding: 40px 0 16px; gap: 20px; }
+}
+
+/* Our Values on tablet / mobile: heading first, then a tidy grid of value chips */
+@media only screen and (max-width: 991px) {
+    .about_ring_col .about_item{ grid-template-columns: repeat(2, 1fr); column-gap: 14px; row-gap: 14px; text-align: left; }
+    .about_ring_col .about_item .item4{ grid-column: 1 / -1; order: -1; margin-bottom: 6px; }
+    .about_ring_col .about_item .item4 h6{ font-size: 32px; text-align: left; }
+    .about_ring_col .about_item .item1, .about_ring_col .about_item .item2, .about_ring_col .about_item .item3,
+    .about_ring_col .about_item .item5, .about_ring_col .about_item .item6, .about_ring_col .about_item .item7{
+        grid-column: auto; display: flex; align-items: center; gap: 12px;
+        padding: 14px 16px; border: 1px solid #DDDDDD; border-radius: 12px; background: #fff;
+    }
+    .about_ring_col .about_item img{ order: 0; flex: 0 0 auto; width: 26px; min-width: 0; height: auto; margin: 0 !important; }
+    .about_ring_col .about_item h6{ order: 1; margin: 0; font-size: 17px; line-height: 1.25; text-align: left; }
+}
+@media only screen and (max-width: 575px) {
+    .about_ring_col .about_item{ column-gap: 10px; row-gap: 10px; }
+    .about_ring_col .about_item .item1, .about_ring_col .about_item .item2, .about_ring_col .about_item .item3,
+    .about_ring_col .about_item .item5, .about_ring_col .about_item .item6, .about_ring_col .about_item .item7{ padding: 12px; gap: 10px; }
+    .about_ring_col .about_item img{ width: 22px; }
+    .about_ring_col .about_item h6{ font-size: 15px; }
+    .about_ring_col .about_item .item4 h6{ font-size: 28px; }
+}
+
+/* Footer menus: two columns side by side (4 + 4) on mobile */
+@media only screen and (max-width: 575px) {
+    .ft_main_row{ column-gap: 0; }
+    .ft_main_row > .ft_col:nth-of-type(-n+2){ width: 50%; flex: 0 0 50%; }
+    .ft_main_row .footer_menu li{ margin-bottom: 16px; }
+}
+
+/* Footer brand + social icons: scale down on tablet / mobile */
+@media only screen and (max-width: 991px) {
+    .footer .logo_img{ width: 190px; }
+    .footer .brand_flo_logo{ width: 82px; }
+    .footer_social{ gap: 14px; }
+    .footer_social svg{ width: 28px; height: 28px; }
+}
+@media only screen and (max-width: 575px) {
+    .footer .logo_img{ width: 145px; }
+    .footer .brand_flo_logo{ width: 64px; }
+    .footer_social{ gap: 6px; }
+    .footer_social svg{ width: 24px; height: 24px; }
+}
+
+/* Request A Quote panel: compact and tidy on mobile */
+@media only screen and (max-width: 575px) {
+    .quote_modal{ padding: 24px 20px 32px; height: 100dvh; }
+    .quote_modal_close{ top: 12px; right: 12px; width: 44px; height: 44px; }
+    .quote_modal_header{ margin: 44px 0 24px; }
+    .quote_modal_title{ font-size: 28px; line-height: 1.2; margin-bottom: 12px; }
+    .quote_modal_form{ gap: 22px; }
+    .quote_modal_form .contact_field input,
+    .quote_modal_form .contact_field textarea,
+    .quote_modal_select select{ font-size: 16px; }
+    .quote_modal_select{ position: relative; }
+    .quote_modal_select::after{ content: ""; position: absolute; right: 4px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid #666; border-bottom: 1.5px solid #666; transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+    .quote_modal_submit{ width: 100%; margin-top: 4px; }
+}
+
+/* About page Our Brands: same continuous logo slider as We Represent */
+.about_brands_logos{ min-width: 0; overflow: hidden; }
+@media only screen and (max-width: 991px) { .about_brands_logos{ flex: 0 0 100%; max-width: 100%; margin-top: 12px; } }
+.about_brands_logos .slider_item{ box-sizing: border-box; border: 1px solid #DDDDDD; padding: 8px; }
+.about_brands_logos .slider_item img{ width: 100%; height: 100%; object-fit: contain; }
+.about_brands_logos{ padding-left: 24px; }
+@media only screen and (max-width: 991px){ .about_brands_logos{ padding-left: 12px; } }
+
+/* Breadcrumb: one tidy line on mobile, long current page name gets an ellipsis */
+@media only screen and (max-width: 767px) {
+    .breadcrumb_row{ flex-wrap: nowrap; justify-content: center; gap: 6px; max-width: 100%; font-size: 14px; line-height: 20px; }
+    .breadcrumb_row a, .breadcrumb_row i{ flex: 0 0 auto; white-space: nowrap; }
+    .breadcrumb_row span{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+@media only screen and (max-width: 575px) {
+    .page_hero_content{ padding-left: 16px; padding-right: 16px; }
+    .page_hero_title{ font-size: 30px; line-height: 1.2; }
+    .product_detail_hero_title{ font-size: 30px; line-height: 38px; }
+}
+
+/* =========================================================================
+   UNIFIED BUTTONS - every button/CTA on the site shares one height, padding,
+   font and minimum width (desktop 54px, mobile 48px). Only the colours differ.
+   ========================================================================= */
+.purple-btn, .purple-btn-solid, .dark-btn, .product_know_more, .product_cta_btn_outline,
+.product_cta_btn_solid, .product_download_btn, .product_enquire_btn, .quote_modal_submit{
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    box-sizing: border-box; min-height: 54px; min-width: 200px; padding: 0 36px;
+    font-family: var(--wb-body-typography-font-family); font-size: 18px; font-weight: 500;
+    line-height: 1.2; white-space: nowrap; text-align: center; text-decoration: none;
+    border-radius: 30px;
+}
+.product_know_more{ align-self: flex-start; }
+/* header button sits in a tight row, keep it compact but the same height */
+.header_actions .purple-btn-solid{ min-width: 0; padding: 0 32px; }
+
+@media only screen and (max-width: 1399.98px) and (min-width: 992px) {
+    .header_actions .purple-btn-solid{ padding: 0 22px; font-size: 15px; }
+}
+@media only screen and (max-width: 991px) {
+    .header_actions .purple-btn-solid{ width: 100%; }
+}
+@media only screen and (max-width: 575px) {
+    .purple-btn, .purple-btn-solid, .dark-btn, .product_know_more, .product_cta_btn_outline,
+    .product_cta_btn_solid, .product_download_btn, .product_enquire_btn, .quote_modal_submit{
+        min-height: 48px; min-width: 200px; padding: 0 24px; font-size: 16px;
+    }
+    /* stacked button groups: same full width */
+    .product_cta_actions, .product_detail_actions{ flex-direction: column; align-items: stretch; }
+    .product_cta_actions > a, .product_detail_actions > a{ width: 100%; }
+}
+
+/* =========================================================================
+   HEADING SCALE - one consistent set of sizes for tablet and mobile
+   ========================================================================= */
+@media only screen and (max-width: 991px) {
+    .title, .title_f27, .client_title, .vmp_panel_title, .product_cta_title, .product_spec_title,
+    .blog_featured_title, .products_header_title{ font-size: 36px; line-height: 1.2; }
+    .product_list_title, .event_card_title{ font-size: 22px; line-height: 1.3; }
+}
+@media only screen and (max-width: 575px) {
+    .hero_title, .page_hero_title, .product_detail_hero_title{ font-size: 30px; line-height: 1.2; }
+    .title, .title_f27, .client_title, .vmp_panel_title, .product_cta_title, .product_spec_title,
+    .blog_featured_title, .products_header_title, .quote_modal_title{ font-size: 28px; line-height: 1.2; }
+    .product_list_title, .event_card_title, .articles_title{ font-size: 20px; line-height: 1.3; }
+    .articles_card > .articles_title{ font-size: 20px; }
+    .branch_card_title{ font-size: 18px; }
+    .contact_info_label, .contact_info_value, .founder_signoff{ font-size: 18px; }
+    .item4 h6, .about_ring_col .about_item .item4 h6{ font-size: 28px; }
+
+    .client_slider .slider_item
+    {
+        margin: 0 10px;
+    }
+}
+
+/* Logo marquee: keep the sliding logos inside the frame and fade them out at both edges */
+.we_represent_row > .we_represent_logos{ padding-right: 24px; }
+.client_slider{
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+}
+@media only screen and (max-width: 991px) {
+    .we_represent_row > .we_represent_logos{ padding-right: 0; }
+}
+
+/* Home "Our Brands" slider: same edge fade as the other logo sliders */
+.brands_slider{
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 60px, #000 calc(100% - 60px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 60px, #000 calc(100% - 60px), transparent 100%);
+}
+
+/* Request A Quote panel - desktop: dropdown arrow + compact on short screens so
+   the whole form and the submit button fit without hunting for the scrollbar */
+.quote_modal_select{ position: relative; }
+.quote_modal_select::after{ content: ""; position: absolute; right: 6px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid #666; border-bottom: 1.5px solid #666; transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+.quote_modal_select select{ cursor: pointer; padding-right: 24px; }
+.quote_modal_form textarea{ height: 110px; }
+
+@media only screen and (min-width: 576px) and (max-height: 900px) {
+    .quote_modal{ padding: 32px 60px 36px; }
+    .quote_modal_header{ margin: 26px 0 22px; }
+    .quote_modal_title{ font-size: 44px; line-height: 1.15; margin-bottom: 12px; }
+    .quote_modal_form{ gap: 22px; }
+    .quote_modal_form textarea{ height: 88px; }
+    .quote_modal_submit{ margin-top: 0; }
+}
+@media only screen and (min-width: 576px) and (max-height: 720px) {
+    .quote_modal{ padding: 20px 60px 24px; }
+    .quote_modal_header{ margin: 18px 0 14px; }
+    .quote_modal_title{ font-size: 36px; margin-bottom: 8px; }
+    .quote_modal_form{ gap: 14px; }
+    .quote_modal_form textarea{ height: 64px; }
+}
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+    .quote_modal{ padding-left: 32px; padding-right: 32px; }
+}
+
+/* Technical brochure category filter - proper select-style dropdown */
+.brochure_filter_dropdown{ position: relative; }
+.brochure_filter{
+    box-sizing: border-box; min-width: 300px; min-height: 54px; justify-content: space-between; gap: 16px;
+    padding: 0 20px; background: #fff; border: 1px solid #CFCFD6; border-radius: 30px; font-size: 17px; font-weight: 500;
+    transition: border-color .25s ease, background-color .25s ease;
+}
+.brochure_filter:hover, .brochure_filter[aria-expanded="true"]{ border-color: var(--wb-purple); }
+.brochure_filter i{ font-size: 13px; color: var(--wb-purple); transition: transform .25s ease; }
+.brochure_filter[aria-expanded="true"] i{ transform: rotate(180deg); }
+.brochure_filter_dropdown > .dropdown-menu{
+    display: none; opacity: 1; visibility: visible; pointer-events: auto; transform: none; transition: none;
+    top: 100%; left: 0; right: 0; min-width: 100%; margin-top: 8px; padding: 8px;
+    border: 1px solid #E3E3E8; border-radius: 18px; background: #fff; max-height: 60vh; overflow-y: auto;
+}
+.brochure_filter_dropdown > .dropdown-menu.show{ display: block; }
+.brochure_filter_item{ padding: 11px 16px; border-radius: 12px; font-size: 16px; white-space: normal; }
+.brochure_filter_item.active, .brochure_filter_item:active{ background: #EFEDFA; color: var(--wb-purple); font-weight: 600; }
+.brochure_filter_item:hover{ background: var(--wb-purple); color: #fff; }
+@media only screen and (max-width: 991px) {
+    .brochure_filter_dropdown{ width: 100%; }
+    .brochure_filter{ width: 100%; min-width: 0; }
+}

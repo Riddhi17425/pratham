@@ -1,0 +1,127 @@
+/* =========================================================================
+   ANIMATIONS - scroll reveals, hover effects, hero entrance.
+   Purely additive: it uses opacity and the standalone `translate` / `scale`
+   properties only, so it never touches layout or the existing `transform`
+   rules (dropdown, sliders, play button). js/animations.js tags the targets.
+   ========================================================================= */
+
+html{ scroll-behavior: smooth; }
+
+/* ---------- Scroll reveal ---------- */
+.js-anim [data-reveal]{
+    opacity: 0;
+    translate: 0 32px;
+    transition: opacity .8s cubic-bezier(.22,.61,.36,1), translate .8s cubic-bezier(.22,.61,.36,1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, translate;
+}
+.js-anim [data-reveal="fade"]{ translate: 0 0; }
+.js-anim [data-reveal="left"]{ translate: -40px 0; }
+.js-anim [data-reveal="right"]{ translate: 40px 0; }
+.js-anim [data-reveal].in-view{ opacity: 1; translate: 0 0; }
+
+/* ---------- Hero entrance (replays on every slide change) ---------- */
+@keyframes anim_fade_up{ from{ opacity: 0; translate: 0 36px; } to{ opacity: 1; translate: 0 0; } }
+@keyframes anim_zoom_in{ from{ opacity: 0; scale: 1.06; } to{ opacity: 1; scale: 1; } }
+.hero_slide.slick-active .hero_title{ animation: anim_fade_up .8s .1s cubic-bezier(.22,.61,.36,1) backwards; }
+.hero_slide.slick-active .hero_content .sub_text_p16{ animation: anim_fade_up .8s .3s cubic-bezier(.22,.61,.36,1) backwards; }
+.hero_slide.slick-active .hero_content .purple-btn{ animation: anim_fade_up .8s .5s cubic-bezier(.22,.61,.36,1) backwards; }
+.hero_slide.slick-active .hero_img_wrap{ animation: anim_zoom_in 1s .2s cubic-bezier(.22,.61,.36,1) backwards; }
+
+/* Inner page banners */
+.page_hero_content > *{ animation: anim_fade_up .7s cubic-bezier(.22,.61,.36,1) backwards; }
+.page_hero_content > :nth-child(2){ animation-delay: .12s; }
+.page_hero_content > :nth-child(3){ animation-delay: .24s; }
+
+/* ---------- Hover effects (mouse devices only) ---------- */
+@media (hover: hover) and (pointer: fine){
+
+    /* Buttons */
+    .purple-btn, .purple-btn-solid, .product_cta_btn_outline, .product_cta_btn_solid,
+    .product_know_more, .product_download_btn, .product_enquire_btn{
+        transition: background-color .3s ease, color .3s ease, border-color .3s ease, translate .3s ease;
+    }
+    .purple-btn:hover, .purple-btn-solid:hover, .product_cta_btn_outline:hover, .product_cta_btn_solid:hover,
+    .product_know_more:hover, .product_download_btn:hover, .product_enquire_btn:hover{
+        translate: 0 -3px;
+    }
+    .purple-btn:active, .purple-btn-solid:active{ translate: 0 0; }
+
+    /* Header links: growing underline */
+    #header .nav-link{
+        background: linear-gradient(var(--wb-purple), var(--wb-purple)) no-repeat 0 calc(100% - 4px) / 0 2px;
+        transition: background-size .3s ease, color .3s ease;
+    }
+    #header .nav-link:hover, #header .nav-link.show{ background-size: 100% 2px; color: var(--wb-purple); }
+    .dropdown-item{ transition: background-color .2s ease, color .2s ease, padding-left .2s ease; }
+    .dropdown-item:hover{ padding-left: 22px; }
+
+    /* Cards lift */
+    .event_card, .product_list_card, .branch_card, .brochure_card, .vmp_card, .related_product_card{
+        transition: translate .35s cubic-bezier(.22,.61,.36,1), border-color .3s ease, background-color .3s ease;
+    }
+    .event_card:hover, .branch_card:hover, .brochure_card:hover, .related_product_card:hover{
+        translate: 0 -8px;
+    }
+
+    /* Product cards: no lift - purple border, image zoom, purple title */
+    .product_list_card:hover{ border-color: var(--wb-purple); }
+    .product_list_img_wrap img{ transition: scale .6s cubic-bezier(.22,.61,.36,1); }
+    .product_list_card:hover .product_list_img_wrap img{ scale: 1.08; }
+    .product_list_title, .product_list_info h3, .product_list_info h2{ transition: color .3s ease; }
+    .product_list_card:hover .product_list_title, .product_list_card:hover .product_list_info h3, .product_list_card:hover .product_list_info h2{ color: var(--wb-purple); }
+    .articles_card:hover .articles_title{ color: var(--wb-purple); }
+    .articles_title{ transition: color .3s ease; }
+    .product_list_card:hover, .event_card:hover{ border-color: var(--wb-purple-light); }
+
+    /* Image zoom inside overflow-hidden frames */
+    .filter_card img, .event_card_img_wrap img, .blog_featured_card{ transition: scale .6s cubic-bezier(.22,.61,.36,1); }
+    .filter_card:hover img, .event_card:hover .event_card_img_wrap img{ scale: 1.07; }
+    .blog_featured_card:hover{ scale: 1.005; }
+
+    /* Logos */
+    .client_slider .slider_item img, .brands_slider .brand_item{ transition: translate .3s ease, border-color .3s ease; }
+    .client_slider .slider_item:hover img{ translate: 0 -3px; }
+    .brands_slider .brand_item:hover, .brands_row .brand_item:hover{ border-color: var(--wb-purple); }
+
+    /* Footer + misc links */
+    .footer_menu a{ display: inline-block; transition: color .25s ease, translate .25s ease; }
+    .footer_menu a:hover{ color: var(--wb-purple); translate: 4px 0; }
+    .about_item .item1, .about_item .item2, .about_item .item3, .about_item .item5, .about_item .item6, .about_item .item7{ transition: translate .3s ease; }
+    .about_item .item1:hover, .about_item .item2:hover, .about_item .item3:hover,
+    .about_item .item5:hover, .about_item .item6:hover, .about_item .item7:hover{ translate: 0 -4px; }
+    .about_item h6{ transition: color .3s ease; }
+    .about_item div:hover h6{ color: var(--wb-purple); }
+    .contact_info_block{ transition: translate .3s ease; }
+    .contact_info_block:hover{ translate: 6px 0; }
+    .contact_field input:focus, .contact_field textarea:focus, .contact_field select:focus{ border-color: var(--wb-purple); }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    .js-anim [data-reveal]{ opacity: 1; translate: none; transition: none; }
+    .hero_slide.slick-active .hero_title, .hero_slide.slick-active .hero_content .sub_text_p16,
+    .hero_slide.slick-active .hero_content .purple-btn, .hero_slide.slick-active .hero_img_wrap,
+    .page_hero_content > *{ animation: none; }
+}
+
+/* No box shadows anywhere on the site (incl. Bootstrap's focus/dropdown ones) */
+*, *::before, *::after{ box-shadow: none !important; }
+
+/* Footer social icons: lift, grow a little and take on the network's brand colour */
+@media (hover: hover) and (pointer: fine){
+    .footer_social a{ transition: translate .3s cubic-bezier(.22,.61,.36,1), scale .3s cubic-bezier(.22,.61,.36,1); }
+    .footer_social a path, .footer_social a rect{ transition: fill .3s ease; }
+    .footer_social a:hover{ translate: 0 -5px; scale: 1.15; }
+    .footer_social a:nth-child(1):hover path[fill="#181818"], .footer_social a:nth-child(1):hover path[fill="black"]{ fill: #0A66C2; }
+    .footer_social a:nth-child(3):hover path[fill="#181818"], .footer_social a:nth-child(3):hover path[fill="black"]{ fill: #25D366; }
+    .footer_social a:nth-child(4):hover path[fill="#181818"], .footer_social a:nth-child(4):hover path[fill="black"]{ fill: #1877F2; }
+    .footer_social a:nth-child(5):hover path[fill="#181818"], .footer_social a:nth-child(5):hover path[fill="black"]{ fill: #E4405F; }
+    .footer_social a:nth-child(2):hover path[fill="#181818"], .footer_social a:nth-child(2):hover path[fill="black"]{ fill: var(--wb-purple); }
+}
+
+/* Smart header: hides on scroll down, returns on scroll up (js/main.js) */
+#header{ transition: translate .35s cubic-bezier(.22,.61,.36,1), background-color .3s ease, border-color .3s ease; }
+#header.header_hidden{ translate: 0 -100%; }
+@media (prefers-reduced-motion: reduce){ #header{ transition: none; } }

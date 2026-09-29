@@ -1,0 +1,40 @@
+<?php
+// Shared product catalogue data used by products.php and product-detail.php
+$products = [
+    ["Spun Filter Cartridge", "The 100% PP (polypropylene) virgin fibers are spun to produce a true graded-density filter cartridge which offers excellent depth filtration where retained suspended particulates are captured throughout the depth of the filter media. Both standard and jumbo-size spun filter cartridges are offered.", "prod-spun-cartridge.jpg", "center", "plain"],
+    ["Filter Bags", "Filter bags are easy to use and suitable for filtration of liquids and suspended solids in fluids. Pratham Filter Industries offer their BP and RSB series of filter bags, available in different constructions. While the BP series are non-woven needle felts with a glazed PP finish, the RSB series contains multiple filtration layers and a rubber collar with a tight sealing arrangement, which prevents bypass.", "prod-filter-bags.jpg", "stretch", "plain"],
+    ["Pleated PP High Efficiency", "Pleated PP high-efficiency filter cartridges offer graded-density microfiber media in a pleated arrangement. With multiple media layers, the coarsest at the outside and progressively finer inward, high dirt-holding capacity and superior filtration efficiency are achieved. Specialized media, micron ratings, lengths, and end configurations are available to suit particular filtration needs.", "prod-pleated-pp.jpg", "stretch", "plain"],
+    ["Activated Carbon Cartridge", "Activated carbon cartridges offer an ideal synergy between the dirt-holding capacity of carbon block filters and the filtration ability of carbon. In a 5-micron (nominal) configuration, the CT series allows full saturation of the carbon media and prevents premature clogging. Filters are available in various micron ratings and form factors for water filtration systems.", "prod-activated-carbon.jpg", "center", "plain"],
+    ["Washable Cartridge", "Washable filter cartridges are employed for filtration duties where the filter medium is intended to be washable and reusable. They can also be considered for systems where wash and reuse of the filtration element form part of normal operating and maintenance procedures.", "prod-washable.jpg", "center", "plain"],
+    ["SS Filter Cartridge", "SS Filter Cartridges consist of stainless steel wire mesh with stainless steel construction and offer filtration by surface area in 5, 10, 15, 25, 40, 50, 80, and 100 m micron range. The stainless steel design will resist chemical reactions and temperature, and a filtration surface can support a high rate of flow.", "prod-ss-cartridge.jpg", "center", "plain"],
+    ["SS Basket Strainers", "SS Basket strainers are pre-strainers for ETP, STP, and large-scale ultrafiltration units. It employs a pleat design, resulting in an effective and huge surface area and dirt-holding capacity within limited space. CIP-enabled for ease of cleaning in the least possible time, readily available in SS 304, SS 316, and SS 316L construction.", "prod-filter-bags.jpg", "stretch", "shadow"],
+    ["Nominal Pleated Cartridge", "Plated pleated cartridges utilize pleated filter media to give a large effective filtration area in a compact cartridge size. The design is conducive to particle retention, so pleated cartridge filters for filtration of water are typically used for many general applications to obtain economic and reliable filtration performance.", "prod-spun-cartridge.jpg", "center", "shadow"],
+    ["Std PP Filter Housings", "Standard PP Filter Housings for various residential, commercial, and industrial filtration needs. Standard PP housings are offered in multiple arrangements and can hold standard types of filter cartridges. The housing is offered with additional thickness in the side walls and seated O-rings for reliability during operation.", "prod-spun-cartridge.jpg", "center", "shadow"],
+    ["Jumbo Filter Housings", "Large filter housings Jumbo housings are intended for filtering flows in which the filter elements are large. The large design allows for higher filtration capacity than the standard filter housings and is ideal for commercial and industrial water filtration where high-flow filters are used.", "prod-spun-cartridge.jpg", "center", "shadow"],
+    ["PP Bag Filter Assembly", "The lightweight and corrosion-resistant PP bag filter assemblies can be easily incorporated into filtration applications. They feature a fixed-head mount and compact configuration for simple installations, and can also be available in PBA versions, which include a gauge, wrench, and valve for efficient use and maintenance.", "prod-spun-cartridge.jpg", "center", "shadow"],
+    ["SS Multi Filter Cartridge Housing", "SS multi-filter cartridge housings are heavy-duty housings, typically suited for large-scale commercial and industrial use. Process-specific housings can be manufactured from standard or specially fabricated stainless-steel housings based on process and design demands; all drawings, tests, and inspection procedures are done in-house. Units are available for flows up to 500 m³/hr.", "prod-spun-cartridge.jpg", "center", "shadow"],
+    ["SS Bag Filter Housings", "SS Bag Filter Housings are a cost-effective means to house bag filter applications. Their stainless-steel construction ensures robustness for tough industrial applications, and their bag arrangement is an efficient way to capture suspended solids, which can be replaced as needed.", "prod-spun-cartridge.jpg", "center", "shadow"],
+    ["UPVC Multi Cartridge Housing", "UPVC multi-cartridge housings are made to handle a large volume of flow that cannot be met by standard single housing units. The UPVC material is chemically resistant to most chemicals and can be used for processes that have higher TDS and salinity conditions. Applications include large-scale ETP/STP, desalination, ZLD units, food and beverage, electroplating, and the chemical industry.", "prod-spun-cartridge.jpg", "center", "shadow"],
+    ["UPVC Bag Filter Housings", "These UPVC Bag Filter Housings, suitable for high-flow rates, demand a resistant body material that can avoid any type of corrosion. UPVC is a most versatile material that works with the most chemicals in harsh conditions that, for instance, desalination, ETP, ZLD, F&B applications, electroplating, and chemical filtration process demands.", "prod-spun-cartridge.jpg", "center", "shadow"],
+];
+
+// Extended detail content (only available for a subset of products so far)
+$product_details = [
+    "Spun Filter Cartridge" => [
+        "image" => "product-detail-hero.jpg",
+        "paragraphs" => [
+            "The Standard PP Series cartridges are made up of 100% pure polypropylene fibers. The fibers are carefully spun together to form a true graded-density cartridge, providing a depth filtration solution for different filtration requirements.",
+            "The Spun PP Depth Filter Cartridges are available in Standard and Jumbo configurations. The specified flow per 10\" cartridge is 16 LPM for Standard and 50 LPM for Jumbo, based on raw water at an operating pressure of 2.5 bar.",
+            "The cartridges are available in 2.5\" (63 mm), 4\" (100 mm), and 4.5\" (115 mm) diameters, with 10\", 20\", 30\", and 40\" lengths. Micron options include 0.5, 1, 5, 10, and 25 microns.",
+        ],
+        "spec_note" => "The brochure identifies SP / SP BB for the spun PP depth filter cartridge range and specifies polypropylene as the MOC.",
+        "spec_table" => [
+            ["Polypropylene (PP)", "2.5\" (63 mm)", "10\"", "0.5, 1, 5, 10, 25", "SP / SP BB"],
+            ["Polypropylene (PP)", "2.5\" (63 mm)", "20\"", "0.5, 1, 5, 10, 25", "SP / SP BB"],
+            ["Polypropylene (PP)", "2.5\" (63 mm)", "30\"", "0.5, 1, 5, 10, 25", "SP / SP BB"],
+            ["Polypropylene (PP)", "2.5\" (63 mm)", "40\"", "0.5, 1, 5, 10, 25", "SP / SP BB"],
+            ["Polypropylene (PP)", "4\" (100 mm)", "10\"–40\"", "0.5, 1, 5, 10, 25", "SP / SP BB"],
+            ["Polypropylene (PP)", "4.5\" (115 mm)", "10\"–40\"", "0.5, 1, 5, 10, 25", "SP / SP BB"],
+        ],
+    ],
+];

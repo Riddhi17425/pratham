@@ -2,8 +2,18 @@
 
 use App\Http\Controllers\Admin\{BlogsController, DashboardController, LoginController,EventsController,OurBrandsController,BannersController,PartnersController,SettingsController};
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Front\FrontController;
 
-Route::get('/', fn () => redirect()->route('dashboard'));
+
+Route::get('/', [FrontController::class, 'home'])->name('home');
+Route::get('about', [FrontController::class, 'about'])->name('about');
+Route::get('blogs', [FrontController::class, 'getBlogs'])->name('blog');
+Route::get('blog', [FrontController::class, 'blogDetails'])->name('blog.details');
+Route::get('contact', [FrontController::class, 'contact'])->name('contact');
+Route::get('news-event', [FrontController::class, 'getNewsEvent'])->name('news.events');
+Route::get('technical-brochure', [FrontController::class, 'technicalBrochure'])->name('technical.brochure');
+Route::get('products', [FrontController::class, 'productList'])->name('products');
+Route::get('product', [FrontController::class, 'productDetails'])->name('product.details');
 
 // ===== Login (guests only) =====
 Route::middleware('guest')->prefix('admin')->group(function () {
