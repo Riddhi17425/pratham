@@ -3,66 +3,37 @@
 @section('title', 'Pratham Filter Industries | Home')
 
 @section('content')
+@if ($banners->isNotEmpty())
 <section class="hero_area">
     <div class="hero_slider">
+        @foreach ($banners as $banner)
         <div class="hero_slide" style="background: linear-gradient(135deg, #F6F2F2 0%, #D9D9D9 100%);">
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
                         <div class="hero_content">
-                            <h1 class="hero_title">Purifying Water, Empowering Industries</h1>
-                            <p class="sub_text_p16">From filter housings to RO membranes, Pratham Filter Industries has engineered complete water treatment solutions since 2003. Manufacturing, wholesaling, and exporting under one trusted name.</p>
-                            <button class="purple-btn" type="submit">Explore Products</button>
+                            <h1 class="hero_title">{{ $banner->title }}</h1>
+                            <p class="sub_text_p16">{{ $banner->description }}</p>
+                            <a class="purple-btn" href="{{ route('products') }}">Explore Products</a>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="hero_img_wrap">
-                            <img src="{{ asset('front/img/figma/hero-main.png') }}" alt="Pratham Filter Industries" class="w-100">
+                            @if ($banner->image)
+                            <img src="{{ asset('admin-assets/banners/image/' . $banner->image) }}" alt="{{ $banner->image_alt ?: $banner->title }}" class="w-100">
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="hero_slide" style="background: linear-gradient(135deg, #F6F2F2 0%, #D9D9D9 100%);">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <div class="hero_content">
-                            <h1 class="hero_title">Engineering Water Treatment Since 2003</h1>
-                            <p class="sub_text_p16">Two decades of manufacturing excellence across ETP, STP, RO, and industrial filtration &mdash; built for reliability, backed by stringent quality control.</p>
-                            <button class="purple-btn" type="submit">Explore Products</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="hero_img_wrap">
-                            <img src="{{ asset('front/img/figma/about/about-video-bg.jpg') }}" alt="Pratham Filter Industries facility" class="w-100 hero_slide_img_rounded">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="hero_slide" style="background: linear-gradient(135deg, #F6F2F2 0%, #D9D9D9 100%);">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <div class="hero_content">
-                            <h1 class="hero_title">Trusted By Industries Nationwide</h1>
-                            <p class="sub_text_p16">From Ahmedabad to Guwahati, our filtration solutions serve ETP, RO, food and beverage, pharma, and electroplating industries across India.</p>
-                            <button class="purple-btn" type="submit">Explore Products</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="hero_img_wrap">
-                            <img src="{{ asset('front/img/figma/about/founder-photo.png') }}" alt="Pratham Filter Industries team" class="w-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
     <div class="hero_dots"></div>
 </section>
+@endif
 
+@if ($partners->isNotEmpty())
 <section class="section_padding">
     <div class="container container_flush">
         <div class="row align-items-center client_border we_represent_row">
@@ -72,29 +43,19 @@
             </div>
             <div class="col-md-9 we_represent_logos">
                 <div class="client client_slider">
+                    @foreach ($partners as $partner)
+                    @if ($partner->icon)
                     <div class="slider_item">
-                        <img src="{{ asset('front/img/figma/client-logo1.svg') }}" alt="Digital Instruments Corporation" class="w-100">
+                        <img src="{{ asset('admin-assets/partners/icon/' . $partner->icon) }}" alt="{{ $partner->icon_alt }}" class="w-100">
                     </div>
-                    <div class="slider_item">
-                        <img src="{{ asset('front/img/figma/client-logo2.svg') }}" alt="Pentair" class="w-100">
-                    </div>
-                    <div class="slider_item">
-                        <img src="{{ asset('front/img/figma/client-logo3.svg') }}" alt="DuPont" class="w-100">
-                    </div>
-                    <div class="slider_item">
-                        <img src="{{ asset('front/img/figma/client-logo4.svg') }}" alt="Alfa - The UV Expert" class="w-100">
-                    </div>
-                    <div class="slider_item">
-                        <img src="{{ asset('front/img/figma/client-logo1.svg') }}" alt="Digital Instruments Corporation" class="w-100">
-                    </div>
-                    <div class="slider_item">
-                        <img src="{{ asset('front/img/figma/client-logo2.svg') }}" alt="Pentair" class="w-100">
-                    </div>
+                    @endif
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
 </section>
+@endif
 
 <section>
     <div class="container container_flush">
@@ -183,7 +144,7 @@
                 <p class="sub_text_p16">Since 2003, Pratham Filter Industries has been a trusted name in water and industrial filtration. With a strong presence in manufacturing, wholesaling, exporting, and importing, we serve diverse industries with reliable, innovative filtration technology.</p>
                 <p class="sub_text_p16 mt-3">From filter housings to RO membranes, our range meets the demands of ETP, STP, desalination, food and beverage, pharma, and electroplating applications, backed by stringent quality control.</p>
                 <p class="sub_text_p16 mt-3">With over two decades of expertise, our customer-centric approach ensures every solution is tailored to the specific needs of the industries we serve. Our FRP pressure vessels are NSF and PED certified, reflecting our commitment to global quality standards.</p>
-                <button class="purple-btn mt-4" type="submit">Know More </button>
+                <a href="{{route('about')}}" class="purple-btn mt-4" type="submit">Know More </a>
             </div>
             <div class="col-md-6 position-relative about_ring_col">
                 <div class="about_item ">
@@ -275,19 +236,18 @@
     </div>
 </section>
 
+@if ($brands->isNotEmpty())
 <section class="section_padding">
         <h2 class="title_f27 text-center mb-3 mb-lg-5">Our Brands</h2>
         <div class="brands_row brands_slider">
-            <div class="brand_item"><img src="{{ asset('front/img/figma/brand1.png') }}" alt=""></div>
-            <div class="brand_item"><img src="{{ asset('front/img/figma/brand2.png') }}" alt=""></div>
-            <div class="brand_item"><img src="{{ asset('front/img/figma/brand3.png') }}" alt=""></div>
-            <div class="brand_item"><img src="{{ asset('front/img/figma/brand4.png') }}" alt=""></div>
-            <div class="brand_item"><img src="{{ asset('front/img/figma/brand5.png') }}" alt=""></div>
-            <div class="brand_item"><img src="{{ asset('front/img/figma/brand6.png') }}" alt=""></div>
-            <div class="brand_item"><img src="{{ asset('front/img/figma/brand7.png') }}" alt=""></div>
-            <div class="brand_item"><img src="{{ asset('front/img/figma/brand8.png') }}" alt=""></div>
+            @foreach ($brands as $brand)
+            @if ($brand->icon)
+            <div class="brand_item"><img src="{{ asset('admin-assets/our-brands/icon/' . $brand->icon) }}" alt="{{ $brand->icon_alt }}"></div>
+            @endif
+            @endforeach
         </div>
 </section>
+@endif
 
 <section class="section_padding_bot">
     <div class="container">
@@ -298,30 +258,16 @@
         <div class="articles_items">
             <div class="articles_grid">
                 <div class="articles_row">
+                    @foreach ($blogs as $blog)
                     <div class="articles_card">
                         <img src="{{ asset('front/img/figma/article-card-frame.svg') }}" alt="" class="articles_frame">
-                        <p class="articles_date">April 30, 2024</p>
-                        <h3 class="articles_title">Choosing the Right Filtration System</h3>
-                        <img src="{{ asset('front/img/figma/article1.jpg') }}" alt="" class="articles_photo">
+                        <p class="articles_date">{{ $blog->date ? \Carbon\Carbon::parse($blog->date)->format('F j, Y') : $blog->created_at->format('F j, Y') }}</p>
+                        <h3 class="articles_title">{{ $blog->title }}</h3>
+                        @if ($blog->front_image)
+                        <img src="{{ asset('admin-assets/blogs/front_image/' . $blog->front_image) }}" alt="{{ $blog->front_image_alt ?: $blog->title }}" class="articles_photo">
+                        @endif
                     </div>
-                    <div class="articles_card">
-                        <img src="{{ asset('front/img/figma/article-card-frame.svg') }}" alt="" class="articles_frame">
-                        <p class="articles_date">April 30, 2024</p>
-                        <h3 class="articles_title">How Hydro Pneumatic Tanks Improve Flow</h3>
-                        <img src="{{ asset('front/img/figma/article2.jpg') }}" alt="" class="articles_photo">
-                    </div>
-                    <div class="articles_card">
-                        <img src="{{ asset('front/img/figma/article-card-frame.svg') }}" alt="" class="articles_frame">
-                        <p class="articles_date">April 30, 2024</p>
-                        <h3 class="articles_title">Why Anti-Scalants Matter in RO Plants</h3>
-                        <img src="{{ asset('front/img/figma/article3.jpg') }}" alt="" class="articles_photo">
-                    </div>
-                    <div class="articles_card">
-                        <img src="{{ asset('front/img/figma/article-card-frame.svg') }}" alt="" class="articles_frame">
-                        <p class="articles_date">April 30, 2024</p>
-                        <h3 class="articles_title">A Guide to Membrane Pressure Vessels</h3>
-                        <img src="{{ asset('front/img/figma/article4.jpg') }}" alt="" class="articles_photo">
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

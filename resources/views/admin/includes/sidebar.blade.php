@@ -4,24 +4,42 @@
         <a class="m-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
             <i class="bi bi-house-door"></i> <span>Dashboard</span>
         </a>
-         <a class="m-link {{ request()->routeIs('blogs') || request()->routeIs('blogs.*') ? 'active' : '' }}"
-            href="{{ route('blogs') }}">
+
+        {{-- ===== ADD NEW MODULE LINKS BELOW ===== --}}
+        <a class="m-link {{ request()->routeIs('banners.*') ? 'active' : '' }}" href="{{ route('banners.index') }}">
+            <i class="bi bi-images"></i> <span>Banners</span>
+        </a>
+
+        <a class="m-link {{ request()->routeIs('blogs.*') ? 'active' : '' }}" href="{{ route('blogs.index') }}">
             <i class="bi bi-journal-text"></i> <span>Blogs</span>
         </a>
-        {{-- ===== MODULES YAHAN ADD HONGE ===== --}}
+        <a class="m-link {{ request()->routeIs('events.*') ? 'active' : '' }}" href="{{ route('events.index') }}">
+            <i class="bi bi-calendar-event"></i> <span>Events</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('our-brands.*') ? 'active' : '' }}"
+            href="{{ route('our-brands.index') }}">
+            <i class="bi bi-award"></i> <span>Our Brand</span>
+        </a>
 
-        @if (auth()->user()->isSuperAdmin())
-            <div class="menu-title">Management</div>
-            <a class="m-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
-                <i class="bi bi-people"></i> <span>Admin Users</span>
-            </a>
-        @endif
-
-        
-
-        <div class="menu-title">Account</div>
-        <a class="m-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" href="{{ route('profile.edit') }}">
-            <i class="bi bi-person-circle"></i> <span>My Profile</span>
+        <a class="m-link {{ request()->routeIs('partners.*') ? 'active' : '' }}" href="{{ route('partners.index') }}">
+            <i class="bi bi-people"></i> <span>Partners</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.edit') }}">
+            <i class="bi bi-gear"></i> <span>Settings</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('locators.*') ? 'active' : '' }}" href="{{ route('locators.index') }}">
+            <i class="bi bi-geo-alt"></i> <span>Locators</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('categories.*') ? 'active' : '' }}"
+            href="{{ route('categories.index') }}">
+            <i class="bi bi-tags"></i> <span>Categories</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('products.*') ? 'active' : '' }}" href="{{ route('products.index') }}">
+            <i class="bi bi-box-seam"></i> <span>Products</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('technical-data-sheets.*') ? 'active' : '' }}"
+            href="{{ route('technical-data-sheets.index') }}">
+            <i class="bi bi-file-earmark-text"></i> <span>Technical Data Sheets</span>
         </a>
     </div>
 </div>

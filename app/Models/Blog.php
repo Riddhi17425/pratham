@@ -31,7 +31,7 @@ class Blog extends Model
     ];
 
     /**
-     * `faqs` is stored as a JSON array of {faq_title, question, answer} objects.
+     * `faqs` is stored as a JSON array of {faq_title, faq_description} objects.
      * Casting it to array means $blog->faqs is already a PHP array when read,
      * and assigning a PHP array to it is automatically encoded to JSON on save.
      */

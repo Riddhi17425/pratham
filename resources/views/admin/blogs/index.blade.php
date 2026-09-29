@@ -13,21 +13,12 @@
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
                     <h3 class="fw-bold mb-0">Blogs</h3>
                     <div class="col-auto d-flex w-sm-100">
-                        <a href="{{ route('blogs.addBlogs') }}">
-                            <button type="button" class="btn btn-primary btn-set-task w-sm-100">
-                                <i class="icofont-plus-circle me-2 fs-6"></i>Add Blogs
-                            </button>
+                        <a href="{{ route('blogs.create') }}" class="btn btn-primary btn-set-task w-sm-100">
+                            <i class="bi bi-plus-circle me-2"></i>Add Blogs
                         </a>
                     </div>
                 </div>
             </div>
-
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
         </div>
 
         <div class="row clearfix g-3">
@@ -55,10 +46,19 @@
 <script>
     window.APP_URLS = {
         getBlogsData: "{{ route('getBlogsData') }}",
-        deleteblogs: "{{ route('blogs.delete', [':id']) }}",
-        csrfToken: "{{ csrf_token() }}",
-        image_path: "{{ asset('/admin-assets/blogs/front_image/') }}"
+        deleteblogs: "{{ route('blogs.destroy', [':id']) }}",
+        toggleBlogStatus: "{{ route('blogs.toggle-status', [':id']) }}",
+        csrfToken: "{{ csrf_token() }}"
     };
 </script>
-<script src="{{ asset('admin-assets/js/blogs/blogs.js') }}" defer></script>
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script src="{{ asset('admin-assets/js/blogs/blogs.js') }}"></script>
+@endpush
 @endsection

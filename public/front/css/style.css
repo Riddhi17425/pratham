@@ -445,6 +445,12 @@ body{font-family: var(--wb-body-typography-font-family); color: var(--wb-light-b
 .event_card_meta{list-style: none; margin: 0; padding: 16px 0 0; display: flex; flex-direction: column; gap: 10px;}
 .event_card_meta li{font-family: var(--wb-body-typography-font-family); font-size: 16px; color: var(--wb-light-black); display: flex; align-items: center; gap: 10px;}
 .event_card_meta img{width: 20px; height: 20px; flex-shrink: 0;}
+.event_pagination{display:flex; justify-content:center; gap:8px; margin-top:32px;}
+.event_page_button{min-width:40px; height:40px; padding:0 12px; border:1px solid #D9D9DE; background:#fff; color:var(--wb-purple); cursor:pointer;}
+.event_page_button:hover, .event_page_button.active{border-color:var(--wb-purple); background:var(--wb-purple); color:#fff;}
+@keyframes eventSearchEnter{from{opacity:0; transform:translateY(8px);}to{opacity:1; transform:translateY(0);}}
+.event_card.event_search_enter{animation:eventSearchEnter .55s cubic-bezier(.22,.61,.36,1) both;}
+@media (prefers-reduced-motion: reduce){.event_card.event_search_enter{animation:none;}}
   /***** End news & events page *****/
 
   /***** Request a Quote modal *****/

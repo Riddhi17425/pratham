@@ -1,12 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\{BlogsController, DashboardController, LoginController,EventsController,OurBrandsController,BannersController,PartnersController,SettingsController,LocatorsController,CategoriesController,ProductsController,TechnicalDataSheetsController};
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\BlogsController;
 use App\Http\Controllers\Front\FrontController;
+
 
 Route::get('/', [FrontController::class, 'home'])->name('home');
 Route::get('about', [FrontController::class, 'about'])->name('about');
@@ -18,35 +15,62 @@ Route::get('technical-brochure', [FrontController::class, 'technicalBrochure'])-
 Route::get('products', [FrontController::class, 'productList'])->name('products');
 Route::get('product', [FrontController::class, 'productDetails'])->name('product.details');
 
+// ===== Login (guests only) =====
 Route::middleware('guest')->prefix('admin')->group(function () {
     Route::get('login', [LoginController::class, 'login_page'])->name('login');
     Route::post('login', [LoginController::class, 'login'])->name('login.store');
 });
 
+// ===== Admin area (Admin + Super Admin) =====
 Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+    // ===== ADD NEW MODULE ROUTES BELOW =====
 
-    // ===== Sirf Super Admin =====
-    Route::middleware('role:super_admin')->group(function () {
-        Route::resource('users', UserController::class)->except('show');
-        Route::post('users/{user}/status', [UserController::class, 'updateStatus'])->name('users.status');
-        Route::put('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
-        Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
-    });
+    // Blogs
 
-     // ===== MODULES YAHAN ADD HONGE (banners, products, blog ...) =====
-      // ===== Blogs =====
-Route::get('blogs', [BlogsController::class, 'index'])->name('blogs');
-Route::get('blogs/create', [BlogsController::class, 'createBlogs'])->name('blogs.addBlogs');
-Route::post('blogs/store', [BlogsController::class, 'BlogsStore'])->name('blogs.store');
 Route::get('blogs/get-data', [BlogsController::class, 'getBlogsData'])->name('getBlogsData');
-Route::get('blogs/{id}/edit', [BlogsController::class, 'EditBlogs'])->name('blogs.edit');
-Route::put('blogs/{id}', [BlogsController::class, 'UpdateBlogs'])->name('blogs.update');
-Route::delete('blogs/{id}', [BlogsController::class, 'DestoryBlogs'])->name('blogs.delete');
+Route::post('blogs/{id}/toggle-status', [BlogsController::class, 'toggleStatus'])->name('blogs.toggle-status');
+Route::resource('blogs', BlogsController::class)->except('show');
+    // Events
 
+Route::get('events/get-data', [EventsController::class, 'getEventsData'])->name('getEventsData');
+Route::post('events/{id}/toggle-status', [EventsController::class, 'toggleStatus'])->name('events.toggle-status');
+Route::resource('events', EventsController::class)->except('show');
 
-     });
+// Our Brands
+Route::get('our-brands/get-data', [OurBrandsController::class, 'getOurBrandsData'])->name('getOurBrandsData');
+Route::post('our-brands/{id}/toggle-status', [OurBrandsController::class, 'toggleStatus'])->name('our-brands.toggle-status');
+Route::resource('our-brands', OurBrandsController::class)->except('show');
+// Banners
+    // Banners
+    Route::get('banners/get-data', [BannersController::class, 'getBannersData'])->name('getBannersData');
+    Route::post('banners/{id}/toggle-status', [BannersController::class, 'toggleStatus'])->name('banners.toggle-status');
+    Route::resource('banners', BannersController::class)->except('show');
+    // Partners
+Route::get('partners/get-data', [PartnersController::class, 'getPartnersData'])->name('getPartnersData');
+Route::post('partners/{id}/toggle-status', [PartnersController::class, 'toggleStatus'])->name('partners.toggle-status');
+Route::resource('partners', PartnersController::class)->except('show');
+    // Settings
+   
+Route::get('settings', [SettingsController::class, 'edit'])->name('settings.edit');
+Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
+    // Locators
+    Route::get('locators/get-data', [LocatorsController::class, 'getLocatorsData'])->name('getLocatorsData');
+    Route::post('locators/{id}/toggle-status', [LocatorsController::class, 'toggleStatus'])->name('locators.toggle-status');
+    Route::resource('locators', LocatorsController::class)->except('show');
+    // Categories
+    Route::get('categories/get-data', [CategoriesController::class, 'getCategoriesData'])->name('getCategoriesData');
+    Route::post('categories/{id}/toggle-status', [CategoriesController::class, 'toggleStatus'])->name('categories.toggle-status');
+    Route::resource('categories', CategoriesController::class)->except('show');
+    // Products
+    Route::get('products/get-data', [ProductsController::class, 'getProductsData'])->name('getProductsData');
+    Route::post('products/{id}/toggle-status', [ProductsController::class, 'toggleStatus'])->name('products.toggle-status');
+    Route::resource('products', ProductsController::class)->except('show');
+    // Technical Data Sheets
+    Route::get('technical-data-sheets/get-data', [TechnicalDataSheetsController::class, 'getTechnicalDataSheetsData'])->name('getTechnicalDataSheetsData');
+    Route::post('technical-data-sheets/{id}/toggle-status', [TechnicalDataSheetsController::class, 'toggleStatus'])->name('technical-data-sheets.toggle-status');
+    Route::resource('technical-data-sheets', TechnicalDataSheetsController::class)->except('show');
+
+});
