@@ -6,6 +6,10 @@
         </a>
 
         {{-- ===== ADD NEW MODULE LINKS BELOW ===== --}}
+        <a class="m-link {{ request()->routeIs('banners.*') ? 'active' : '' }}" href="{{ route('banners.index') }}">
+            <i class="bi bi-images"></i> <span>Banners</span>
+        </a>
+        
         <a class="m-link {{ request()->routeIs('blogs.*') ? 'active' : '' }}" href="{{ route('blogs.index') }}">
             <i class="bi bi-journal-text"></i> <span>Blogs</span>
         </a>
@@ -16,9 +20,7 @@
             href="{{ route('our-brands.index') }}">
             <i class="bi bi-award"></i> <span>Our Brand</span>
         </a>
-        <a class="m-link {{ request()->routeIs('banners.*') ? 'active' : '' }}" href="{{ route('banners.index') }}">
-            <i class="bi bi-images"></i> <span>Banners</span>
-        </a>
+        
         <a class="m-link {{ request()->routeIs('partners.*') ? 'active' : '' }}" href="{{ route('partners.index') }}">
             <i class="bi bi-people"></i> <span>Partners</span>
         </a>
