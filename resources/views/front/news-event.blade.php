@@ -3,44 +3,6 @@
 @section('title', 'Pratham Filter Industries | news-events')
 
 @section('content')
-<?php
-$events = [
-    [
-        "title" => "Exhibition IFAT",
-        "desc" => "Join Pratham Filter Industries at IFAT, one of the world's leading trade fairs for water, sewage, waste, and raw materials management. Visit our booth to see our latest filtration innovations.",
-        "location" => "Munich, Germany",
-        "date" => "Sept 9 - Sept 11, 2026",
-        "image" => "img/figma/events/event-ifat.jpg",
-        "status" => "Upcoming",
-    ],
-    [
-        "title" => "Watertech India",
-        "desc" => "Pratham will showcase our full range of RO membranes, filter housings, and industrial filtration systems at Watertech India, the country's premier water technology exhibition.",
-        "location" => "Mumbai, India",
-        "date" => "Nov 18 - Nov 20, 2026",
-        "image" => "img/figma/about/about-video-bg.jpg",
-        "status" => "Upcoming",
-    ],
-    [
-        "title" => "Aquatech Amsterdam",
-        "desc" => "Our export and engineering teams will be attending Aquatech Amsterdam to connect with global partners in water treatment and industrial filtration.",
-        "location" => "Amsterdam, Netherlands",
-        "date" => "Mar 3 - Mar 6, 2026",
-        "image" => "img/figma/blog/blog-bagfilter-steel.jpg",
-        "status" => "Upcoming",
-    ],
-    [
-        "title" => "IFAT India",
-        "desc" => "The regional edition of IFAT brings together India's water, sewage, and waste management industry. Pratham exhibited its ETP and STP filtration range at this year's show.",
-        "location" => "New Delhi, India",
-        "date" => "Oct 8 - Oct 10, 2025",
-        "image" => "img/figma/article1.jpg",
-        "status" => "Past",
-    ],
-];
-
-?>
-
 <section class="page_hero" style="background-image: url('{{ asset('front/img/figma/about/page-hero-bg.jpg') }}');">
     <div class="page_hero_overlay"></div>
     <div class="container position-relative">
@@ -70,25 +32,28 @@ $events = [
         </div>
 
         <div class="event_grid" id="eventGridList">
-            <?php foreach ($events as $ev): ?>
-            <div class="event_card" data-name="<?php echo strtolower($ev['title']); ?>">
+            @foreach ($events as $event)
+            <div class="event_card" data-search="{{ \Illuminate\Support\Str::lower($event->title . ' ' . $event->location) }}">
                 <div class="event_card_img_wrap">
-                    <img src="<?php echo asset('front/' . $ev['image']); ?>" alt="<?php echo htmlspecialchars($ev['title']); ?>" class="w-100">
+                    @if ($event->image)
+                    <img src="{{ asset('admin-assets/events/image/' . $event->image) }}" alt="{{ $event->image_alt ?: $event->title }}" class="w-100">
+                    @endif
                 </div>
                 <div class="event_card_body">
                     <div class="event_card_title_row">
-                        <h3 class="event_card_title"><?php echo htmlspecialchars($ev['title']); ?></h3>
+                        <h3 class="event_card_title">{{ $event->title }}</h3>
                     </div>
-                    <p class="event_card_desc"><?php echo htmlspecialchars($ev['desc']); ?></p>
+                    <p class="event_card_desc">{{ $event->description }}</p>
                     <ul class="event_card_meta">
-                        <li><img src="{{ asset('front/img/figma/events/icon-event-location.svg') }}" alt=""> <?php echo htmlspecialchars($ev['location']); ?></li>
-                        <li><img src="{{ asset('front/img/figma/events/icon-event-calendar.svg') }}" alt=""> <?php echo htmlspecialchars($ev['date']); ?></li>
+                        <li><img src="{{ asset('front/img/figma/events/icon-event-location.svg') }}" alt=""> {{ $event->location }}</li>
+                        <li><img src="{{ asset('front/img/figma/events/icon-event-calendar.svg') }}" alt=""> {{ $event->date ? \Carbon\Carbon::parse($event->date)->format('M j, Y') : '' }}</li>
                     </ul>
                 </div>
             </div>
-            <?php endforeach; ?>
+            @endforeach
         </div>
         <p class="product_no_results" id="eventNoResults" style="display:none;">No events match your search.</p>
+        <nav class="event_pagination" id="eventPagination" aria-label="Event pages"></nav>
     </div>
 </section>
 
@@ -97,25 +62,16 @@ $events = [
         <h2 class="product_cta_title">Meet Us At The Next Show</h2>
         <p class="product_cta_text">Want to schedule a meeting with our team at an upcoming exhibition? Get in touch and we'll set it up.</p>
         <div class="product_cta_actions">
-            <a href="/contact" class="product_cta_btn_outline">Talk to Our Experts</a>
-            <a href="/products" class="product_cta_btn_solid">Explore Water Filter Products</a>
+            <a href="{{route('contact')}}" class="product_cta_btn_outline">Talk to Our Experts</a>
+            <!-- <a href="/products" class="product_cta_btn_solid">Explore Water Filter Products</a> -->
         </div>
     </div>
 </section>
 
 
 
-<script>
-document.getElementById('eventSearch').addEventListener('input', function () {
-    const q = this.value.trim().toLowerCase();
-    let visible = 0;
-    document.querySelectorAll('#eventGridList .event_card').forEach(function (card) {
-        const match = card.dataset.name.includes(q);
-        card.style.display = match ? '' : 'none';
-        if (match) visible++;
-    });
-    document.getElementById('eventNoResults').style.display = visible === 0 ? 'block' : 'none';
-});
-</script>
+@push('scripts')
+<script src="{{ asset('front/js/events.js') }}?v={{ filemtime(public_path('front/js/events.js')) }}"></script>
+@endpush
 
 @endsection

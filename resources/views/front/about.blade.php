@@ -113,6 +113,7 @@
     </div>
 </section>
 
+@if ($brands->isNotEmpty())
 <section class="section_padding">
     <div class="container">
         <div class="row align-items-center client_border">
@@ -121,19 +122,17 @@
             </div>
             <div class="col-md-10 about_brands_logos">
                 <div class="client client_slider">
-                    <div class="slider_item"><img src="{{ asset('front/img/figma/about/about-brand1.png') }}" alt="" class="w-100"></div>
-                    <div class="slider_item"><img src="{{ asset('front/img/figma/about/about-brand2.png') }}" alt="" class="w-100"></div>
-                    <div class="slider_item"><img src="{{ asset('front/img/figma/about/about-brand3.png') }}" alt="" class="w-100"></div>
-                    <div class="slider_item"><img src="{{ asset('front/img/figma/about/about-brand4.png') }}" alt="" class="w-100"></div>
-                    <div class="slider_item"><img src="{{ asset('front/img/figma/about/about-brand1.png') }}" alt="" class="w-100"></div>
-                    <div class="slider_item"><img src="{{ asset('front/img/figma/about/about-brand2.png') }}" alt="" class="w-100"></div>
-                    <div class="slider_item"><img src="{{ asset('front/img/figma/about/about-brand3.png') }}" alt="" class="w-100"></div>
-                    <div class="slider_item"><img src="{{ asset('front/img/figma/about/about-brand4.png') }}" alt="" class="w-100"></div>
+                    @foreach ($brands as $brand)
+                    @if ($brand->icon)
+                    <div class="slider_item"><img src="{{ asset('admin-assets/our-brands/icon/' . $brand->icon) }}" alt="{{ $brand->icon_alt }}" class="w-100"></div>
+                    @endif
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
 </section>
+@endif
 
 <!-- Company demo video lightbox -->
 <div class="video_modal_backdrop" id="videoModalBackdrop"></div>
