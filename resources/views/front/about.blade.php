@@ -24,8 +24,8 @@
         <p class="sub_text_p16 about_intro_text">Since 2003, Pratham Filter Industries has grown from a small manufacturing unit into a trusted name in water and industrial filtration. What started as a focused effort to solve local filtration challenges has evolved into a full-scale operation serving industries across ETP, RO, desalination, food and beverage, pharma, and electroplating sectors.</p>
 
         <div class="about_video_wrap">
-            <img src="{{ asset('front/img/figma/about/about-video-bg.jpg') }}" alt="Pratham Filter Industries facility" class="w-100">
-            <button class="about_video_play js-open-video" type="button" aria-label="Play video" data-video="{{ asset('front/img/figma/about/company-demo.mp4') }}">
+            <img src="{{ asset('front/img/figma/about/about-video-bg.webp') }}" alt="Pratham Filter Industries facility" class="w-100">
+            <button class="about_video_play js-open-video" type="button" aria-label="Play video" data-video="{{ asset('front/img/figma/about/aboutvideo.mp4') }}">
                 <img src="{{ asset('front/img/figma/about/video-play-icon.png') }}" alt="">
             </button>
            

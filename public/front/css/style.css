@@ -282,7 +282,7 @@ body{font-family: var(--wb-body-typography-font-family); color: var(--wb-light-b
 .about_intro{display: flex; flex-direction: column; align-items: center; gap: 37px;}
 .about_intro_text{width: 100%; margin: 0;}
 .about_video_wrap{position: relative; width: 100%;  overflow: hidden;}
-.about_video_play{position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 100px; height: 100px; border: none; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease;}
+.about_video_play{position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 80px; height: 80px; border: none; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease;}
 .about_video_play img{width: 40px; height: 40px;}
 .about_video_play:hover{transform: translate(-50%,-50%) scale(1.08);}
 
