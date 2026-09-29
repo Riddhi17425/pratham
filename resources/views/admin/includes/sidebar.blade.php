@@ -25,6 +25,11 @@
         <a class="m-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.index') }}">
             <i class="bi bi-gear"></i> <span>Settings</span>
         </a>
-
+            <a class="m-link {{ request()->routeIs('locators.*') ? 'active' : '' }}" href="{{ route('locators.index') }}">
+            <i class="bi bi-geo-alt"></i> <span>Locators</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}">
+            <i class="bi bi-tags"></i> <span>Categories</span>
+        </a>
     </div>
 </div>

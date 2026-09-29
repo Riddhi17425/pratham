@@ -37,6 +37,17 @@
                                         @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Category <span class="required-star">*</span></label>
+                                        <select name="category_id" class="form-control @error('category_id') is-invalid @enderror">
+                                            <option value="">Select Category</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}" {{ old('category_id', $banner->category_id) == $category->id ? 'selected' : '' }}>{{ $category->title }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Description <span class="required-star">*</span></label>
                                         <textarea name="description" id="banner_description"
@@ -115,12 +126,14 @@
         },
         rules: {
             title: { required: true, maxlength: 255 },
+            category_id: { required: true },
             description: { required: true },
             image: imageRules,
             image_alt: { required: true, maxlength: 255 },
             status: { required: true }
         },
         messages: {
+            category_id: { required: 'Please select the category.' },
             title: { required: 'Please enter the title.', maxlength: 'The title may not be greater than 255 characters.' },
             description: { required: 'Please enter the description.' },
             image: imageMessages,

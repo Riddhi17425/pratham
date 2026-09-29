@@ -60,7 +60,7 @@ class SettingsController extends Controller
     {
         $validated = $request->validate($this->rules(), $this->messages());
 
-        Setting::create($validated);
+        Setting::create($this->cleanOfficeNumber($validated));
 
         return redirect()->route('settings.index')->with('toast_success', 'Setting created successfully.');
     }
@@ -84,7 +84,7 @@ class SettingsController extends Controller
 
         $validated = $request->validate($this->rules(), $this->messages());
 
-        $setting->update($validated);
+        $setting->update($this->cleanOfficeNumber($validated));
 
         return redirect()->route('settings.index')->with('toast_success', 'Setting updated successfully.');
     }
@@ -108,6 +108,7 @@ class SettingsController extends Controller
             'address'       => 'required|string|max:500',
             'phone'         => ['required', 'string', 'regex:/^[0-9+\-()\s]{7,20}$/'],
             'email'         => 'required|email|max:255',
+            'office_number' => ['nullable', 'string', 'max:255', 'regex:/^[0-9+\-()\s]{7,20}(\s*,\s*[0-9+\-()\s]{7,20})*$/'],
 
             'linkedin_url'  => 'nullable|url|max:255',
             'instagram_url' => 'nullable|url|max:255',
@@ -120,12 +121,26 @@ class SettingsController extends Controller
     }
 
     /**
+     * Tidy the comma separated office numbers ("a , b,c" => "a,b,c").
+     */
+    protected function cleanOfficeNumber(array $validated): array
+    {
+        if (! empty($validated['office_number'])) {
+            $numbers = array_filter(array_map('trim', explode(',', $validated['office_number'])));
+            $validated['office_number'] = implode(',', $numbers);
+        }
+
+        return $validated;
+    }
+
+    /**
      * Custom validation messages.
      */
     protected function messages(): array
     {
         return [
-            'phone.regex' => 'Please enter a valid phone number.',
+            'phone.regex'         => 'Please enter a valid phone number.',
+            'office_number.regex' => 'Enter valid office numbers separated by commas.',
         ];
     }
 }

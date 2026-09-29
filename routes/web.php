@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\{BlogsController, DashboardController, LoginController,EventsController,OurBrandsController,BannersController,PartnersController,SettingsController};
+use App\Http\Controllers\Admin\{BlogsController, DashboardController, LoginController,EventsController,OurBrandsController,BannersController,PartnersController,SettingsController,LocatorsController,CategoriesController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Front\FrontController;
 
@@ -38,13 +38,24 @@ Route::resource('events', EventsController::class)->except('show');
 Route::get('our-brands/get-data', [OurBrandsController::class, 'getOurBrandsData'])->name('getOurBrandsData');
 Route::resource('our-brands', OurBrandsController::class)->except('show');
 // Banners
+    // Banners
     Route::get('banners/get-data', [BannersController::class, 'getBannersData'])->name('getBannersData');
+    Route::post('banners/{id}/toggle-status', [BannersController::class, 'toggleStatus'])->name('banners.toggle-status');
     Route::resource('banners', BannersController::class)->except('show');
+
     // Partners
     Route::get('partners/get-data', [PartnersController::class, 'getPartnersData'])->name('getPartnersData');
     Route::resource('partners', PartnersController::class)->except('show');
     // Settings
     Route::get('settings/get-data', [SettingsController::class, 'getSettingsData'])->name('getSettingsData');
     Route::resource('settings', SettingsController::class)->except('show');
+    // Locators
+    Route::get('locators/get-data', [LocatorsController::class, 'getLocatorsData'])->name('getLocatorsData');
+    Route::post('locators/{id}/toggle-status', [LocatorsController::class, 'toggleStatus'])->name('locators.toggle-status');
+    Route::resource('locators', LocatorsController::class)->except('show');
+    // Categories
+    Route::get('categories/get-data', [CategoriesController::class, 'getCategoriesData'])->name('getCategoriesData');
+    Route::post('categories/{id}/toggle-status', [CategoriesController::class, 'toggleStatus'])->name('categories.toggle-status');
+    Route::resource('categories', CategoriesController::class)->except('show');
 
 });

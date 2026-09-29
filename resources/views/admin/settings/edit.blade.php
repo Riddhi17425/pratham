@@ -51,6 +51,14 @@
                                         @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Office Number</label>
+                                        <input type="text" name="office_number" class="form-control @error('office_number') is-invalid @enderror"
+                                            value="{{ old('office_number', $setting->office_number) }}" placeholder="e.g. 0261-1234567, 0261-7654321">
+                                        <small class="text-muted">Multiple numbers ko comma (,) se alag karein.</small>
+                                        @error('office_number')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -130,6 +138,7 @@
             address: { required: true, maxlength: 500 },
             phone: { required: true, phoneNumber: true },
             email: { required: true, email: true, maxlength: 255 },
+            office_number: { officeNumbers: true, maxlength: 255 },
             linkedin_url: { url: true, maxlength: 255 },
             instagram_url: { url: true, maxlength: 255 },
             twitter_url: { url: true, maxlength: 255 },
@@ -141,6 +150,7 @@
             address: { required: 'Please enter the address.', maxlength: 'The address may not be greater than 500 characters.' },
             phone: { required: 'Please enter the phone number.' },
             email: { required: 'Please enter the email.', email: 'Please enter a valid email address.' },
+            office_number: { maxlength: 'The office number may not be greater than 255 characters.' },
             linkedin_url: { url: urlMsg },
             instagram_url: { url: urlMsg },
             twitter_url: { url: urlMsg },

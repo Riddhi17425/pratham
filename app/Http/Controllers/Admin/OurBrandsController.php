@@ -123,7 +123,7 @@ class OurBrandsController extends Controller
      */
     protected function rules(?OurBrand $brand = null): array
     {
-        $image = 'image|mimes:jpg,jpeg,png,webp|max:2048';
+        $image = 'image|mimes:jpg,jpeg,png,webp,svg|max:2048';
 
         return [
             'icon'     => ($brand ? 'nullable|' : 'required|') . $image,

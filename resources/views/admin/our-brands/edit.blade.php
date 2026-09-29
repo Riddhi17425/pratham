@@ -77,9 +77,9 @@
 @push('scripts')
 <script src="{{ asset('admin-assets/js/our-brands/our-brands.js') }}"></script>
 <script>
-    var imageRules = { fileExt: 'jpg|jpeg|png|webp', maxFileSize: 2048 };
+    var imageRules = { fileExt: 'jpg|jpeg|png|webp|svg', maxFileSize: 2048 };
     var imageMessages = {
-        fileExt: 'Only JPG, PNG or WEBP images are allowed.',
+        fileExt: 'Only JPG, PNG, WEBP or SVG images are allowed.',
         maxFileSize: 'The image may not be greater than 2 MB.'
     };
 

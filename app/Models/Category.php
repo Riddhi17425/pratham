@@ -5,21 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Banner extends Model
+class Category extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'category_id',
         'title',
+        'category_url',
         'description',
-        'image',
-        'image_alt',
+        'meta_title',
+        'meta_description',
+        'thumbnail',
+        'thumbnail_alt',
         'status',
     ];
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
 }

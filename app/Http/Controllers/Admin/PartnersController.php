@@ -125,7 +125,7 @@ class PartnersController extends Controller
      */
     protected function rules(?Partner $partner = null): array
     {
-        $image = 'image|mimes:jpg,jpeg,png,webp|max:2048';
+        $image = 'image|mimes:jpg,jpeg,png,webp,svg|max:2048';
 
         return [
             'icon'     => ($partner ? 'nullable|' : 'required|') . $image,
