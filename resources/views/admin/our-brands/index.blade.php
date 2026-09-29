@@ -11,10 +11,10 @@
 
             <div class="border-0 mb-4">
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
-                    <h3 class="fw-bold mb-0">Blogs</h3>
+                    <h3 class="fw-bold mb-0">Our Brands</h3>
                     <div class="col-auto d-flex w-sm-100">
-                        <a href="{{ route('blogs.create') }}" class="btn btn-primary btn-set-task w-sm-100">
-                            <i class="bi bi-plus-circle me-2"></i>Add Blogs
+                        <a href="{{ route('our-brands.create') }}" class="btn btn-primary btn-set-task w-sm-100">
+                            <i class="bi bi-plus-circle me-2"></i>Add Brand
                         </a>
                     </div>
                 </div>
@@ -25,12 +25,11 @@
             <div class="col-sm-12">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <table id="blogs_table" class="table table-hover align-middle mb-0" style="width:100%">
+                        <table id="brands_table" class="table table-hover align-middle mb-0" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Title</th>
-                                    <th>Front Image</th>
+                                    <th>Icon</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -44,11 +43,10 @@
 </div>
 
 <script>
-    window.APP_URLS = {
-        getBlogsData: "{{ route('getBlogsData') }}",
-        deleteblogs: "{{ route('blogs.destroy', [':id']) }}",
-        csrfToken: "{{ csrf_token() }}"
-    };
+    window.APP_URLS = window.APP_URLS || {};
+    window.APP_URLS.getOurBrandsData = "{{ route('getOurBrandsData') }}";
+    window.APP_URLS.deleteOurBrands  = "{{ route('our-brands.destroy', [':id']) }}";
+    window.APP_URLS.csrfToken        = "{{ csrf_token() }}";
 </script>
 
 @push('styles')
@@ -58,6 +56,6 @@
 @push('scripts')
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
-<script src="{{ asset('admin-assets/js/blogs/blogs.js') }}"></script>
+<script src="{{ asset('admin-assets/js/our-brands/our-brands.js') }}"></script>
 @endpush
 @endsection

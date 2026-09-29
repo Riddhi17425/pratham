@@ -7,13 +7,15 @@ use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\Facades\DataTables;
 
 class BlogsController extends Controller
 {
-    protected string $frontImagePath  = 'public/admin-assets/blogs/front_image/';
-    protected string $detailImagePath = 'public/admin-assets/blogs/detail_image/';
-    protected string $ctaImagePath    = 'public/admin-assets/blogs/cta_image/';
+    // Upload folders (relative to the /public directory)
+    protected string $frontImagePath  = 'admin-assets/blogs/front_image/';
+    protected string $detailImagePath = 'admin-assets/blogs/detail_image/';
+    protected string $ctaImagePath    = 'admin-assets/blogs/cta_image/';
 
     /**
      * Blogs list page.
@@ -46,8 +48,8 @@ class BlogsController extends Controller
             ->addColumn('action', function ($row) {
                 $editUrl = route('blogs.edit', $row->id);
                 return '
-                    <a href="' . $editUrl . '" class="btn btn-sm btn-primary me-1"><i class="icofont-edit"></i> Edit</a>
-                    <button type="button" class="btn btn-sm btn-danger btn-delete-blog" data-id="' . $row->id . '"><i class="icofont-ui-delete"></i> Delete</button>
+                    <a href="' . $editUrl . '" class="btn btn-sm btn-primary me-1"><i class="bi bi-pencil-square"></i> Edit</a>
+                    <button type="button" class="btn btn-sm btn-danger btn-delete-blog" data-id="' . $row->id . '"><i class="bi bi-trash"></i> Delete</button>
                 ';
             })
             ->rawColumns(['front_image', 'status', 'action'])
@@ -57,7 +59,7 @@ class BlogsController extends Controller
     /**
      * Show add blog form.
      */
-    public function createBlogs()
+    public function create()
     {
         return view('admin.blogs.create');
     }
@@ -65,45 +67,26 @@ class BlogsController extends Controller
     /**
      * Store a new blog.
      */
-    public function BlogsStore(Request $request)
+    public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title'               => 'required|string|max:255',
-            'url'                 => 'required|string|max:255|unique:blogs,url',
-            'front_image'         => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'front_image_alt'     => 'required|string|max:255',
-            'detail_image'        => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'detail_image_alt'    => 'required|string|max:255',
-            'cta_image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'cta_image_alt'       => 'nullable|string|max:255',
-            'cta_link_url'        => 'nullable|string|max:255',
-            'date'                => 'nullable|date',
-            'meta_title'          => 'nullable|string|max:255',
-            'meta_description'   => 'nullable|string',
-            'short_description'   => 'required|string',
-            'detail_description'  => 'nullable|string',
-            'conclusion'          => 'nullable|string',
-            'schema_json'         => 'nullable|string',
-            'status'              => 'required|in:Active,In-Active',
-            'faq_title.*'         => 'nullable|string|max:255',
-            'question.*'          => 'nullable|string|max:255',
-            'answer.*'            => 'nullable|string',
-        ]);
+        $validated = $request->validate($this->rules());
+
+        // Build FAQs first: it can throw a validation error before any file is saved
+        $validated['faqs'] = $this->buildFaqsArray($request);
 
         $validated['front_image']  = $this->uploadImage($request, 'front_image', $this->frontImagePath);
         $validated['detail_image'] = $this->uploadImage($request, 'detail_image', $this->detailImagePath);
         $validated['cta_image']    = $this->uploadImage($request, 'cta_image', $this->ctaImagePath);
-        $validated['faqs']         = $this->buildFaqsArray($request);
 
         Blog::create($validated);
 
-        return redirect()->route('blogs')->with('success', 'Blog added successfully.');
+        return redirect()->route('blogs.index')->with('toast_success', 'Blog created successfully.');
     }
 
     /**
      * Show edit blog form.
      */
-    public function EditBlogs($id)
+    public function edit($id)
     {
         $blogs = Blog::findOrFail($id);
 
@@ -113,32 +96,13 @@ class BlogsController extends Controller
     /**
      * Update an existing blog.
      */
-    public function UpdateBlogs(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $blog = Blog::findOrFail($id);
 
-        $validated = $request->validate([
-            'title'               => 'required|string|max:255',
-            'url'                 => 'required|string|max:255|unique:blogs,url,' . $blog->id,
-            'front_image'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'front_image_alt'     => 'required|string|max:255',
-            'detail_image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'detail_image_alt'    => 'required|string|max:255',
-            'cta_image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'cta_image_alt'       => 'nullable|string|max:255',
-            'cta_link_url'        => 'nullable|string|max:255',
-            'date'                => 'nullable|date',
-            'meta_title'          => 'nullable|string|max:255',
-            'meta_description'   => 'nullable|string',
-            'short_description'   => 'required|string',
-            'detail_description'  => 'nullable|string',
-            'conclusion'          => 'nullable|string',
-            'schema_json'         => 'nullable|string',
-            'status'              => 'required|in:Active,In-Active',
-            'faq_title.*'         => 'nullable|string|max:255',
-            'question.*'          => 'nullable|string|max:255',
-            'answer.*'            => 'nullable|string',
-        ]);
+        $validated = $request->validate($this->rules($blog));
+
+        $validated['faqs'] = $this->buildFaqsArray($request);
 
         if ($request->hasFile('front_image')) {
             $this->deleteImage($this->frontImagePath, $blog->front_image);
@@ -153,19 +117,21 @@ class BlogsController extends Controller
         if ($request->hasFile('cta_image')) {
             $this->deleteImage($this->ctaImagePath, $blog->cta_image);
             $validated['cta_image'] = $this->uploadImage($request, 'cta_image', $this->ctaImagePath);
+        } elseif ($request->boolean('remove_cta_image')) {
+            $this->deleteImage($this->ctaImagePath, $blog->cta_image);
+            $validated['cta_image'] = null;
+            $validated['cta_image_alt'] = null;
         }
-
-        $validated['faqs'] = $this->buildFaqsArray($request);
 
         $blog->update($validated);
 
-        return redirect()->route('blogs')->with('success', 'Blog updated successfully.');
+        return redirect()->route('blogs.index')->with('toast_success', 'Blog updated successfully.');
     }
 
     /**
-     * Delete a blog, its images and its FAQs.
+     * Delete a blog and its images (called via ajax from the list page).
      */
-    public function DestoryBlogs($id)
+    public function destroy($id)
     {
         $blog = Blog::findOrFail($id);
 
@@ -179,32 +145,66 @@ class BlogsController extends Controller
     }
 
     /**
-     * Build the FAQs array (to be cast to JSON and saved directly on the
-     * blogs.faqs column) from the submitted faq_title[] / question[] / answer[]
-     * parallel arrays.
+     * Server-side validation rules (keep in sync with blogs/_scripts.blade.php).
+     */
+    protected function rules(?Blog $blog = null): array
+    {
+        $image = 'image|mimes:jpg,jpeg,png,webp|max:2048';
+
+        return [
+            'title'              => 'required|string|max:255',
+            'url'                => 'required|string|max:255|unique:blogs,url' . ($blog ? ',' . $blog->id : ''),
+            'front_image'        => ($blog ? 'nullable|' : 'required|') . $image,
+            'front_image_alt'    => 'required|string|max:255',
+            'detail_image'       => ($blog ? 'nullable|' : 'required|') . $image,
+            'detail_image_alt'   => 'required|string|max:255',
+            'cta_image'          => 'nullable|' . $image,
+            'cta_image_alt'      => 'nullable|string|max:255',
+            'cta_link_url'       => 'nullable|string|max:255',
+            'date'               => 'nullable|date',
+            'meta_title'         => 'nullable|string|max:255',
+            'meta_description'   => 'nullable|string',
+            'short_description'  => 'required|string',
+            'detail_description' => 'nullable|string',
+            'conclusion'         => 'nullable|string',
+            'schema_json'        => 'nullable|string',
+            'status'             => 'required|in:Active,In-Active',
+            'faq_title.*'        => 'nullable|string|max:255',
+            'faq_description.*'  => 'nullable|string',
+        ];
+    }
+
+    /**
+     * Build the FAQs array (cast to JSON on the blogs.faqs column) from the
+     * submitted faq_title[] / faq_description[] parallel arrays.
+     * Rows where both fields are empty are skipped; a half-filled row is an error.
      */
     protected function buildFaqsArray(Request $request): array
     {
-        $titles    = $request->input('faq_title', []);
-        $questions = $request->input('question', []);
-        $answers   = $request->input('answer', []);
+        $titles       = $request->input('faq_title', []);
+        $descriptions = $request->input('faq_description', []);
 
-        $rowCount = max(count($titles), count($questions), count($answers));
+        $rowCount = max(count($titles), count($descriptions));
         $faqs     = [];
 
         for ($index = 0; $index < $rowCount; $index++) {
-            $title    = $titles[$index]    ?? null;
-            $question = $questions[$index] ?? null;
-            $answer   = $answers[$index]   ?? null;
+            $title       = trim((string) ($titles[$index] ?? ''));
+            $description = (string) ($descriptions[$index] ?? '');
+            $descText    = trim(strip_tags(str_replace('&nbsp;', ' ', $description)));
 
-            if (blank($title) && blank($question) && blank($answer)) {
+            if ($title === '' && $descText === '') {
                 continue;
             }
 
+            if ($title === '' || $descText === '') {
+                throw ValidationException::withMessages([
+                    'faq_title' => 'Each FAQ needs both a title and a description.',
+                ]);
+            }
+
             $faqs[] = [
-                'faq_title' => $title,
-                'question'  => $question,
-                'answer'    => $answer,
+                'faq_title'       => $title,
+                'faq_description' => $description,
             ];
         }
 
@@ -224,7 +224,7 @@ class BlogsController extends Controller
         $fileName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
             . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-        $file->move(public_path(str_replace('public/', '', $path)), $fileName);
+        $file->move(public_path($path), $fileName);
 
         return $fileName;
     }
@@ -238,7 +238,7 @@ class BlogsController extends Controller
             return;
         }
 
-        $fullPath = public_path(str_replace('public/', '', $path)) . '/' . $fileName;
+        $fullPath = public_path($path . $fileName);
 
         if (File::exists($fullPath)) {
             File::delete($fullPath);

@@ -4,24 +4,27 @@
         <a class="m-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
             <i class="bi bi-house-door"></i> <span>Dashboard</span>
         </a>
-         <a class="m-link {{ request()->routeIs('blogs') || request()->routeIs('blogs.*') ? 'active' : '' }}"
-            href="{{ route('blogs') }}">
+
+        {{-- ===== ADD NEW MODULE LINKS BELOW ===== --}}
+        <a class="m-link {{ request()->routeIs('blogs.*') ? 'active' : '' }}" href="{{ route('blogs.index') }}">
             <i class="bi bi-journal-text"></i> <span>Blogs</span>
         </a>
-        {{-- ===== MODULES YAHAN ADD HONGE ===== --}}
-
-        @if (auth()->user()->isSuperAdmin())
-            <div class="menu-title">Management</div>
-            <a class="m-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
-                <i class="bi bi-people"></i> <span>Admin Users</span>
-            </a>
-        @endif
-
-        
-
-        <div class="menu-title">Account</div>
-        <a class="m-link {{ request()->routeIs('profile.*') ? 'active' : '' }}" href="{{ route('profile.edit') }}">
-            <i class="bi bi-person-circle"></i> <span>My Profile</span>
+        <a class="m-link {{ request()->routeIs('events.*') ? 'active' : '' }}" href="{{ route('events.index') }}">
+            <i class="bi bi-calendar-event"></i> <span>Events</span>
         </a>
+        <a class="m-link {{ request()->routeIs('our-brands.*') ? 'active' : '' }}"
+            href="{{ route('our-brands.index') }}">
+            <i class="bi bi-award"></i> <span>Our Brand</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('banners.*') ? 'active' : '' }}" href="{{ route('banners.index') }}">
+            <i class="bi bi-images"></i> <span>Banners</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('partners.*') ? 'active' : '' }}" href="{{ route('partners.index') }}">
+            <i class="bi bi-people"></i> <span>Partners</span>
+        </a>
+        <a class="m-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.index') }}">
+            <i class="bi bi-gear"></i> <span>Settings</span>
+        </a>
+
     </div>
 </div>

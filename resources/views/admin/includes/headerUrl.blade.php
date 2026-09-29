@@ -23,5 +23,6 @@
         body.sidebar-open .sidebar { transform: none; }
         .table td, .table th { vertical-align: middle; }
     </style>
+    @stack('styles') 
 </head>
 <body>

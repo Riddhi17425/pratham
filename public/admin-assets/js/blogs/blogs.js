@@ -1,3 +1,30 @@
+/**
+ * Blogs module scripts (list page + add/edit pages).
+ * Needs: jQuery. List page also needs DataTables. Add/Edit pages also need Summernote.
+ */
+
+// Shared Summernote settings (used by every editor on the blog form, incl. FAQ answers)
+window.blogEditorOptions = {
+    height: 220,
+    toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline', 'clear']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['insert', ['link', 'picture']],
+        ['view', ['codeview']]
+    ],
+    callbacks: {
+        onChange: function (contents) {
+            var $field = $(this);
+            $field.val(contents);
+            if ($field.hasClass('is-invalid') && $field.closest('form').data('validator')) {
+                $field.valid();
+            }
+        }
+    }
+};
+
 $(document).ready(function () {
 
     // ---------------------------------------------------------------
@@ -8,6 +35,7 @@ $(document).ready(function () {
         var blogsTable = $('#blogs_table').DataTable({
             processing: true,
             serverSide: true,
+            order: [[0, 'desc']],
             ajax: window.APP_URLS.getBlogsData,
             columns: [
                 { data: 'id', name: 'id' },
@@ -64,29 +92,28 @@ $(document).ready(function () {
     }
 
     // ---------------------------------------------------------------
-    // 3. Dynamic FAQ rows (add more / remove)
+    // 3. Dynamic FAQ rows (question + answer with Summernote editor)
     // ---------------------------------------------------------------
     $(document).on('click', '#addFaq', function () {
-        var $wrapper = $('#faq-wrapper');
-        var $lastItem = $wrapper.find('.faq-item').first();
-        var $newItem = $lastItem.clone();
+        // A fresh row comes from the hidden <template>, so no editor is cloned by mistake
+        var $item = $($.trim($('#faq-template').html()));
 
-        // Clear cloned values
-        $newItem.find('input[name="faq_title[]"]').val('');
-        $newItem.find('input[name="question[]"]').val('');
-        $newItem.find('textarea[name="answer[]"]').val('');
+        $('#faq-wrapper').append($item);
 
-        $wrapper.append($newItem);
+        if ($.fn.summernote) {
+            $item.find('.js-editor').summernote(window.blogEditorOptions);
+        }
     });
 
     $(document).on('click', '.removeFaq', function () {
-        var $items = $('#faq-wrapper .faq-item');
+        var $item = $(this).closest('.faq-item');
 
-        // Keep at least one FAQ row on the form
-        if ($items.length > 1) {
-            $(this).closest('.faq-item').remove();
+        // Keep at least one FAQ row on the form: clear it instead of removing it
+        if ($('#faq-wrapper .faq-item').length > 1) {
+            $item.remove();
         } else {
-            $(this).closest('.faq-item').find('input, textarea').val('');
+            $item.find('input').val('');
+            $item.find('.js-editor').summernote('code', '');
         }
     });
 
