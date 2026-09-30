@@ -45,15 +45,19 @@
 /* ---------- Suggestions ---------- */
 .search_results{ list-style: none; max-width: 900px; margin: 10px auto 0; padding: 0; max-height: 55vh; overflow-y: auto; }
 .search_results li a{
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    display: flex; align-items: center; justify-content: flex-start; gap: 16px;
     padding: 13px 8px; border-bottom: 1px solid #EEEEEE; color: var(--wb-black); text-decoration: none;
     font-family: var(--wb-body-typography-font-family); font-size: 17px; line-height: 1.3;
     transition: background-color .2s ease, padding-left .2s ease;
 }
+.search_result_thumb{ flex: 0 0 58px; width: 58px; height: 58px; object-fit: contain; border-radius: 6px; background: #f4f4f6; }
+.search_result_copy{ display: flex; min-width: 0; flex-direction: column; gap: 5px; }
+.search_result_title{ color: var(--wb-black); }
+.search_result_copy small{ color: #747487; font-size: 13px; line-height: 1.2; }
 .search_results li a:hover, .search_results li a.active{ background: #F6F5FB; padding-left: 14px; }
 .search_results mark{ background: none; padding: 0; margin: 0; color: var(--wb-purple); font-weight: 600; }
 .search_badge{
-    flex: 0 0 auto; padding: 3px 12px; border-radius: 20px; background: #EFEDFA; color: var(--wb-purple);
+    flex: 0 0 auto; margin-left: auto; padding: 3px 12px; border-radius: 20px; background: #EFEDFA; color: var(--wb-purple);
     font-size: 12px; font-weight: 500; letter-spacing: .02em;
 }
 .search_empty{ padding: 18px 8px; color: #666; font-size: 16px; }

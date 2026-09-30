@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('name');
-
+            $table->string('product_url')->nullable()->after('name');
             $table->string('image')->nullable();
             $table->string('image_alt')->nullable();
 

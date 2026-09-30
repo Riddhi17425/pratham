@@ -36,6 +36,7 @@ class Blog extends Model
      * and assigning a PHP array to it is automatically encoded to JSON on save.
      */
     protected $casts = [
+        'date' => 'date',
         'faqs' => 'array',
     ];
 }

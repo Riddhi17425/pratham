@@ -13,15 +13,12 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('location');
-            $table->date('date')->nullable();
-
+            $table->date('from_date')->nullable();
+            $table->date('to_date')->nullable();
             $table->string('image')->nullable();
             $table->string('image_alt')->nullable();
-
             $table->longText('description')->nullable();
-
             $table->enum('status', ['Active', 'In-Active'])->default('Active');
-
             $table->timestamps();
         });
     }

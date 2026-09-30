@@ -21,7 +21,7 @@
     <div class="container">
         <div class="products_header">
             <div class="products_header_title">
-                <p class="products_eyebrow">Our Products</p>
+                <p class="products_eyebrow">Pratham Filter Industries</p>
                 <h2 class="title mb-0">Upcoming / Current Exhibitions</h2>
                 <span class="products_accent_line"></span>
             </div>
@@ -33,7 +33,7 @@
 
         <div class="event_grid" id="eventGridList">
             @foreach ($events as $event)
-            <div class="event_card" data-search="{{ \Illuminate\Support\Str::lower($event->title . ' ' . $event->location) }}">
+            <div class="event_card" data-search="{{ \Illuminate\Support\Str::lower($event->title . ' ' . $event->location . ' ' . strip_tags($event->description ?? '')) }}">
                 <div class="event_card_img_wrap">
                     @if ($event->image)
                     <img src="{{ asset('admin-assets/events/image/' . $event->image) }}" alt="{{ $event->image_alt ?: $event->title }}" class="w-100">
@@ -46,7 +46,7 @@
                     <p class="event_card_desc">{{ $event->description }}</p>
                     <ul class="event_card_meta">
                         <li><img src="{{ asset('front/img/figma/events/icon-event-location.svg') }}" alt=""> {{ $event->location }}</li>
-                        <li><img src="{{ asset('front/img/figma/events/icon-event-calendar.svg') }}" alt=""> {{ $event->date ? \Carbon\Carbon::parse($event->date)->format('M j, Y') : '' }}</li>
+                        <li><img src="{{ asset('front/img/figma/events/icon-event-calendar.svg') }}" alt=""> {{ $event->date_range }}</li>
                     </ul>
                 </div>
             </div>

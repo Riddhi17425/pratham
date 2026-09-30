@@ -27,7 +27,7 @@ class FrontController extends Controller
         $banners = Banner::where('status', 'Active')->latest()->get();
         $partners = Partner::where('status', 'Active')->latest()->get();
         $brands = OurBrand::where('status', 'Active')->latest()->get();
-        $blogs = Blog::where('status', 'Active')->orderByDesc('date')->orderByDesc('id')->take(4)->get();
+        $blogs = Blog::where('status', 'Active')->orderByDesc('id')->take(4)->get();
 
         return view('front.home', compact('metaTitle', 'metaDescription', 'banners', 'partners', 'brands', 'blogs'));
     }
@@ -42,14 +42,16 @@ class FrontController extends Controller
     public function getBlogs(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        $blogs = Blog::where('status', 'Active')->orderByDesc('date')->orderByDesc('id')->get();
+        $blogs = Blog::where('status', 'Active')->orderByDesc('id')->get();
         return view('front.blogs', compact('metaTitle', 'metaDescription', 'blogs'));
     }
 
     public function blogDetails(Request $requesr){
-        $metaTitle = '';
-        $metaDescription = '';
-        return view('front.blog-details', compact('metaTitle', 'metaDescription'));
+        $blog = Blog::where('url', $requesr->query('post'))
+            ->firstOrFail();
+        $metaTitle = $blog->meta_title ?: $blog->title;
+        $metaDescription = $blog->meta_description ?: strip_tags($blog->short_description ?? '');
+        return view('front.blog-details', compact('metaTitle', 'metaDescription', 'blog'));
     }
 
     public function contact(Request $requesr){
@@ -161,7 +163,7 @@ class FrontController extends Controller
     public function getNewsEvent(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        $events = Event::where('status', 'Active')->orderByDesc('date')->orderByDesc('id')->get();
+        $events = Event::where('status', 'Active')->orderByDesc('from_date')->orderByDesc('id')->get();
         return view('front.news-event', compact('metaTitle', 'metaDescription', 'events'));
     }
 
@@ -175,10 +177,19 @@ class FrontController extends Controller
         $metaTitle = '';
         $metaDescription = '';
         $category = null;
-        $products = Product::with('category')
+        $query = Product::with('category')
             ->where('status', 'Active')
-            ->orderBy('name')
-            ->get();
+            ->orderBy('name');
+
+        if ($search = trim((string) $requesr->query('q'))) {
+            $query->where(function ($products) use ($search) {
+                $products->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('title', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
+        $products = $query->get();
 
         return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
     }
