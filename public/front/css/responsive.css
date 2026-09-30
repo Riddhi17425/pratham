@@ -245,6 +245,11 @@
         transition: none;
     }
     .dropdown > .dropdown-menu.show { display: block; }
+    /* Touch devices keep :hover "stuck" after a tap, which would leave the
+       arrow flipped even after the dropdown closes. Drive the arrow purely
+       off aria-expanded (set by Bootstrap's click toggle) on mobile. */
+    .dropdown:hover .dropdown_arrow{ transform: none; }
+    .dropdown-toggle[aria-expanded="true"] .dropdown_arrow{ transform: rotate(180deg); }
     .header_actions{ flex-direction: column; align-items: stretch; gap: 12px; margin-top: 16px; }
     .nav_search{ width: 100%; }
     .header_actions .dark-btn, .header_actions .purple-btn-solid{ justify-content: center; white-space: nowrap; width: 100%; }
@@ -583,6 +588,12 @@ img:not([class]) { height: auto; }
 @media only screen and (max-width: 767px) {
     .collage_col.collage_col_title{ aspect-ratio: auto; height: auto; }
     .collage_title_card{ padding: 40px 0 16px; gap: 20px; }
+
+    .about_video_img
+    {
+        height: 250px;
+        object-fit: cover;
+    }
 }
 
 /* Our Values on tablet / mobile: heading first, then a tidy grid of value chips */

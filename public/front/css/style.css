@@ -56,7 +56,8 @@ body{font-family: var(--wb-body-typography-font-family); color: var(--wb-light-b
  .no-caret::after{display: none;}
  .dropdown_arrow{color: var(--wb-light-black); transition: transform 0.25s ease;}
  .dropdown:hover .dropdown_arrow,
- .dropdown.open .dropdown_arrow{transform: rotate(180deg);}
+ .dropdown.open .dropdown_arrow,
+ .dropdown-toggle[aria-expanded="true"] .dropdown_arrow{transform: rotate(180deg);}
  .dropdown-menu{border: none; border-radius: 12px; padding: 12px; min-width: 260px;}
  .dropdown-item{color: var(--wb-light-black); font-family: var(--wb-body-typography-font-family); font-size: 16px; font-weight: 400; padding: 10px 16px; border-radius: 8px; transition: all 0.2s ease;}
  .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active{background-color: var(--wb-purple); color: #fff;}
