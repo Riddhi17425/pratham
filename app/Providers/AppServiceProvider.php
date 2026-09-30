@@ -20,8 +20,9 @@ class AppServiceProvider extends ServiceProvider
         $productCategories = null;
         $siteSetting = null;
         $siteSearchItems = null;
+        $activeProducts = null;
 
-        View::composer(['front.layouts.header', 'front.layouts.footer'], function ($view) use (&$productCategories, &$siteSetting, &$siteSearchItems) {
+        View::composer(['front.layouts.header', 'front.layouts.footer'], function ($view) use (&$productCategories, &$siteSetting, &$siteSearchItems, &$activeProducts) {
             if ($productCategories === null) {
                 $productCategories = Category::where('status', 'Active')->orderBy('title')->get();
             }
@@ -30,8 +31,15 @@ class AppServiceProvider extends ServiceProvider
                 $siteSetting = Setting::first() ?? new Setting();
             }
 
+            if ($activeProducts === null) {
+                $activeProducts = Product::query()
+                    ->where('status', 'Active')
+                    ->orderByRaw("COALESCE(NULLIF(name, ''), title)")
+                    ->get();
+            }
+
             if ($siteSearchItems === null) {
-                $siteSearchItems = Product::with('category')->where('status', 'Active')->orderBy('name')->get()
+                $siteSearchItems = $activeProducts
                     ->map(fn ($product) => [
                         't' => $product->name ?: $product->title,
                         'c' => $product->category?->title ?: 'Uncategorized',
@@ -40,14 +48,15 @@ class AppServiceProvider extends ServiceProvider
                             ? asset('admin-assets/products/image/' . $product->image)
                             : asset('front/img/figma/products/prod-spun-cartridge.jpg'),
                         'k' => 'Product',
-                        'u' => route('products', ['q' => $product->name ?: $product->title]),
+                        'u' => route('product.details', ['productUrl' => $product->product_url]),
                     ])
                     ->values();
             }
 
             $view->with('productCategories', $productCategories)
                  ->with('siteSetting', $siteSetting)
-                 ->with('siteSearchItems', $siteSearchItems);
+                 ->with('siteSearchItems', $siteSearchItems)
+                 ->with('activeProducts', $activeProducts);
         });
     }
 }

@@ -14,10 +14,12 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use App\Models\QuoteRequest;
 use App\Models\Locator;
 use App\Models\Setting;
+use App\Models\TechnicalDataSheet;
 
 class FrontController extends Controller
 {
@@ -160,6 +162,69 @@ class FrontController extends Controller
         ->with('contact_status', 'Thank you. Your quote request has been sent.');
 }
 
+    public function submitProductInquiry(Request $request)
+    {
+        $validated = $request->validateWithBag('productInquiry', [
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:120',
+                "regex:/^[\\p{L}\\p{M}][\\p{L}\\p{M}0-9\\s.'\\x{2019}-]{1,119}$/u",
+            ],
+            'email' => ['required', 'email:rfc', 'max:255'],
+            'phone' => ['nullable', 'digits_between:7,15'],
+            'product' => ['required', 'string', 'max:255'],
+            'product_id' => [
+                'required',
+                'integer',
+                Rule::exists('products', 'id')->where(fn ($query) => $query->where('status', 'Active')),
+            ],
+            'message' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $product = Product::whereKey($validated['product_id'])
+            ->where('status', 'Active')
+            ->firstOrFail();
+        $productName = $product->name ?: $product->title;
+
+        $contact = Contact::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'product' => $productName,
+            'message' => $validated['message'] ?? '',
+        ]);
+
+        $sheetsData = [
+            'inquiry_type' => 'Product Inquiry',
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? '',
+            'product' => $productName,
+            'message' => $validated['message'] ?? '',
+            'date' => Carbon::now()->format('Y-m-d H:i:s'),
+        ];
+
+        try {
+            $response = Http::withHeaders(['Content-Type' => 'application/json'])
+                ->post('https://script.google.com/macros/s/AKfycbzMzhwi18bHlO3k_TFqVPLfWpCp_ZsztpaPwQ4TVhzzOwd9OaYqnaiKw5JRmdqO7eTl/exec', $sheetsData);
+
+            if ($response->failed()) {
+                Log::error('Google Sheet request failed (product inquiry): ' . $response->body());
+            }
+        } catch (\Throwable $exception) {
+            Log::warning('Product inquiry was saved, but Google Sheets could not be reached.', [
+                'contact_id' => $contact->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        return redirect()
+            ->route('contact.thank-you')
+            ->with('contact_status', 'Thank you. Your product inquiry has been sent.');
+    }
+
     public function getNewsEvent(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
@@ -209,10 +274,16 @@ class FrontController extends Controller
         return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
     }
 
-    public function productDetails(Request $requesr){
-        $metaTitle = '';
-        $metaDescription = '';
-        return view('front.product-details', compact('metaTitle', 'metaDescription'));
+    public function productDetails(Request $request, $productUrl){
+        $product = Product::with('category')
+            ->where('product_url', $productUrl)
+            ->where('status', 'Active')
+            ->firstOrFail();
+
+        $metaTitle = $product->title . ' | Pratham Filter Industries';
+        $metaDescription = strip_tags($product->description ?? '');
+           
+        return view('front.product-details', compact('product', 'metaTitle', 'metaDescription'));
     }
 
     

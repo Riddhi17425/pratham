@@ -52,6 +52,32 @@ $(document).ready(function () {
     });
 });
 
+// Product detail inquiry modal uses the same drawer presentation as Request A Quote.
+$(document).ready(function () {
+    var $backdrop = $('#productInquiryBackdrop');
+    var $modal = $('#productInquiryModal');
+    if (!$backdrop.length || !$modal.length) return;
+    if ($modal.hasClass('active')) $('body').css('overflow', 'hidden');
+
+    function closeProductInquiry() {
+        $backdrop.removeClass('active');
+        $modal.removeClass('active');
+        $('body').css('overflow', '');
+    }
+
+    $(document).on('click', '.js-open-product-inquiry', function (e) {
+        e.preventDefault();
+        $backdrop.addClass('active');
+        $modal.addClass('active');
+        $('body').css('overflow', 'hidden');
+    });
+    $(document).on('click', '.js-close-product-inquiry', closeProductInquiry);
+    $backdrop.on('click', closeProductInquiry);
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape' && $modal.hasClass('active')) closeProductInquiry();
+    });
+});
+
 // Technical Brochure page: category filter dropdown
 $(document).ready(function () {
     var $items = $('.brochure_filter_item');

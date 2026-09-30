@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->enum('status', ['Active', 'In-Active'])->default('Active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

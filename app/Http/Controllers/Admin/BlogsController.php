@@ -137,10 +137,6 @@ class BlogsController extends Controller
     {
         $blog = Blog::findOrFail($id);
 
-        $this->deleteImage($this->frontImagePath, $blog->front_image);
-        $this->deleteImage($this->detailImagePath, $blog->detail_image);
-        $this->deleteImage($this->ctaImagePath, $blog->cta_image);
-
         $blog->delete();
 
         return response()->json(['success' => true, 'message' => 'Blog deleted successfully.']);

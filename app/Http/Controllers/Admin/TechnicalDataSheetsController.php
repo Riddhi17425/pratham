@@ -120,9 +120,6 @@ class TechnicalDataSheetsController extends Controller
     {
         $sheet = TechnicalDataSheet::findOrFail($id);
 
-        $this->deleteFile($sheet->brochure, $this->brochurePath);
-        $this->deleteFile($sheet->pdf, $this->pdfPath);
-
         $sheet->delete();
 
         return response()->json(['success' => true, 'message' => 'Technical data sheet deleted successfully.']);

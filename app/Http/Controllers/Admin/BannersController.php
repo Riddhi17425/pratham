@@ -128,8 +128,6 @@ class BannersController extends Controller
     {
         $banner = Banner::findOrFail($id);
 
-        $this->deleteImage($banner->image);
-
         $banner->delete();
 
         return response()->json(['success' => true, 'message' => 'Banner deleted successfully.']);

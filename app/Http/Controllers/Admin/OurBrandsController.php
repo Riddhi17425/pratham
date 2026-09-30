@@ -113,8 +113,6 @@ class OurBrandsController extends Controller
     {
         $brand = OurBrand::findOrFail($id);
 
-        $this->deleteImage($brand->icon);
-
         $brand->delete();
 
         return response()->json(['success' => true, 'message' => 'Brand deleted successfully.']);
