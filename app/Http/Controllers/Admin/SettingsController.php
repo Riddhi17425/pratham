@@ -14,8 +14,7 @@ class SettingsController extends Controller
      */
     public function edit()
     {
-        $setting = Setting::first() ?? new Setting(['status' => 'Active']);
-
+        $setting = Setting::first() ?? new Setting();
         return view('admin.settings.edit', compact('setting'));
     }
 
@@ -55,8 +54,6 @@ class SettingsController extends Controller
             'twitter_url'   => 'nullable|url|max:255',
             'whatsapp_url'  => 'nullable|url|max:255',
             'facebook_url'  => 'nullable|url|max:255',
-
-            'status'        => 'required|in:Active,In-Active',
         ];
     }
 

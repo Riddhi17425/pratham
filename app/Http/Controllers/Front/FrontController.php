@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Models\QuoteRequest;
+use App\Models\Locator;
+use App\Models\Setting;
 
 class FrontController extends Controller
 {
@@ -52,7 +55,10 @@ class FrontController extends Controller
     public function contact(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        return view('front.contact', compact('metaTitle', 'metaDescription'));
+         $locators = Locator::where('status', 'Active')->orderBy('id')->get();
+        $siteSetting = Setting::first() ?? new Setting();
+
+        return view('front.contact', compact('metaTitle', 'metaDescription','locators','siteSetting'));
     }
 
     public function thankYou()
@@ -103,6 +109,54 @@ class FrontController extends Controller
 
         return redirect()->route('contact.thank-you')->with('contact_status', $message);
     }
+    
+   public function submitQuote(Request $request)
+{
+    $validated = $request->validateWithBag('quote', [
+        'name' => [
+            'required',
+            'string',
+            'min:2',
+            'max:120',
+            "regex:/^[\\p{L}\\p{M}][\\p{L}\\p{M}0-9\\s.'\\x{2019}-]{1,119}$/u",
+        ],
+        'email' => ['required', 'email:rfc', 'max:255'],
+        'phone' => ['nullable', 'digits_between:7,15'],        'product' => ['required', 'string', 'max:150'],
+        'message' => ['nullable', 'string', 'max:5000'],
+    ]);
+
+    // 1. Database me save
+    $quote = QuoteRequest::create($validated);
+
+    // 2. Google Sheet me save
+    $sheetsData = [
+        'inquiry_type' => 'Pop Up Form',
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'phone' => $validated['phone'] ?? '',
+        'product' => $validated['product'],
+        'message' => $validated['message'] ?? '',
+        'date' => Carbon::now()->format('Y-m-d H:i:s'),
+    ];
+
+    try {
+        $response = Http::withHeaders(['Content-Type' => 'application/json'])
+            ->post("https://script.google.com/macros/s/AKfycbzMzhwi18bHlO3k_TFqVPLfWpCp_ZsztpaPwQ4TVhzzOwd9OaYqnaiKw5JRmdqO7eTl/exec", $sheetsData);
+
+        if ($response->failed()) {
+            Log::error('Google Sheet request failed (quote): ' . $response->body());
+        }
+    } catch (\Throwable $exception) {
+        Log::warning('Quote request was saved, but Google Sheets could not be reached.', [
+            'quote_id' => $quote->id,
+            'error' => $exception->getMessage(),
+        ]);
+    }
+
+    return redirect()
+        ->route('contact.thank-you')
+        ->with('contact_status', 'Thank you. Your quote request has been sent.');
+}
 
     public function getNewsEvent(Request $requesr){
         $metaTitle = '';

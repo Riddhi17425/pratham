@@ -180,6 +180,7 @@ class ProductsController extends Controller
             ],
             'title'             => 'required|string|max:255',
             'name'              => 'required|string|max:255',
+            'product_url'       => 'nullable|url|max:255',
             'image'             => ($product ? 'nullable|' : 'required|') . $image,
             'image_alt'         => 'required|string|max:255',
             'description'       => 'required|string',

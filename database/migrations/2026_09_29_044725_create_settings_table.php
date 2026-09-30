@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('whatsapp_url')->nullable();
             $table->string('facebook_url')->nullable();
 
-            $table->enum('status', ['Active', 'In-Active'])->default('Active');
 
             $table->timestamps();
         });

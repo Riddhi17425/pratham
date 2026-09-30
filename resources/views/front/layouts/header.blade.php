@@ -82,7 +82,7 @@
         <div class="container-fluid">
             <form class="search_form" action="{{ route('products') }}" method="get" role="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="search" name="q" id="siteSearchInput" placeholder="Search products, articles, pages..." autocomplete="off" aria-label="Search the site">
+                <input type="search" name="q" id="siteSearchInput" placeholder="Search products" autocomplete="off" aria-label="Search the site">
                 <button type="button" class="search_close js-close-search" aria-label="Close search"><i class="fa-solid fa-xmark"></i></button>
             </form>
             <ul class="search_results" id="searchResults" role="listbox"></ul>
