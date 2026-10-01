@@ -69,7 +69,7 @@
     <div class="container">
         <h2 class="product_cta_title">Can&rsquo;t Find What You&rsquo;re Looking For?</h2>
         <p class="product_cta_text">Our engineering team can design a custom filtration solution built around your exact process requirements.</p>
-        <a href="{{ route('contact') }}" class="purple-btn-solid product_cta_btn">Request for Quote</a>
+        <a href="{{ route('contact') }}" class="product_cta_btn_solid">Request for Quote</a>
     </div>
 </section>
 

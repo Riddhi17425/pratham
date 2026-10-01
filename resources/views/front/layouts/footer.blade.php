@@ -70,7 +70,7 @@
                 <h5 class="footer_heading">Our Solutions</h5>
                 <ul class="footer_menu solutions_menu">
                   @forelse ($productCategories as $productCategory)
-                  <li><a href="{{ route('category.products', $productCategory->category_url) }}"><span class="solution_icon"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>{{ $productCategory->title }}</a></li>
+                  <li><a href="{{ route('category.products', $productCategory->category_url) }}"><span class="solution_icon img-fluid"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>{{ $productCategory->title }}</a></li>
                   @empty
                   <li><a href="{{ route('products') }}"><span class="solution_icon"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>All Products</a></li>
                   @endforelse
