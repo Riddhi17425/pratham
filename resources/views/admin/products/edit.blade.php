@@ -94,7 +94,7 @@
                                             <input type="text" name="product_url"
                                                 class="form-control @error('product_url') is-invalid @enderror"
                                                 value="{{ old('product_url', $product->product_url) }}"
-                                                placeholder="https://example.com/product">
+                                                placeholder="Auto-generated from title (you can edit)">
                                             @error('product_url')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -230,10 +230,7 @@
                         required: true,
                         maxlength: 255
                     },
-                    product_url: {
-                        url: true,
-                        maxlength: 255
-                    },
+                   
                     image: imageRules,
                     image_alt: {
                         required: true,
@@ -259,10 +256,7 @@
                         required: 'Please enter the product name.',
                         maxlength: 'The name may not be greater than 255 characters.'
                     },
-                    product_url: {
-                        url: 'Please enter a valid URL (starting with http:// or https://).',
-                        maxlength: 'The URL may not be greater than 255 characters.'
-                    },
+                    
                     image: imageMessages,
                     image_alt: {
                         required: 'Please enter the alt text.',

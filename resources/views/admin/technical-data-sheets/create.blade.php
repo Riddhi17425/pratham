@@ -53,16 +53,8 @@
                                         <label class="form-label">Brochure (PDF) <span class="required-star">*</span></label>
                                         <input type="file" name="brochure" id="sheet_brochure" accept="application/pdf"
                                             class="form-control @error('brochure') is-invalid @enderror">
-                                        <small class="text-muted">Sirf PDF, max 10 MB.</small>
+                                        <small class="text-muted">Only PDF, max 2 GB.</small>
                                         @error('brochure')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">PDF <span class="required-star">*</span></label>
-                                        <input type="file" name="pdf" id="sheet_pdf" accept="application/pdf"
-                                            class="form-control @error('pdf') is-invalid @enderror">
-                                        <small class="text-muted">Sirf PDF, max 10 MB.</small>
-                                        @error('pdf')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
                                 </div>
@@ -83,10 +75,10 @@
 @push('scripts')
 <script src="{{ asset('admin-assets/js/technical-data-sheets/technical-data-sheets.js') }}"></script>
 <script>
-    var pdfRules = { fileExt: 'pdf', maxFileSize: 10240 };
+    var pdfRules = { fileExt: 'pdf', maxFileSize: 2097152 }; // KB (2 GB)
     var pdfMessages = {
         fileExt: 'Only PDF files are allowed.',
-        maxFileSize: 'The file may not be greater than 10 MB.'
+        maxFileSize: 'The file may not be greater than 2 GB.'
     };
 
     $('#sheetForm').validate({
@@ -96,13 +88,11 @@
         rules: {
             category_id: { required: true },
             brochure: $.extend({ required: true }, pdfRules),
-            pdf: $.extend({ required: true }, pdfRules),
             status: { required: true }
         },
         messages: {
             category_id: { required: 'Please select the category.' },
             brochure: $.extend({ required: 'Please select the brochure PDF.' }, pdfMessages),
-            pdf: $.extend({ required: 'Please select the PDF.' }, pdfMessages),
             status: { required: 'Please select the status.' }
         }
     });

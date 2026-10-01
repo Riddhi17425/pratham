@@ -3,27 +3,6 @@
 @section('title', 'Pratham Filter Industries | technical-brochure')
 
 @section('content')
-<?php
-$sheets = [
-    ["Spun Filter Cartridge", "Filter Cartridges"],
-    ["Filter Bags", "Filter Bags"],
-    ["Pleated PP High Efficiency", "Filter Cartridges"],
-    ["Activated Carbon Cartridge", "Filter Cartridges"],
-    ["Washable Cartridge", "Filter Cartridges"],
-    ["SS Filter Cartridge", "Filter Cartridges"],
-    ["SS Basket Strainers", "Filter Housings & Assemblies"],
-    ["Nominal Pleated Cartridge", "Filter Cartridges"],
-    ["Std PP Filter Housings", "Filter Housings & Assemblies"],
-    ["Jumbo Filter Housings", "Filter Housings & Assemblies"],
-    ["PP Bag Filter Assembly", "Filter Housings & Assemblies"],
-    ["SS Multi Filter Cartridge Housing", "Filter Housings & Assemblies"],
-];
-$categories = [];
-foreach ($sheets as $s) {
-    if (!in_array($s[1], $categories)) $categories[] = $s[1];
-}
-
-?>
 
 <section class="page_hero" style="background-image: url('{{ asset('front/img/figma/about/page-hero-bg.jpg') }}');">
     <div class="page_hero_overlay"></div>
@@ -50,23 +29,65 @@ foreach ($sheets as $s) {
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="brochureFilterBtn" id="brochureFilterMenu">
                     <li><a class="dropdown-item brochure_filter_item active" href="#" data-cat="all">All Categories</a></li>
-                    <?php foreach ($categories as $cat): ?>
-                    <li><a class="dropdown-item brochure_filter_item" href="#" data-cat="<?php echo htmlspecialchars($cat); ?>"><?php echo htmlspecialchars($cat); ?></a></li>
-                    <?php endforeach; ?>
+                    @foreach($categories as $category)
+                        <li><a class="dropdown-item brochure_filter_item" href="#" data-cat="{{ $category->id }}">{{ $category->title }}</a></li>
+                    @endforeach
                 </ul>
             </div>
         </div>
 
         <div class="brochure_grid" id="brochureGrid">
-            <?php foreach ($sheets as $sheet): ?>
-            <a href="#" class="brochure_card" download data-cat="<?php echo htmlspecialchars($sheet[1]); ?>">
-                <img src="{{ asset('front/img/figma/pdf-icon.svg') }}" alt="PDF" class="brochure_pdf_icon">
-                <span><?php echo htmlspecialchars($sheet[0]); ?></span>
-            </a>
-            <?php endforeach; ?>
+            @forelse($sheets as $sheet)
+                @if($sheet->brochure)
+                    <a href="{{ asset('admin-assets/technical-data-sheets/brochure/' . $sheet->brochure) }}"
+                       class="brochure_card" target="_blank" download data-cat="{{ $sheet->category_id }}">
+                        <img src="{{ asset('front/img/figma/pdf-icon.svg') }}" alt="PDF" class="brochure_pdf_icon">
+                        <span>{{ $sheet->category->title }}</span>
+                    </a>
+                @endif
+            @empty
+                <p class="text-center w-100">No technical sheets available right now.</p>
+            @endforelse
         </div>
+
+        <p id="brochureEmpty" class="text-center w-100 mt-4" style="display:none;">
+            No technical sheets found in this category.
+        </p>
     </div>
 </section>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var items    = document.querySelectorAll('.brochure_filter_item');
+    var cards    = document.querySelectorAll('#brochureGrid .brochure_card');
+    var label    = document.getElementById('brochureFilterLabel');
+    var emptyMsg = document.getElementById('brochureEmpty');
+
+    items.forEach(function (item) {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            var cat = this.getAttribute('data-cat');
+
+            // active class
+            items.forEach(function (i) { i.classList.remove('active'); });
+            this.classList.add('active');
+
+            // button label
+            label.textContent = this.textContent.trim();
+
+            // cards show/hide
+            var visible = 0;
+            cards.forEach(function (card) {
+                var show = (cat === 'all' || card.getAttribute('data-cat') === cat);
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+
+            emptyMsg.style.display = visible === 0 ? 'block' : 'none';
+        });
+    });
+});
+</script>
 
 @endsection

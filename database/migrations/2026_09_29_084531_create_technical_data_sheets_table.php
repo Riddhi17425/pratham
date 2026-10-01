@@ -17,7 +17,7 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->string('brochure')->nullable(); // PDF file name
-            $table->string('pdf')->nullable();      // PDF file name
+                 // PDF file name
 
             $table->enum('status', ['Active', 'In-Active'])->default('Active');
 

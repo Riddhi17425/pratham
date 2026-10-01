@@ -13,21 +13,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TechnicalDataSheetsController extends Controller
 {
-    // Upload folders (relative to the /public directory)
+    // Upload folder (relative to the /public directory)
     protected string $brochurePath = 'admin-assets/technical-data-sheets/brochure/';
-    protected string $pdfPath      = 'admin-assets/technical-data-sheets/pdf/';
 
-    /**
-     * Technical data sheets list page.
-     */
     public function index()
     {
         return view('admin.technical-data-sheets.index');
     }
 
-    /**
-     * DataTable ajax feed for the list.
-     */
     public function getTechnicalDataSheetsData()
     {
         $sheets = TechnicalDataSheet::with('category')->select('technical_data_sheets.*');
@@ -36,7 +29,6 @@ class TechnicalDataSheetsController extends Controller
             ->addIndexColumn()
             ->addColumn('category', fn ($row) => e($row->category->title ?? '-'))
             ->addColumn('brochure', fn ($row) => $this->fileLink($row->brochure, $this->brochurePath))
-            ->addColumn('pdf', fn ($row) => $this->fileLink($row->pdf, $this->pdfPath))
             ->addColumn('status', function ($row) {
                 $checked = $row->status === 'Active' ? 'checked' : '';
                 return '<div class="form-check form-switch">
@@ -50,13 +42,10 @@ class TechnicalDataSheetsController extends Controller
                     <button type="button" class="btn btn-sm btn-danger btn-delete-sheet" data-id="' . $row->id . '"><i class="bi bi-trash"></i> Delete</button>
                 ';
             })
-            ->rawColumns(['brochure', 'pdf', 'status', 'action'])
+            ->rawColumns(['brochure', 'status', 'action'])
             ->make(true);
     }
 
-    /**
-     * Show add form.
-     */
     public function create()
     {
         $categories = $this->categoryOptions();
@@ -64,24 +53,17 @@ class TechnicalDataSheetsController extends Controller
         return view('admin.technical-data-sheets.create', compact('categories'));
     }
 
-    /**
-     * Store a new technical data sheet.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate($this->rules());
 
         $validated['brochure'] = $this->uploadFile($request, 'brochure', $this->brochurePath);
-        $validated['pdf']      = $this->uploadFile($request, 'pdf', $this->pdfPath);
 
         TechnicalDataSheet::create($validated);
 
         return redirect()->route('technical-data-sheets.index')->with('toast_success', 'Technical data sheet created successfully.');
     }
 
-    /**
-     * Show edit form.
-     */
     public function edit($id)
     {
         $sheet      = TechnicalDataSheet::findOrFail($id);
@@ -90,22 +72,17 @@ class TechnicalDataSheetsController extends Controller
         return view('admin.technical-data-sheets.edit', compact('sheet', 'categories'));
     }
 
-    /**
-     * Update an existing technical data sheet.
-     */
     public function update(Request $request, $id)
     {
         $sheet = TechnicalDataSheet::findOrFail($id);
 
         $validated = $request->validate($this->rules($sheet));
 
-        foreach ([['brochure', $this->brochurePath], ['pdf', $this->pdfPath]] as [$field, $path]) {
-            if ($request->hasFile($field)) {
-                $this->deleteFile($sheet->{$field}, $path);
-                $validated[$field] = $this->uploadFile($request, $field, $path);
-            } else {
-                unset($validated[$field]);
-            }
+        if ($request->hasFile('brochure')) {
+            $this->deleteFile($sheet->brochure, $this->brochurePath);
+            $validated['brochure'] = $this->uploadFile($request, 'brochure', $this->brochurePath);
+        } else {
+            unset($validated['brochure']);
         }
 
         $sheet->update($validated);
@@ -113,21 +90,19 @@ class TechnicalDataSheetsController extends Controller
         return redirect()->route('technical-data-sheets.index')->with('toast_success', 'Technical data sheet updated successfully.');
     }
 
-    /**
-     * Delete a record with its files (called via ajax from the list page).
-     */
     public function destroy($id)
     {
         $sheet = TechnicalDataSheet::findOrFail($id);
 
+<<<<<<< HEAD
+        $this->deleteFile($sheet->brochure, $this->brochurePath);
+=======
+>>>>>>> eebc9ff31fdfc9b99680186a13a58c1a8e062b9e
         $sheet->delete();
 
         return response()->json(['success' => true, 'message' => 'Technical data sheet deleted successfully.']);
     }
 
-    /**
-     * Switch Active / In-Active from the list page (ajax).
-     */
     public function toggleStatus($id)
     {
         $sheet = TechnicalDataSheet::findOrFail($id);
@@ -142,19 +117,15 @@ class TechnicalDataSheetsController extends Controller
         ]);
     }
 
-    /**
-     * Server-side validation rules.
-     */
     protected function rules(?TechnicalDataSheet $sheet = null): array
     {
-        $pdf = 'file|mimes:pdf|max:10240';
-        $req = $sheet ? 'nullable|' : 'required|';
+        // 2 GB = 2097152 KB (Laravel `max` KB me hota hai)
+        $brochure = ($sheet ? 'nullable' : 'required') . '|file|mimes:pdf|mimetypes:application/pdf|max:2097152';
 
         return [
             'category_id' => [
                 'required',
                 Rule::exists('categories', 'id')->where(function ($query) use ($sheet) {
-                    // only Active categories (plus the one already saved on this record)
                     $query->where(function ($q) use ($sheet) {
                         $q->where('status', 'Active');
 
@@ -164,16 +135,11 @@ class TechnicalDataSheetsController extends Controller
                     });
                 }),
             ],
-            'brochure' => $req . $pdf,
-            'pdf'      => $req . $pdf,
+            'brochure' => $brochure,
             'status'   => 'required|in:Active,In-Active',
         ];
     }
 
-    /**
-     * Categories for the dropdown: all Active ones, plus the record's current
-     * category (so an In-Active one still shows while editing).
-     */
     protected function categoryOptions(?TechnicalDataSheet $sheet = null)
     {
         return Category::where('status', 'Active')
@@ -182,9 +148,6 @@ class TechnicalDataSheetsController extends Controller
             ->get(['id', 'title']);
     }
 
-    /**
-     * "View" link for the list page.
-     */
     protected function fileLink(?string $fileName, string $path): string
     {
         if (! $fileName) {
@@ -194,9 +157,6 @@ class TechnicalDataSheetsController extends Controller
         return '<a href="' . asset($path . $fileName) . '" target="_blank"><i class="bi bi-file-earmark-pdf"></i> View</a>';
     }
 
-    /**
-     * Upload a file to the given public path and return the stored filename.
-     */
     protected function uploadFile(Request $request, string $field, string $path): ?string
     {
         if (! $request->hasFile($field)) {
@@ -212,9 +172,6 @@ class TechnicalDataSheetsController extends Controller
         return $fileName;
     }
 
-    /**
-     * Delete a previously uploaded file, if it exists.
-     */
     protected function deleteFile(?string $fileName, string $path): void
     {
         if (! $fileName) {

@@ -19,7 +19,6 @@ $(document).ready(function () {
                 { data: 'id', name: 'id' },
                 { data: 'category', name: 'category', orderable: false, searchable: false },
                 { data: 'brochure', name: 'brochure', orderable: false, searchable: false },
-                { data: 'pdf', name: 'pdf', orderable: false, searchable: false },
                 { data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]

@@ -53,9 +53,14 @@
                     @if ($product->name !== $product->title)
                       <a href="{{ route('product.details', $product->product_url) }}"><p class="product_list_name">{{ $product->name }}</p></a>
                     @endif
+<<<<<<< HEAD
+                    <p class="product_list_desc">{{ html_entity_decode(strip_tags($product->description)) }}</p>
+                    <a href="{{ route('product.details', ['p' => $product->product_url]) }}" class="dark-btn product_know_more">Know More</a>                </div>
+=======
                     <p class="product_list_desc">{{ $product->description }}</p>
                     <a href="{{ route('product.details', $product->product_url) }}" class="dark-btn product_know_more">Know More</a>
                 </div>
+>>>>>>> eebc9ff31fdfc9b99680186a13a58c1a8e062b9e
             </div>
             @endforeach
         </div>
@@ -69,7 +74,7 @@
     <div class="container">
         <h2 class="product_cta_title">Can&rsquo;t Find What You&rsquo;re Looking For?</h2>
         <p class="product_cta_text">Our engineering team can design a custom filtration solution built around your exact process requirements.</p>
-        <a href="{{ route('contact') }}" class="purple-btn-solid product_cta_btn">Request for Quote</a>
+        <a href="{{ route('contact') }}" class="product_cta_btn_solid">Request for Quote</a>
     </div>
 </section>
 

@@ -232,11 +232,20 @@ class FrontController extends Controller
         return view('front.news-event', compact('metaTitle', 'metaDescription', 'events'));
     }
 
-    public function technicalBrochure(Request $requesr){
-        $metaTitle = '';
-        $metaDescription = '';
-        return view('front.technical-brochure', compact('metaTitle', 'metaDescription'));
-    }
+    public function technicalBrochure(Request $request){
+    $metaTitle = '';
+    $metaDescription = '';
+
+    $sheets = TechnicalDataSheet::with('category')
+        ->where('status', 'Active')
+        ->whereHas('category', fn ($q) => $q->where('status', 'Active'))
+        ->latest('id')
+        ->get();
+
+    $categories = $sheets->pluck('category')->unique('id')->sortBy('title')->values();
+
+    return view('front.technical-brochure', compact('metaTitle', 'metaDescription', 'sheets', 'categories'));
+}
 
     public function productList(Request $requesr){
         $metaTitle = '';
