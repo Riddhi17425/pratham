@@ -10,8 +10,8 @@
         <div class="page_hero_content">
             <div class="breadcrumb_row">
                 <a href="{{ route('home') }}">Home</a>
-                <i class="fa-solid fa-chevron-right"></i>
-                <a href="{{ route('products') }}">Water Filter Products</a>
+                <!-- <i class="fa-solid fa-chevron-right"></i> -->
+                <!-- <a href="{{ route('products') }}">Water Filter Products</a> -->
                 @if ($product->category)
                     <i class="fa-solid fa-chevron-right"></i>
                     <a href="{{ route('category.products', $product->category->category_url) }}">{{ $product->category->title }}</a>

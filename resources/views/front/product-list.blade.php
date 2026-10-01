@@ -12,8 +12,8 @@
                 <a href="{{ route('home') }}">Home</a>
                 <i class="fa-solid fa-chevron-right"></i>
                 @if ($category)
-                <a href="{{ route('products') }}">Water Filter Products</a>
-                <i class="fa-solid fa-chevron-right"></i>
+                <!-- <a href="{{ route('products') }}">Water Filter Products</a>
+                <i class="fa-solid fa-chevron-right"></i> -->
                 <span>{{ $category->title }}</span>
                 @else
                 <span>Water Filter Products</span>
