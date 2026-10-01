@@ -142,9 +142,6 @@ class ProductsController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        $this->deleteFile($product->image, $this->imagePath);
-        $this->deleteFile($product->catalogue, $this->cataloguePath);
-
         $product->delete();
 
         return response()->json(['success' => true, 'message' => 'Product deleted successfully.']);

@@ -13,6 +13,9 @@
                 <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
                     <h3 class="fw-bold mb-0">Events</h3>
                     <div class="col-auto d-flex w-sm-100">
+                        <a href="{{ route('admin.trash.index', 'events') }}" class="btn btn-outline-secondary me-2">
+                            <i class="bi bi-trash me-1"></i>Trash
+                        </a>
                         <a href="{{ route('events.create') }}" class="btn btn-primary btn-set-task w-sm-100">
                             <i class="bi bi-plus-circle me-2"></i>Add Event
                         </a>

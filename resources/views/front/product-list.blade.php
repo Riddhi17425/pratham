@@ -12,8 +12,8 @@
                 <a href="{{ route('home') }}">Home</a>
                 <i class="fa-solid fa-chevron-right"></i>
                 @if ($category)
-                <a href="{{ route('products') }}">Water Filter Products</a>
-                <i class="fa-solid fa-chevron-right"></i>
+                <!-- <a href="{{ route('products') }}">Water Filter Products</a>
+                <i class="fa-solid fa-chevron-right"></i> -->
                 <span>{{ $category->title }}</span>
                 @else
                 <span>Water Filter Products</span>
@@ -46,15 +46,21 @@
             @foreach ($products as $product)
             <div class="product_list_card" data-name="{{ \Illuminate\Support\Str::lower($product->title . ' ' . $product->name . ' ' . $product->description) }}">
                 <div class="product_list_img_wrap product_img_stretch">
-                    <img src="{{ $product->image ? asset('admin-assets/products/image/' . $product->image) : asset('front/img/figma/products/prod-spun-cartridge.jpg') }}" alt="{{ $product->image_alt ?: $product->name }}">
+                    <a href="{{ route('product.details', $product->product_url) }}"><img src="{{ $product->image ? asset('admin-assets/products/image/' . $product->image) : asset('front/img/figma/products/prod-spun-cartridge.jpg') }}" alt="{{ $product->image_alt ?: $product->name }}"></a>
                 </div>
                 <div class="product_list_info">
-                    <h3 class="product_list_title">{{ $product->title }}</h3>
+                    <a href="{{ route('product.details', $product->product_url) }}"><h3 class="product_list_title">{{ $product->title }}</h3></a>
                     @if ($product->name !== $product->title)
-                    <p class="product_list_name">{{ $product->name }}</p>
+                      <a href="{{ route('product.details', $product->product_url) }}"><p class="product_list_name">{{ $product->name }}</p></a>
                     @endif
+<<<<<<< HEAD
                     <p class="product_list_desc">{{ html_entity_decode(strip_tags($product->description)) }}</p>
                     <a href="{{ route('product.details', ['p' => $product->product_url]) }}" class="dark-btn product_know_more">Know More</a>                </div>
+=======
+                    <p class="product_list_desc">{{ $product->description }}</p>
+                    <a href="{{ route('product.details', $product->product_url) }}" class="dark-btn product_know_more">Know More</a>
+                </div>
+>>>>>>> eebc9ff31fdfc9b99680186a13a58c1a8e062b9e
             </div>
             @endforeach
         </div>

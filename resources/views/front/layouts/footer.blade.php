@@ -208,13 +208,11 @@
         <div class="contact_field quote_modal_select">
             <select name="product" required>
                 <option value="" disabled selected>Products</option>
-                <option value="Spun Filter Cartridge">Spun Filter Cartridge</option>
-                <option value="Filter Bags">Filter Bags</option>
-                <option value="Pleated PP High Efficiency">Pleated PP High Efficiency</option>
-                <option value="Activated Carbon Cartridge">Activated Carbon Cartridge</option>
-                <option value="Washable Cartridge">Washable Cartridge</option>
-                <option value="SS Filter Cartridge">SS Filter Cartridge</option>
-                <option value="Other">Other</option>
+                @forelse ($activeProducts as $quoteProduct)
+                    <option value="{{ $quoteProduct->name ?: $quoteProduct->title }}">{{ $quoteProduct->name ?: $quoteProduct->title }}</option>
+                @empty
+                    <option value="" disabled>No active products available</option>
+                @endforelse
             </select>
         </div>
         <div class="contact_field">

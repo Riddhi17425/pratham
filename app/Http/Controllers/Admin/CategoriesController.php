@@ -118,8 +118,6 @@ class CategoriesController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        $this->deleteImage($category->thumbnail, $this->thumbnailPath);
-
         $category->delete();
 
         return response()->json(['success' => true, 'message' => 'Category deleted successfully.']);

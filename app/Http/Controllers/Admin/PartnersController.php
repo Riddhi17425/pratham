@@ -115,8 +115,6 @@ class PartnersController extends Controller
     {
         $partner = Partner::findOrFail($id);
 
-        $this->deleteImage($partner->icon);
-
         $partner->delete();
 
         return response()->json(['success' => true, 'message' => 'Partner deleted successfully.']);

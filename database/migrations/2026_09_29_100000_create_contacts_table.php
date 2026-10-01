@@ -14,7 +14,11 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone', 30)->nullable();
             $table->text('message');
+<<<<<<< HEAD
             $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
+=======
+            $table->string('product')->nullable();
+>>>>>>> eebc9ff31fdfc9b99680186a13a58c1a8e062b9e
             $table->timestamps();
         });
     }

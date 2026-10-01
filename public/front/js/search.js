@@ -35,7 +35,7 @@
         return data
             .map(function (it) {
                 var t = it.t.toLowerCase();
-                var hay = t + ' ' + (it.x || '').toLowerCase();
+                var hay = t + ' ' + (it.c || '').toLowerCase() + ' ' + (it.x || '').toLowerCase();
                 var score = t.indexOf(q) === 0 ? 0 : t.indexOf(q) > -1 ? 1 : hay.indexOf(q) > -1 ? 2 : -1;
                 return { it: it, score: score };
             })
@@ -58,12 +58,13 @@
         var res = matches(q);
         if (!res.length) {
             list.innerHTML = '<li class="search_empty">No results for &ldquo;' + esc(q) +
-                '&rdquo;. <a href="./products.php?q=' + encodeURIComponent(q) + '">Search all products</a></li>';
+                '&rdquo;. <a href="' + esc(form.action) + '?q=' + encodeURIComponent(q) + '">Search products</a></li>';
             return;
         }
         list.innerHTML = res.map(function (it) {
-            return '<li role="option"><a href="' + esc(it.u) + '"><span>' + highlight(it.t, q) +
-                '</span><span class="search_badge">' + esc(it.k) + '</span></a></li>';
+            return '<li role="option"><a href="' + esc(it.u) + '"><img class="search_result_thumb" src="' + esc(it.i) + '" alt="">' +
+                '<span class="search_result_copy"><span class="search_result_title">' + highlight(it.t, q) +
+                '</span><small>' + esc(it.c || '') + '</small></span><span class="search_badge">' + esc(it.k) + '</span></a></li>';
         }).join('');
     }
 

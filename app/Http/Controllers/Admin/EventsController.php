@@ -131,8 +131,6 @@ class EventsController extends Controller
     {
         $event = Event::findOrFail($id);
 
-        $this->deleteImage($event->image);
-
         $event->delete();
 
         return response()->json(['success' => true, 'message' => 'Event deleted successfully.']);
