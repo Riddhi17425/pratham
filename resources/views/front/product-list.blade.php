@@ -16,10 +16,10 @@
                 <i class="fa-solid fa-chevron-right"></i> -->
                 <span>{{ $category->title }}</span>
                 @else
-                <span>Water Filter Products</span>
+                <span>All Products</span>
                 @endif
             </div>
-            <h1 class="page_hero_title">{{ $category?->title ?? 'Water Filter Products' }}</h1>
+            <h1 class="page_hero_title">{{ $category?->title . ' Products'?? 'Products' }}</h1>
         </div>
     </div>
 </section>

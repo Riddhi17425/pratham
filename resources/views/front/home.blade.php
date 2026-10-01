@@ -61,19 +61,15 @@
     <div class="container container_flush">
         <div class="collage_grid_row1">
             <div class="collage_col collage_col_empty">
-                <div class="filter_card  h-100">
+                <div class="filter_card h-100">
                     <img src="{{ asset('front/img/figma/collage-bag-filter-assembly.png') }}" alt="Bag Filter Assembly" class="img_pos_bagfilter">
-                    <div class="overlay">
-                        <p>Bag Filter Assembly</p>
-                    </div>
+                    <div class="overlay"><p>Bag Filter Assembly</p></div>
                 </div>
             </div>
             <div class="collage_col collage_col_cartridge">
                 <div class="filter_card h-100">
                     <img src="{{ asset('front/img/figma/collage-ss-filter-cartridge.png') }}" alt="SS Filter Cartridge" class="img_pos_sscartridge">
-                    <div class="overlay">
-                        <p>SS Filter Cartridge</p>
-                    </div>
+                    <div class="overlay"><p>SS Filter Cartridge</p></div>
                 </div>
             </div>
             <div class="collage_col collage_col_title">
@@ -87,48 +83,36 @@
             <div class="collage_col collage_col_stringwound">
                 <div class="filter_card h-100">
                     <img src="{{ asset('front/img/figma/collage-string-wound.png') }}" alt="String Wound Cartridge" class="img_pos_stringwound">
-                    <div class="overlay">
-                        <p>String Wound Cartridge</p>
-                    </div>
+                    <div class="overlay"><p>String Wound Cartridge</p></div>
                 </div>
             </div>
             <div class="collage_col collage_col_housing">
                 <div class="collage_stack">
                     <div class="filter_card">
                         <img src="{{ asset('front/img/figma/collage-plastic-filter-housing.png') }}" alt="Plastic Filter Housing" class="img_pos_plastichousing">
-                        <div class="overlay">
-                            <p>Plastic Filter Housing</p>
-                        </div>
+                        <div class="overlay"><p>Plastic Filter Housing</p></div>
                     </div>
                     <div class="filter_card">
                         <img src="{{ asset('front/img/figma/collage-cartridges.png') }}" alt="Cartridges" class="img_pos_cartridges">
-                        <div class="overlay">
-                            <p>Cartridges</p>
-                        </div>
+                        <div class="overlay"><p>Cartridges</p></div>
                     </div>
                 </div>
             </div>
             <div class="collage_col collage_col_filter">
                 <div class="filter_card h-100">
                     <img src="{{ asset('front/img/figma/collage-filter-large.png') }}" alt="Filter" class="img_pos_filterlarge">
-                    <div class="overlay">
-                        <p>Filter Cartridge</p>
-                    </div>
+                    <div class="overlay"><p>Filter Cartridge</p></div>
                 </div>
             </div>
             <div class="collage_col collage_col_pp">
                 <div class="collage_stack">
                     <div class="filter_card">
                         <img src="{{ asset('front/img/figma/collage-pp-filter.png') }}" alt="PP Filter" class="img_pos_ppfilter">
-                        <div class="overlay">
-                            <p>PP Filter</p>
-                        </div>
+                        <div class="overlay"><p>PP Filter</p></div>
                     </div>
                     <div class="filter_card">
                         <img src="{{ asset('front/img/figma/collage-ro-membrane.png') }}" alt="RO Membrane" class="img_pos_romembrane">
-                        <div class="overlay">
-                            <p>RO Membrane</p>
-                        </div>
+                        <div class="overlay"><p>RO Membrane</p></div>
                     </div>
                 </div>
             </div>
