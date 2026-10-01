@@ -78,6 +78,11 @@ class ProductsController extends Controller
     {
         $validated = $request->validate($this->rules());
 
+        // URL khali ho to title se bana do
+        if (empty($validated['product_url'])) {
+            $validated['product_url'] = Str::slug($validated['name']);
+        }
+
         $validated['image']     = $this->uploadFile($request, 'image', $this->imagePath);
         $validated['catalogue'] = $this->uploadFile($request, 'catalogue', $this->cataloguePath);
 
@@ -105,6 +110,11 @@ class ProductsController extends Controller
         $product = Product::findOrFail($id);
 
         $validated = $request->validate($this->rules($product));
+
+        // URL khali ho to title se bana do
+        if (empty($validated['product_url'])) {
+            $validated['product_url'] = Str::slug($validated['name']);
+        }
 
         if ($request->hasFile('image')) {
             $this->deleteFile($product->image, $this->imagePath);
@@ -180,11 +190,16 @@ class ProductsController extends Controller
             ],
             'title'             => 'required|string|max:255',
             'name'              => 'required|string|max:255',
-            'product_url'       => 'nullable|url|max:255',
+            'product_url' => [
+    'nullable',
+    'string',
+    'max:255',
+    Rule::unique('products', 'product_url')->ignore($product?->id),
+],
             'image'             => ($product ? 'nullable|' : 'required|') . $image,
             'image_alt'         => 'required|string|max:255',
             'description'       => 'required|string',
-            'catalogue'         => 'nullable|file|mimes:pdf|max:10240',
+            'catalogue'         => 'nullable|file|mimes:pdf|max:2097152',
             'technical_details' => 'nullable|string',
             'status'            => 'required|in:Active,In-Active',
         ];

@@ -122,7 +122,47 @@ initEditor('#product_technical_details', 300, 'Enter Technical Details');
             reader.readAsDataURL(input.files[0]);
         }
     });
+   
+            // ---------------------------------------------------------------
+    // 4. Auto-generate Product URL from Product Name (add / edit pages)
+    //    - Name likhte hi URL auto bharega
+    //    - User URL khud change kare to auto-fill band ho jayega
+    //    - URL khali kar do to auto-fill wapas shuru
+    // ---------------------------------------------------------------
+    function slugify(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/&/g, ' and ')
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/[\s_-]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
 
+    var $nameInput = $('input[name="name"]');
+    var $urlInput  = $('input[name="product_url"]');
+
+    if ($nameInput.length && $urlInput.length) {
+        // Edit page par agar saved URL custom hai (name se alag), to usko overwrite mat karo
+        var urlEdited = $.trim($urlInput.val()) !== '' &&
+                        $urlInput.val() !== slugify($nameInput.val());
+
+        $nameInput.on('input', function () {
+            if (!urlEdited) {
+                $urlInput.val(slugify($(this).val()));
+                if ($urlInput.closest('form').data('validator')) {
+                    $urlInput.valid();
+                }
+            }
+        });
+
+        $urlInput.on('input', function () {
+            // user ne khud type kiya => auto band; khali kiya => auto wapas chalu
+            urlEdited = $.trim($(this).val()) !== '';
+        });
+    }
+     
     // ---------------------------------------------------------------
     // Helper: show a dismissible message in the #message-pop-up alert
     // ---------------------------------------------------------------

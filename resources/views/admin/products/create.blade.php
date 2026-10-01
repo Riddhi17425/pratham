@@ -91,7 +91,8 @@
                                             <label class="form-label">Product URL</label>
                                             <input type="text" name="product_url"
                                                 class="form-control @error('product_url') is-invalid @enderror"
-                                                value="{{ old('product_url') }}" placeholder="https://example.com/product">
+                                                value="{{ old('product_url') }}"
+                                                placeholder="Auto-generated from title (you can edit)">
                                             @error('product_url')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -131,7 +132,7 @@
                                             <input type="file" name="catalogue" id="product_catalogue"
                                                 accept="application/pdf"
                                                 class="form-control @error('catalogue') is-invalid @enderror">
-                                            <small class="text-muted">max 10 MB.</small>
+                                            <small class="text-muted">max 2 GB.</small>
                                             @error('catalogue')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -179,11 +180,11 @@
             };
             var pdfRules = {
                 fileExt: 'pdf',
-                maxFileSize: 10240
+                maxFileSize: 2097152
             };
             var pdfMessages = {
                 fileExt: 'Only PDF files are allowed.',
-                maxFileSize: 'The catalogue may not be greater than 10 MB.'
+                maxFileSize: 'The catalogue may not be greater than 2 GB.'
             };
 
             $('#productForm').validate({
@@ -213,10 +214,7 @@
                         required: true,
                         maxlength: 255
                     },
-                    product_url: {
-                        url: true,
-                        maxlength: 255
-                    },
+
                     image: $.extend({
                         required: true
                     }, imageRules),
@@ -244,10 +242,7 @@
                         required: 'Please enter the product name.',
                         maxlength: 'The name may not be greater than 255 characters.'
                     },
-                    product_url: {
-                        url: 'Please enter a valid URL (starting with http:// or https://).',
-                        maxlength: 'The URL may not be greater than 255 characters.'
-                    },
+
                     image: $.extend({
                         required: 'Please select the image.'
                     }, imageMessages),

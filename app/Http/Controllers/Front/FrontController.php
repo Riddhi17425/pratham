@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use App\Models\QuoteRequest;
 use App\Models\Locator;
 use App\Models\Setting;
+use App\Models\TechnicalDataSheet;
 
 class FrontController extends Controller
 {
@@ -165,11 +166,20 @@ class FrontController extends Controller
         return view('front.news-event', compact('metaTitle', 'metaDescription', 'events'));
     }
 
-    public function technicalBrochure(Request $requesr){
-        $metaTitle = '';
-        $metaDescription = '';
-        return view('front.technical-brochure', compact('metaTitle', 'metaDescription'));
-    }
+    public function technicalBrochure(Request $request){
+    $metaTitle = '';
+    $metaDescription = '';
+
+    $sheets = TechnicalDataSheet::with('category')
+        ->where('status', 'Active')
+        ->whereHas('category', fn ($q) => $q->where('status', 'Active'))
+        ->latest('id')
+        ->get();
+
+    $categories = $sheets->pluck('category')->unique('id')->sortBy('title')->values();
+
+    return view('front.technical-brochure', compact('metaTitle', 'metaDescription', 'sheets', 'categories'));
+}
 
     public function productList(Request $requesr){
         $metaTitle = '';
@@ -198,11 +208,18 @@ class FrontController extends Controller
         return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
     }
 
-    public function productDetails(Request $requesr){
-        $metaTitle = '';
-        $metaDescription = '';
-        return view('front.product-details', compact('metaTitle', 'metaDescription'));
-    }
+    public function productDetails(Request $request)
+{
+    $product = Product::with('category')
+        ->where('product_url', $request->query('p'))
+        ->where('status', 'Active')
+        ->firstOrFail();
+
+    $metaTitle = $product->title;
+    $metaDescription = \Illuminate\Support\Str::limit(strip_tags($product->description), 160);
+
+    return view('front.product-details', compact('metaTitle', 'metaDescription', 'product'));
+}
 
     
     

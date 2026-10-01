@@ -31,7 +31,6 @@
                                     <th>Id</th>
                                     <th>Category</th>
                                     <th>Brochure</th>
-                                    <th>PDF</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>

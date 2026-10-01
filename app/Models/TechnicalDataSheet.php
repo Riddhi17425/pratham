@@ -12,7 +12,6 @@ class TechnicalDataSheet extends Model
     protected $fillable = [
         'category_id',
         'brochure',
-        'pdf',
         'status',
     ];
 
