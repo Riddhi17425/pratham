@@ -259,7 +259,7 @@
             <div class="articles_grid">
                 <div class="articles_row">
                     @foreach ($blogs as $blog)
-                    <a  href="{{route('blog.details')}}" class="articles_card">
+                    <a href="{{ route('blog.details', ['post' => $blog->url]) }}" class="articles_card">
                         <img src="{{ asset('front/img/figma/article-card-frame.svg') }}" alt="" class="articles_frame">
                         <p class="articles_date">{{ $blog->date ? \Carbon\Carbon::parse($blog->date)->format('F j, Y') : $blog->created_at->format('F j, Y') }}</p>
                         <h3 class="articles_title">{{ $blog->title }}</h3>

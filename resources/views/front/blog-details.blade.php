@@ -1,60 +1,58 @@
 @extends('front.app')
 
-@section('title', 'Pratham Filter Industries | blog-detail')
+@section('title', $metaTitle . ' | Pratham Filter Industries')
+@section('meta_description', $metaDescription)
 
 @section('content')
-<?php
-require base_path('resources/views/front/blog-data.blade.php');
-
-$requested = isset($_GET['post']) ? $_GET['post'] : $blog_featured['title'];
-$all_posts = array_merge([$blog_featured], $blog_posts);
-$post = null;
-foreach ($all_posts as $p) {
-    if ($p['title'] === $requested) { $post = $p; break; }
-}
-if (!$post) { $post = $blog_featured; }
-$body = isset($blog_body[$post['title']]) ? $blog_body[$post['title']] : [
-    ["p", isset($post['excerpt']) ? $post['excerpt'] : ""],
-    ["p", "Our engineering team continues to expand this article with deeper technical detail. In the meantime, feel free to reach out to our team directly with any questions about this topic."],
-];
-
-
-?>
-
 <section class="page_hero" style="background-image: url('{{ asset('front/img/figma/blog/blog-detail-hero-bg.jpg') }}');">
     <div class="page_hero_overlay"></div>
     <div class="container position-relative">
         <div class="page_hero_content">
             <div class="breadcrumb_row">
-                <a href="{{ url('/') }}">Home</a>
+                <a href="{{ route('home') }}">Home</a>
                 <i class="fa-solid fa-chevron-right"></i>
-                <span><?php echo htmlspecialchars($post['title']); ?></span>
+                <a href="{{ route('blog') }}">Blogs</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>{{ $blog->title }}</span>
             </div>
-            <h1 class="page_hero_title"><?php echo htmlspecialchars($post['title']); ?></h1>
+            <h1 class="page_hero_title">{{ $blog->title }}</h1>
         </div>
     </div>
 </section>
 
 <section class="section_padding">
-    <div class="container">
-        <div class="blog_detail_body">
-            <?php $firstBlock = array_shift($body); ?>
-            <p class="sub_text_p16"><?php echo htmlspecialchars($firstBlock[1]); ?></p>
-        </div>
+    <article class="container">
+        @if ($blog->date)
+            <p class="articles_date mb-3">{{ $blog->date->format('F j, Y') }}</p>
+        @endif
 
-        <img src="<?php echo asset('front/' . $post['image']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-100 blog_detail_hero_img">
+        @if ($blog->short_description)
+            <div class="blog_detail_body"><p class="sub_text_p16">{{ strip_tags($blog->short_description) }}</p></div>
+        @endif
 
-        <div class="blog_detail_body">
-            <?php foreach ($body as $block): ?>
-                <?php if ($block[0] === 'h'): ?>
-                    <h2 class="blog_detail_heading"><?php echo htmlspecialchars($block[1]); ?></h2>
-                <?php else: ?>
-                    <p class="sub_text_p16"><?php echo htmlspecialchars($block[1]); ?></p>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </div>
-    </div>
+        @if ($blog->detail_image || $blog->front_image)
+            <img src="{{ $blog->detail_image ? asset('admin-assets/blogs/detail_image/' . $blog->detail_image) : asset('admin-assets/blogs/front_image/' . $blog->front_image) }}"
+                 alt="{{ $blog->detail_image_alt ?: ($blog->front_image_alt ?: $blog->title) }}"
+                 class="w-100 blog_detail_hero_img">
+        @endif
+
+        @if ($blog->detail_description)
+            <div class="blog_detail_body">{!! $blog->detail_description !!}</div>
+        @endif
+
+        @if ($blog->conclusion)
+            <div class="blog_detail_body">{!! $blog->conclusion !!}</div>
+        @endif
+
+        @if (!empty($blog->faqs))
+            <section class="blog_detail_body mt-5" aria-labelledby="blogFaqTitle">
+                <h2 class="blog_detail_heading" id="blogFaqTitle">Frequently Asked Questions</h2>
+                @foreach ($blog->faqs as $faq)
+                    <h3 class="h5 mt-4">{{ $faq['faq_title'] ?? '' }}</h3>
+                    <div class="sub_text_p16">{!! $faq['faq_description'] ?? '' !!}</div>
+                @endforeach
+            </section>
+        @endif
+    </article>
 </section>
-
-
 @endsection

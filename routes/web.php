@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\{BlogsController, DashboardController, LoginController,EventsController,OurBrandsController,BannersController,PartnersController,SettingsController,LocatorsController,CategoriesController,ProductsController,TechnicalDataSheetsController};
+use App\Http\Controllers\Admin\{BlogsController, DashboardController, LoginController,EventsController,OurBrandsController,BannersController,PartnersController,SettingsController,LocatorsController,CategoriesController,ProductsController,TechnicalDataSheetsController,TrashController,UserController};
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Front\FrontController;
 
@@ -12,11 +12,13 @@ Route::get('blog', [FrontController::class, 'blogDetails'])->name('blog.details'
 Route::get('contact', [FrontController::class, 'contact'])->name('contact');
 Route::post('contact', [FrontController::class, 'submitContact'])->name('contact.submit');
 Route::get('thank-you', [FrontController::class, 'thankYou'])->name('contact.thank-you');
+Route::post('request-quote', [FrontController::class, 'submitQuote'])->name('quote.submit');
+Route::post('product-inquiry', [FrontController::class, 'submitProductInquiry'])->name('product-inquiry.submit');
 Route::get('news-event', [FrontController::class, 'getNewsEvent'])->name('news.events');
 Route::get('technical-brochure', [FrontController::class, 'technicalBrochure'])->name('technical.brochure');
 Route::get('products', [FrontController::class, 'productList'])->name('products');
 Route::get('category/{categoryUrl}', [FrontController::class, 'categoryProducts'])->name('category.products');
-Route::get('product', [FrontController::class, 'productDetails'])->name('product.details');
+Route::get('product/{productUrl}', [FrontController::class, 'productDetails'])->name('product.details');
 
 // ===== Login (guests only) =====
 Route::middleware('guest')->prefix('admin')->group(function () {
@@ -28,6 +30,19 @@ Route::middleware('guest')->prefix('admin')->group(function () {
 Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('trash/{module}', [TrashController::class, 'index'])->name('admin.trash.index');
+    Route::put('trash/{module}/{id}/restore', [TrashController::class, 'restore'])->name('admin.trash.restore');
+    Route::delete('trash/{module}/{id}', [TrashController::class, 'forceDelete'])->name('admin.trash.force-delete');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('users', [UserController::class, 'store'])->name('users.store');
+    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::put('users/{user}/status', [UserController::class, 'updateStatus'])->name('users.status');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::put('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
 
     // ===== ADD NEW MODULE ROUTES BELOW =====
 

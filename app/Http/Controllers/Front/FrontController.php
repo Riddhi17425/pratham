@@ -14,7 +14,12 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Models\QuoteRequest;
+use App\Models\Locator;
+use App\Models\Setting;
+use App\Models\TechnicalDataSheet;
 
 class FrontController extends Controller
 {
@@ -24,7 +29,7 @@ class FrontController extends Controller
         $banners = Banner::where('status', 'Active')->latest()->get();
         $partners = Partner::where('status', 'Active')->latest()->get();
         $brands = OurBrand::where('status', 'Active')->latest()->get();
-        $blogs = Blog::where('status', 'Active')->orderByDesc('date')->orderByDesc('id')->take(4)->get();
+        $blogs = Blog::where('status', 'Active')->orderByDesc('id')->take(4)->get();
 
         return view('front.home', compact('metaTitle', 'metaDescription', 'banners', 'partners', 'brands', 'blogs'));
     }
@@ -39,20 +44,25 @@ class FrontController extends Controller
     public function getBlogs(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        $blogs = Blog::where('status', 'Active')->orderByDesc('date')->orderByDesc('id')->get();
+        $blogs = Blog::where('status', 'Active')->orderByDesc('id')->get();
         return view('front.blogs', compact('metaTitle', 'metaDescription', 'blogs'));
     }
 
     public function blogDetails(Request $requesr){
-        $metaTitle = '';
-        $metaDescription = '';
-        return view('front.blog-details', compact('metaTitle', 'metaDescription'));
+        $blog = Blog::where('url', $requesr->query('post'))
+            ->firstOrFail();
+        $metaTitle = $blog->meta_title ?: $blog->title;
+        $metaDescription = $blog->meta_description ?: strip_tags($blog->short_description ?? '');
+        return view('front.blog-details', compact('metaTitle', 'metaDescription', 'blog'));
     }
 
     public function contact(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        return view('front.contact', compact('metaTitle', 'metaDescription'));
+         $locators = Locator::where('status', 'Active')->orderBy('id')->get();
+        $siteSetting = Setting::first() ?? new Setting();
+
+        return view('front.contact', compact('metaTitle', 'metaDescription','locators','siteSetting'));
     }
 
     public function thankYou()
@@ -103,28 +113,157 @@ class FrontController extends Controller
 
         return redirect()->route('contact.thank-you')->with('contact_status', $message);
     }
+    
+   public function submitQuote(Request $request)
+{
+    $validated = $request->validateWithBag('quote', [
+        'name' => [
+            'required',
+            'string',
+            'min:2',
+            'max:120',
+            "regex:/^[\\p{L}\\p{M}][\\p{L}\\p{M}0-9\\s.'\\x{2019}-]{1,119}$/u",
+        ],
+        'email' => ['required', 'email:rfc', 'max:255'],
+        'phone' => ['nullable', 'digits_between:7,15'],        'product' => ['required', 'string', 'max:150'],
+        'message' => ['nullable', 'string', 'max:5000'],
+    ]);
+
+    // 1. Database me save
+    $quote = QuoteRequest::create($validated);
+
+    // 2. Google Sheet me save
+    $sheetsData = [
+        'inquiry_type' => 'Pop Up Form',
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'phone' => $validated['phone'] ?? '',
+        'product' => $validated['product'],
+        'message' => $validated['message'] ?? '',
+        'date' => Carbon::now()->format('Y-m-d H:i:s'),
+    ];
+
+    try {
+        $response = Http::withHeaders(['Content-Type' => 'application/json'])
+            ->post("https://script.google.com/macros/s/AKfycbzMzhwi18bHlO3k_TFqVPLfWpCp_ZsztpaPwQ4TVhzzOwd9OaYqnaiKw5JRmdqO7eTl/exec", $sheetsData);
+
+        if ($response->failed()) {
+            Log::error('Google Sheet request failed (quote): ' . $response->body());
+        }
+    } catch (\Throwable $exception) {
+        Log::warning('Quote request was saved, but Google Sheets could not be reached.', [
+            'quote_id' => $quote->id,
+            'error' => $exception->getMessage(),
+        ]);
+    }
+
+    return redirect()
+        ->route('contact.thank-you')
+        ->with('contact_status', 'Thank you. Your quote request has been sent.');
+}
+
+    public function submitProductInquiry(Request $request)
+    {
+        $validated = $request->validateWithBag('productInquiry', [
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:120',
+                "regex:/^[\\p{L}\\p{M}][\\p{L}\\p{M}0-9\\s.'\\x{2019}-]{1,119}$/u",
+            ],
+            'email' => ['required', 'email:rfc', 'max:255'],
+            'phone' => ['nullable', 'digits_between:7,15'],
+            'product' => ['required', 'string', 'max:255'],
+            'product_id' => [
+                'required',
+                'integer',
+                Rule::exists('products', 'id')->where(fn ($query) => $query->where('status', 'Active')),
+            ],
+            'message' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $product = Product::whereKey($validated['product_id'])
+            ->where('status', 'Active')
+            ->firstOrFail();
+        $productName = $product->name ?: $product->title;
+
+        $contact = Contact::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'product' => $productName,
+            'message' => $validated['message'] ?? '',
+        ]);
+
+        $sheetsData = [
+            'inquiry_type' => 'Product Inquiry',
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? '',
+            'product' => $productName,
+            'message' => $validated['message'] ?? '',
+            'date' => Carbon::now()->format('Y-m-d H:i:s'),
+        ];
+
+        try {
+            $response = Http::withHeaders(['Content-Type' => 'application/json'])
+                ->post('https://script.google.com/macros/s/AKfycbzMzhwi18bHlO3k_TFqVPLfWpCp_ZsztpaPwQ4TVhzzOwd9OaYqnaiKw5JRmdqO7eTl/exec', $sheetsData);
+
+            if ($response->failed()) {
+                Log::error('Google Sheet request failed (product inquiry): ' . $response->body());
+            }
+        } catch (\Throwable $exception) {
+            Log::warning('Product inquiry was saved, but Google Sheets could not be reached.', [
+                'contact_id' => $contact->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        return redirect()
+            ->route('contact.thank-you')
+            ->with('contact_status', 'Thank you. Your product inquiry has been sent.');
+    }
 
     public function getNewsEvent(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        $events = Event::where('status', 'Active')->orderByDesc('date')->orderByDesc('id')->get();
+        $events = Event::where('status', 'Active')->orderByDesc('from_date')->orderByDesc('id')->get();
         return view('front.news-event', compact('metaTitle', 'metaDescription', 'events'));
     }
 
-    public function technicalBrochure(Request $requesr){
-        $metaTitle = '';
-        $metaDescription = '';
-        return view('front.technical-brochure', compact('metaTitle', 'metaDescription'));
-    }
+    public function technicalBrochure(Request $request){
+    $metaTitle = '';
+    $metaDescription = '';
+
+    $sheets = TechnicalDataSheet::with('category')
+        ->where('status', 'Active')
+        ->whereHas('category', fn ($q) => $q->where('status', 'Active'))
+        ->latest('id')
+        ->get();
+
+    $categories = $sheets->pluck('category')->unique('id')->sortBy('title')->values();
+
+    return view('front.technical-brochure', compact('metaTitle', 'metaDescription', 'sheets', 'categories'));
+}
 
     public function productList(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
         $category = null;
-        $products = Product::with('category')
+        $query = Product::with('category')
             ->where('status', 'Active')
-            ->orderBy('name')
-            ->get();
+            ->orderBy('name');
+
+        if ($search = trim((string) $requesr->query('q'))) {
+            $query->where(function ($products) use ($search) {
+                $products->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('title', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
+
+        $products = $query->get();
 
         return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
     }
@@ -144,10 +283,16 @@ class FrontController extends Controller
         return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
     }
 
-    public function productDetails(Request $requesr){
-        $metaTitle = '';
-        $metaDescription = '';
-        return view('front.product-details', compact('metaTitle', 'metaDescription'));
+    public function productDetails(Request $request, $productUrl){
+        $product = Product::with('category')
+            ->where('product_url', $productUrl)
+            ->where('status', 'Active')
+            ->firstOrFail();
+
+        $metaTitle = $product->title . ' | Pratham Filter Industries';
+        $metaDescription = strip_tags($product->description ?? '');
+           
+        return view('front.product-details', compact('product', 'metaTitle', 'metaDescription'));
     }
 
     

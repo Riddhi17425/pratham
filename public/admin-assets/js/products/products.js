@@ -71,29 +71,42 @@ $(document).ready(function () {
     }
 
     // ---------------------------------------------------------------
-    // 2. Summernote editor for technical details (add / edit pages)
-    // ---------------------------------------------------------------
-    if ($('#product_technical_details').length && $.fn.summernote) {
-        $('#product_technical_details').summernote({
-            height: 300,
-            placeholder: 'Enter Technical Details',
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link']],
-                ['view', ['codeview']]
-            ],
-            callbacks: {
-                // keep the hidden textarea in sync
-                onChange: function (contents) {
-                    $('#product_technical_details').val(contents);
-                }
-            }
-        });
+// 2. Summernote editors (add / edit pages)
+// ---------------------------------------------------------------
+function initEditor(selector, height, placeholder) {
+    var $el = $(selector);
+
+    if (!$el.length || !$.fn.summernote) {
+        return;
     }
 
+    $el.summernote({
+        height: height,
+        placeholder: placeholder,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link']],
+            ['view', ['codeview']]
+        ],
+        callbacks: {
+            // keep the hidden textarea in sync (empty editor => empty value,
+            // so the "required" rule works and "<p><br></p>" is not saved)
+            onChange: function (contents) {
+                $el.val($el.summernote('isEmpty') ? '' : contents);
+
+                if ($el.closest('form').data('validator')) {
+                    $el.valid();
+                }
+            }
+        }
+    });
+}
+
+initEditor('#product_description', 200, 'Enter Description');
+initEditor('#product_technical_details', 300, 'Enter Technical Details');
     // ---------------------------------------------------------------
     // 3. Image preview (add / edit pages)
     // ---------------------------------------------------------------
@@ -109,7 +122,47 @@ $(document).ready(function () {
             reader.readAsDataURL(input.files[0]);
         }
     });
+   
+            // ---------------------------------------------------------------
+    // 4. Auto-generate Product URL from Product Name (add / edit pages)
+    //    - Name likhte hi URL auto bharega
+    //    - User URL khud change kare to auto-fill band ho jayega
+    //    - URL khali kar do to auto-fill wapas shuru
+    // ---------------------------------------------------------------
+    function slugify(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/&/g, ' and ')
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/[\s_-]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
 
+    var $nameInput = $('input[name="name"]');
+    var $urlInput  = $('input[name="product_url"]');
+
+    if ($nameInput.length && $urlInput.length) {
+        // Edit page par agar saved URL custom hai (name se alag), to usko overwrite mat karo
+        var urlEdited = $.trim($urlInput.val()) !== '' &&
+                        $urlInput.val() !== slugify($nameInput.val());
+
+        $nameInput.on('input', function () {
+            if (!urlEdited) {
+                $urlInput.val(slugify($(this).val()));
+                if ($urlInput.closest('form').data('validator')) {
+                    $urlInput.valid();
+                }
+            }
+        });
+
+        $urlInput.on('input', function () {
+            // user ne khud type kiya => auto band; khali kiya => auto wapas chalu
+            urlEdited = $.trim($(this).val()) !== '';
+        });
+    }
+     
     // ---------------------------------------------------------------
     // Helper: show a dismissible message in the #message-pop-up alert
     // ---------------------------------------------------------------

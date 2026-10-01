@@ -19,6 +19,6 @@ class Setting extends Model
         'twitter_url',
         'whatsapp_url',
         'facebook_url',
-        'status',
+        
     ];
 }

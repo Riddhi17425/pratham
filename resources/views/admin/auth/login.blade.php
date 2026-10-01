@@ -1,12 +1,12 @@
 @include('admin.includes.headerUrl')
 @include('admin.includes.toast')
 
-<div class="min-vh-100 d-flex align-items-center justify-content-center p-3">
-    <form id="loginForm" novalidate method="POST" action="{{ route('login.store') }}" class="card border-0 shadow-sm w-100" style="max-width: 26rem;">
+<div class="login-page min-vh-100 d-flex align-items-center justify-content-center p-3">
+    <form id="loginForm" novalidate method="POST" action="{{ route('login.store') }}" class="card login-card border-0 w-100" style="max-width: 27rem;">
         @csrf
         <div class="card-body p-4 p-md-5">
             <div class="text-center mb-4">
-                <i class="bi bi-grid-fill text-primary" style="font-size: 3rem;"></i>
+                <div class="stat-icon mx-auto" style="width:3.5rem;height:3.5rem;font-size:1.5rem"><i class="bi bi-droplet-half"></i></div>
                 <h1 class="h3 mt-2 mb-0">Pratham Admin</h1>
                 <small class="text-muted">Sign in to continue</small>
             </div>
@@ -25,7 +25,7 @@
                 <input class="form-check-input" type="checkbox" name="remember" id="remember">
                 <label class="form-check-label" for="remember">Remember me</label>
             </div>
-            <button class="btn btn-dark btn-lg w-100 text-uppercase">Sign in</button>
+            <button class="btn btn-primary btn-lg w-100">Sign in</button>
         </div>
     </form>
 </div>

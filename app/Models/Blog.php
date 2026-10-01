@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Blog extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -36,6 +37,7 @@ class Blog extends Model
      * and assigning a PHP array to it is automatically encoded to JSON on save.
      */
     protected $casts = [
+        'date' => 'date',
         'faqs' => 'array',
     ];
 }

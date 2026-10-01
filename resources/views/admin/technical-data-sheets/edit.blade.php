@@ -54,23 +54,10 @@
                                         <label class="form-label">Brochure (PDF)</label>
                                         <input type="file" name="brochure" id="sheet_brochure" accept="application/pdf"
                                             class="form-control @error('brochure') is-invalid @enderror">
-                                        <small class="text-muted">Sirf PDF, max 10 MB.</small>
+                                        <small class="text-muted">Only PDF, max 2 GB. Leave empty to keep the current file.</small>
                                         @error('brochure')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                         @if($sheet->brochure)
                                             <a href="{{ asset('admin-assets/technical-data-sheets/brochure/' . $sheet->brochure) }}" target="_blank" class="d-inline-block mt-2">
-                                                <i class="bi bi-file-earmark-pdf"></i> View current file
-                                            </a>
-                                        @endif
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">PDF</label>
-                                        <input type="file" name="pdf" id="sheet_pdf" accept="application/pdf"
-                                            class="form-control @error('pdf') is-invalid @enderror">
-                                        <small class="text-muted">Sirf PDF, max 10 MB.</small>
-                                        @error('pdf')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                        @if($sheet->pdf)
-                                            <a href="{{ asset('admin-assets/technical-data-sheets/pdf/' . $sheet->pdf) }}" target="_blank" class="d-inline-block mt-2">
                                                 <i class="bi bi-file-earmark-pdf"></i> View current file
                                             </a>
                                         @endif
@@ -94,10 +81,10 @@
 @push('scripts')
 <script src="{{ asset('admin-assets/js/technical-data-sheets/technical-data-sheets.js') }}"></script>
 <script>
-    var pdfRules = { fileExt: 'pdf', maxFileSize: 10240 };
+    var pdfRules = { fileExt: 'pdf', maxFileSize: 2097152 }; // KB (2 GB)
     var pdfMessages = {
         fileExt: 'Only PDF files are allowed.',
-        maxFileSize: 'The file may not be greater than 10 MB.'
+        maxFileSize: 'The file may not be greater than 2 GB.'
     };
 
     $('#sheetForm').validate({
@@ -107,13 +94,11 @@
         rules: {
             category_id: { required: true },
             brochure: pdfRules,
-            pdf: pdfRules,
             status: { required: true }
         },
         messages: {
             category_id: { required: 'Please select the category.' },
             brochure: pdfMessages,
-            pdf: pdfMessages,
             status: { required: 'Please select the status.' }
         }
     });
