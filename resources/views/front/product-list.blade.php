@@ -53,14 +53,9 @@
                     @if ($product->name !== $product->title)
                       <a href="{{ route('product.details', $product->product_url) }}"><p class="product_list_name">{{ $product->name }}</p></a>
                     @endif
-<<<<<<< HEAD
-                    <p class="product_list_desc">{{ html_entity_decode(strip_tags($product->description)) }}</p>
-                    <a href="{{ route('product.details', ['p' => $product->product_url]) }}" class="dark-btn product_know_more">Know More</a>                </div>
-=======
                     <p class="product_list_desc">{{ $product->description }}</p>
                     <a href="{{ route('product.details', $product->product_url) }}" class="dark-btn product_know_more">Know More</a>
                 </div>
->>>>>>> eebc9ff31fdfc9b99680186a13a58c1a8e062b9e
             </div>
             @endforeach
         </div>
