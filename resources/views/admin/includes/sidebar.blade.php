@@ -42,9 +42,9 @@
         <a class="m-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.edit') }}">
             <i class="bi bi-gear"></i> <span>Settings</span>
         </a>
-        <a class="m-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
+        {{-- <a class="m-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
             <i class="bi bi-person-gear"></i> <span>Admin Users</span>
-        </a>
+        </a> --}}
         
     </div>
 </div>
