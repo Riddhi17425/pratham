@@ -289,17 +289,17 @@ class FrontController extends Controller
         return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
     }
 
-    public function productDetails(Request $request)
+   public function productDetails(Request $request, $productUrl)
 {
     $product = Product::with('category')
-        ->where('product_url', $request->query('p'))
+        ->where('product_url', $productUrl)
         ->where('status', 'Active')
         ->firstOrFail();
 
-    $metaTitle = $product->title;
-    $metaDescription = \Illuminate\Support\Str::limit(strip_tags($product->description), 160);
+    $metaTitle = $product->title . ' | Pratham Filter Industries';
+    $metaDescription = \Illuminate\Support\Str::limit(strip_tags($product->description ?? ''), 160);
 
-    return view('front.product-details', compact('metaTitle', 'metaDescription', 'product'));
+    return view('front.product-details', compact('product', 'metaTitle', 'metaDescription'));
 }
 
     

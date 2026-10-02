@@ -122,7 +122,7 @@
                         @forelse ($productCategories as $productCategory)
                             <li>
                                 <a href="{{ route('category.products', $productCategory->category_url) }}">
-                                    <span class="solution_icon">
+                                    <span class="solution_icon img-fluid">
                                         @if ($productCategory->thumbnail)
                                             <img src="{{ asset('admin-assets/categories/thumbnail/' . $productCategory->thumbnail) }}"
                                                 alt="{{ $productCategory->thumbnail_alt ?: $productCategory->title }}">
