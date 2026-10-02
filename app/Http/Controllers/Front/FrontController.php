@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
-use App\Models\QuoteRequest;
 use App\Models\Locator;
 use App\Models\Setting;
 use App\Models\TechnicalDataSheet;
@@ -125,12 +124,19 @@ class FrontController extends Controller
             "regex:/^[\\p{L}\\p{M}][\\p{L}\\p{M}0-9\\s.'\\x{2019}-]{1,119}$/u",
         ],
         'email' => ['required', 'email:rfc', 'max:255'],
-        'phone' => ['nullable', 'digits_between:7,15'],        'product' => ['required', 'string', 'max:150'],
+        'phone' => ['nullable', 'digits_between:7,15'],        
+        'product' => ['required', 'string', 'max:150'],
         'message' => ['nullable', 'string', 'max:5000'],
     ]);
 
     // 1. Database me save
-    $quote = QuoteRequest::create($validated);
+    $contact = Contact::create([
+    'name'    => $validated['name'],
+    'email'   => $validated['email'],
+    'phone'   => $validated['phone'] ?? null,
+    'product' => $validated['product'],
+    'message' => $validated['message'] ?? '',
+]);
 
     // 2. Google Sheet me save
     $sheetsData = [
@@ -152,7 +158,7 @@ class FrontController extends Controller
         }
     } catch (\Throwable $exception) {
         Log::warning('Quote request was saved, but Google Sheets could not be reached.', [
-            'quote_id' => $quote->id,
+            'contact_id' => $contact->id,
             'error' => $exception->getMessage(),
         ]);
     }
@@ -283,7 +289,6 @@ class FrontController extends Controller
         return view('front.product-list', compact('metaTitle', 'metaDescription', 'products', 'category'));
     }
 
-<<<<<<< HEAD
     public function productDetails(Request $request)
 {
     $product = Product::with('category')
@@ -296,19 +301,6 @@ class FrontController extends Controller
 
     return view('front.product-details', compact('metaTitle', 'metaDescription', 'product'));
 }
-=======
-    public function productDetails(Request $request, $productUrl){
-        $product = Product::with('category')
-            ->where('product_url', $productUrl)
-            ->where('status', 'Active')
-            ->firstOrFail();
-
-        $metaTitle = $product->title . ' | Pratham Filter Industries';
-        $metaDescription = strip_tags($product->description ?? '');
-           
-        return view('front.product-details', compact('product', 'metaTitle', 'metaDescription'));
-    }
->>>>>>> eebc9ff31fdfc9b99680186a13a58c1a8e062b9e
 
     
     

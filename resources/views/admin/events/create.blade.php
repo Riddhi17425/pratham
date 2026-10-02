@@ -44,19 +44,18 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">From Date</label>
-                                        <input type="text" name="from_date" id="event_from_date" autocomplete="off" maxlength="10" inputmode="numeric"
-                                            value="{{ old('from_date') }}" placeholder="dd-mm-yyyy"
+                                        <label class="form-label">From Date <span class="required-star">*</span></label>
+                                        <input type="date" name="from_date" id="event_from_date"
+                                            value="{{ old('from_date') }}"
                                             class="form-control @error('from_date') is-invalid @enderror">
                                         @error('from_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">To Date</label>
-                                        <input type="text" name="to_date" id="event_to_date" autocomplete="off" maxlength="10" inputmode="numeric"
-                                            value="{{ old('to_date') }}" placeholder="dd-mm-yyyy"
+                                        <label class="form-label">To Date <span class="required-star">*</span></label>
+                                        <input type="date" name="to_date" id="event_to_date"
+                                            value="{{ old('to_date') }}"
                                             class="form-control @error('to_date') is-invalid @enderror">
-                                       
                                         @error('to_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
@@ -114,73 +113,6 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
 <script src="{{ asset('admin-assets/js/events/events.js') }}"></script>
-<script>
-    $('.js-editor').summernote(window.blogEditorOptions || { height: 220 });
 
-    // ----- Date fields: typed by hand as dd-mm-yyyy (hyphens are added automatically) -----
-    $('#event_from_date, #event_to_date').on('input', function () {
-        var d = $(this).val().replace(/\D/g, '').substring(0, 8);
-        var out = d;
-
-        if (d.length > 4) {
-            out = d.substring(0, 2) + '-' + d.substring(2, 4) + '-' + d.substring(4);
-        } else if (d.length > 2) {
-            out = d.substring(0, 2) + '-' + d.substring(2);
-        }
-
-        $(this).val(out);
-    });
-
-    $.validator.addMethod('dateDMY', function (value, element) {
-        if (this.optional(element)) { return true; }
-        var m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(value);
-        if (!m) { return false; }
-        var date = new Date(m[3], m[2] - 1, m[1]);
-        return date.getFullYear() == m[3] && date.getMonth() == m[2] - 1 && date.getDate() == m[1];
-    }, 'Please enter a valid date (dd-mm-yyyy).');
-
-    $.validator.addMethod('notBeforeFrom', function (value, element) {
-        var from = $.trim($('#event_from_date').val());
-        var re = /^\d{2}-\d{2}-\d{4}$/;
-        if (this.optional(element) || !re.test(from) || !re.test(value)) { return true; }
-        var key = function (v) { return v.split('-').reverse().join(''); };
-        return key(value) >= key(from);
-    }, 'To Date cannot be before From Date.');
-
-    function markEditor(el, invalid) {
-        if ($(el).hasClass('js-editor')) {
-            $(el).next('.note-editor').css('border-color', invalid ? '#dc3545' : '');
-        }
-    }
-
-    var imageRules = { fileExt: 'jpg|jpeg|png|webp', maxFileSize: 2048 };
-    var imageMessages = {
-        fileExt: 'Only JPG, PNG or WEBP images are allowed.',
-        maxFileSize: 'The image may not be greater than 2 MB.'
-    };
-
-    $('#eventForm').validate({
-        ignore: ':disabled',
-        highlight: function (el) { $(el).addClass('is-invalid'); markEditor(el, true); },
-        unhighlight: function (el) { $(el).removeClass('is-invalid'); markEditor(el, false); },
-        rules: {
-            title: { required: true, maxlength: 255 },
-            location: { required: true, maxlength: 255 },
-            from_date: { required: function () { return $.trim($('#event_to_date').val()) !== ''; }, dateDMY: true },
-            to_date: { dateDMY: true, notBeforeFrom: true },
-            image: $.extend({ required: true }, imageRules),
-            image_alt: { required: true, maxlength: 255 },
-            status: { required: true }
-        },
-        messages: {
-            title: { required: 'Please enter the event title.', maxlength: 'The title may not be greater than 255 characters.' },
-            location: { required: 'Please enter the location.', maxlength: 'The location may not be greater than 255 characters.' },
-            from_date: { required: 'Please select the From Date.' },
-            image: $.extend({ required: 'Please select the image.' }, imageMessages),
-            image_alt: { required: 'Please enter the image alt text.', maxlength: 'The alt text may not be greater than 255 characters.' },
-            status: { required: 'Please select the status.' }
-        }
-    });
-</script>
 @endpush
 @endsection

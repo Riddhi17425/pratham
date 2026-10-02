@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -78,9 +79,13 @@ class ProductsController extends Controller
     {
         $validated = $request->validate($this->rules());
 
-        // URL khali ho to title se bana do
+        // URL khali ho to name se bana do (aur teeno modules me unique check karo)
         if (empty($validated['product_url'])) {
             $validated['product_url'] = Str::slug($validated['name']);
+
+            if ($message = $this->urlConflictMessage($validated['product_url'], 'products')) {
+                return back()->withInput()->withErrors(['product_url' => $message]);
+            }
         }
 
         $validated['image']     = $this->uploadFile($request, 'image', $this->imagePath);
@@ -111,9 +116,13 @@ class ProductsController extends Controller
 
         $validated = $request->validate($this->rules($product));
 
-        // URL khali ho to title se bana do
+        // URL khali ho to name se bana do (aur teeno modules me unique check karo)
         if (empty($validated['product_url'])) {
             $validated['product_url'] = Str::slug($validated['name']);
+
+            if ($message = $this->urlConflictMessage($validated['product_url'], 'products', $product->id)) {
+                return back()->withInput()->withErrors(['product_url' => $message]);
+            }
         }
 
         if ($request->hasFile('image')) {
@@ -187,12 +196,16 @@ class ProductsController extends Controller
             ],
             'title'             => 'required|string|max:255',
             'name'              => 'required|string|max:255',
-            'product_url' => [
-    'nullable',
-    'string',
-    'max:255',
-    Rule::unique('products', 'product_url')->ignore($product?->id),
-],
+            'product_url'       => [
+                'nullable',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($product) {
+                    if ($value && ($message = $this->urlConflictMessage($value, 'products', $product?->id))) {
+                        $fail($message);
+                    }
+                },
+            ],
             'image'             => ($product ? 'nullable|' : 'required|') . $image,
             'image_alt'         => 'required|string|max:255',
             'description'       => 'required|string',
@@ -200,6 +213,37 @@ class ProductsController extends Controller
             'technical_details' => 'nullable|string',
             'status'            => 'required|in:Active,In-Active',
         ];
+    }
+
+    /**
+     * Check if a URL is already used in blogs, categories or products.
+     * Returns an error message naming the module that already has it, or null if free.
+     * The current record (on edit) is ignored so it doesn't clash with itself.
+     * DB::table() also checks soft-deleted rows.
+     */
+    protected function urlConflictMessage(string $value, string $currentTable, ?int $currentId = null): ?string
+    {
+        $sources = [
+            'blogs'      => ['column' => 'url',          'label' => 'blog'],
+            'categories' => ['column' => 'category_url', 'label' => 'category'],
+            'products'   => ['column' => 'product_url',  'label' => 'product'],
+        ];
+
+        foreach ($sources as $table => $source) {
+            $query = DB::table($table)->where($source['column'], $value);
+
+            if ($table === $currentTable && $currentId) {
+                $query->where('id', '!=', $currentId);
+            }
+
+            if ($query->exists()) {
+                return $table === $currentTable
+                    ? 'This URL is already used by another ' . $source['label'] . '.'
+                    : 'This URL is already used by a ' . $source['label'] . '.';
+            }
+        }
+
+        return null;
     }
 
     /**

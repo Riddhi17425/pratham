@@ -40,7 +40,6 @@
                                         <label class="form-label">Category URL <span class="required-star">*</span></label>
                                         <input type="text" name="category_url" id="category_url" class="form-control @error('category_url') is-invalid @enderror"
                                             value="{{ old('category_url') }}" placeholder="e.g. web-design">
-                                        <small class="text-muted">Sirf small letters, numbers aur hyphen (-).</small>
                                         @error('category_url')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
 
@@ -131,7 +130,7 @@
         unhighlight: function (el) { $(el).removeClass('is-invalid'); },
         rules: {
             title: { required: true, maxlength: 255 },
-            category_url: { required: true, maxlength: 255, slugUrl: true },
+            category_url: { required: true, maxlength: 255,},
             thumbnail: $.extend({ required: true }, imageRules),
             thumbnail_alt: { required: true, maxlength: 255 },
             meta_title: { required: true, maxlength: 255 },

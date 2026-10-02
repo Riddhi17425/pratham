@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -43,9 +44,9 @@ class BlogsController extends Controller
             })
             ->addColumn('status', function ($row) {
                 $checked = $row->status === 'Active' ? 'checked' : '';
-    return '<div class="form-check form-switch">
-                <input class="form-check-input toggle-status" type="checkbox" data-id="' . $row->id . '" ' . $checked . '>
-            </div>';
+                return '<div class="form-check form-switch">
+                            <input class="form-check-input toggle-status" type="checkbox" data-id="' . $row->id . '" ' . $checked . '>
+                        </div>';
             })
             ->addColumn('action', function ($row) {
                 $editUrl = route('blogs.edit', $row->id);
@@ -143,21 +144,21 @@ class BlogsController extends Controller
     }
 
     /**
- * Switch Active / In-Active from the list page (ajax).
- */
-public function toggleStatus($id)
-{
-    $blog = Blog::findOrFail($id);
+     * Switch Active / In-Active from the list page (ajax).
+     */
+    public function toggleStatus($id)
+    {
+        $blog = Blog::findOrFail($id);
 
-    $blog->status = $blog->status === 'Active' ? 'In-Active' : 'Active';
-    $blog->save();
+        $blog->status = $blog->status === 'Active' ? 'In-Active' : 'Active';
+        $blog->save();
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Status updated successfully.',
-        'status'  => $blog->status,
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully.',
+            'status'  => $blog->status,
+        ]);
+    }
 
     /**
      * Server-side validation rules (keep in sync with blogs/_scripts.blade.php).
@@ -168,7 +169,16 @@ public function toggleStatus($id)
 
         return [
             'title'              => 'required|string|max:255',
-            'url'                => 'required|string|max:255|unique:blogs,url' . ($blog ? ',' . $blog->id : ''),
+            'url'                => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) use ($blog) {
+                    if ($message = $this->urlConflictMessage($value, 'blogs', $blog?->id)) {
+                        $fail($message);
+                    }
+                },
+            ],
             'front_image'        => ($blog ? 'nullable|' : 'required|') . $image,
             'front_image_alt'    => 'required|string|max:255',
             'detail_image'       => ($blog ? 'nullable|' : 'required|') . $image,
@@ -187,6 +197,37 @@ public function toggleStatus($id)
             'faq_title.*'        => 'nullable|string|max:255',
             'faq_description.*'  => 'nullable|string',
         ];
+    }
+
+    /**
+     * Check if a URL is already used in blogs, categories or products.
+     * Returns an error message naming the module that already has it, or null if free.
+     * The current record (on edit) is ignored so it doesn't clash with itself.
+     * DB::table() also checks soft-deleted rows.
+     */
+    protected function urlConflictMessage(string $value, string $currentTable, ?int $currentId = null): ?string
+    {
+        $sources = [
+            'blogs'      => ['column' => 'url',          'label' => 'blog'],
+            'categories' => ['column' => 'category_url', 'label' => 'category'],
+            'products'   => ['column' => 'product_url',  'label' => 'product'],
+        ];
+
+        foreach ($sources as $table => $source) {
+            $query = DB::table($table)->where($source['column'], $value);
+
+            if ($table === $currentTable && $currentId) {
+                $query->where('id', '!=', $currentId);
+            }
+
+            if ($query->exists()) {
+                return $table === $currentTable
+                    ? 'This URL is already used by another ' . $source['label'] . '.'
+                    : 'This URL is already used by a ' . $source['label'] . '.';
+            }
+        }
+
+        return null;
     }
 
     /**

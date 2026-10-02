@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -15,7 +14,7 @@ class EventsController extends Controller
     // Upload folder (relative to the /public directory)
     protected string $imagePath = 'admin-assets/events/image/';
 
-    // Date format used on the form (stored in the database as Y-m-d)
+    // Date format shown on the list page (form + database use Y-m-d)
     protected string $dateFormat = 'd-m-Y';
 
     /**
@@ -86,7 +85,7 @@ class EventsController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $this->convertDates($request->validate($this->rules()));
+        $validated = $request->validate($this->rules(), $this->messages());
 
         $validated['image'] = $this->uploadImage($request, 'image', $this->imagePath);
 
@@ -112,7 +111,7 @@ class EventsController extends Controller
     {
         $event = Event::findOrFail($id);
 
-        $validated = $this->convertDates($request->validate($this->rules($event)));
+        $validated = $request->validate($this->rules($event), $this->messages());
 
         if ($request->hasFile('image')) {
             $this->deleteImage($event->image);
@@ -154,7 +153,8 @@ class EventsController extends Controller
     }
 
     /**
-     * Server-side validation rules (keep in sync with events/_scripts inline validate).
+     * Server-side validation rules (keep in sync with the inline validate in create/edit blade).
+     * Dates come from <input type="date">, so they arrive as Y-m-d.
      */
     protected function rules(?Event $event = null): array
     {
@@ -163,8 +163,8 @@ class EventsController extends Controller
         return [
             'title'       => 'required|string|max:255',
             'location'    => 'required|string|max:255',
-            'from_date'   => 'nullable|required_with:to_date|date_format:' . $this->dateFormat,
-            'to_date'     => 'nullable|date_format:' . $this->dateFormat . '|after_or_equal:from_date',
+            'from_date'   => 'required|date_format:Y-m-d',
+            'to_date'     => 'required|date_format:Y-m-d|after_or_equal:from_date',
             'image'       => ($event ? 'nullable|' : 'required|') . $image,
             'image_alt'   => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -173,17 +173,15 @@ class EventsController extends Controller
     }
 
     /**
-     * Turn the form dates (d-m-Y) into database dates (Y-m-d).
+     * Custom validation messages.
      */
-    protected function convertDates(array $validated): array
+    protected function messages(): array
     {
-        foreach (['from_date', 'to_date'] as $field) {
-            $validated[$field] = ! empty($validated[$field])
-                ? Carbon::createFromFormat($this->dateFormat, $validated[$field])->format('Y-m-d')
-                : null;
-        }
-
-        return $validated;
+        return [
+            'from_date.required'     => 'Please select the From Date.',
+            'to_date.required'       => 'Please select the To Date.',
+            'to_date.after_or_equal' => 'To Date cannot be before From Date.',
+        ];
     }
 
     /**

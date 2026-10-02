@@ -111,12 +111,7 @@ $(document).ready(function () {
     // ---------------------------------------------------------------
     // 4. Category URL: custom rule + auto-fill from title (add page only)
     // ---------------------------------------------------------------
-    if ($.validator) {
-        $.validator.addMethod('slugUrl', function (value, element) {
-            return this.optional(element) || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
-        }, 'Use only lowercase letters, numbers and hyphens (e.g. web-design).');
-    }
-
+    
     if ($('#categoryForm[data-auto-slug]').length) {
         var slugEdited = $('#category_url').val() !== '';
 

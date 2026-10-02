@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class CategoriesController extends Controller
@@ -71,7 +71,7 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate($this->rules(), $this->messages());
+        $validated = $request->validate($this->rules());
 
         $validated['thumbnail'] = $this->uploadImage($request, 'thumbnail', $this->thumbnailPath);
 
@@ -97,7 +97,7 @@ class CategoriesController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        $validated = $request->validate($this->rules($category), $this->messages());
+        $validated = $request->validate($this->rules($category));
 
         if ($request->hasFile('thumbnail')) {
             $this->deleteImage($category->thumbnail, $this->thumbnailPath);
@@ -153,8 +153,11 @@ class CategoriesController extends Controller
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('categories', 'category_url')->ignore($category?->id),
+                function ($attribute, $value, $fail) use ($category) {
+                    if ($message = $this->urlConflictMessage($value, 'categories', $category?->id)) {
+                        $fail($message);
+                    }
+                },
             ],
             'description'      => 'nullable|string',
             'meta_title'       => 'required|string|max:255',
@@ -166,14 +169,34 @@ class CategoriesController extends Controller
     }
 
     /**
-     * Custom validation messages.
+     * Check if a URL is already used in blogs, categories or products.
+     * Returns an error message naming the module that already has it, or null if free.
+     * The current record (on edit) is ignored so it doesn't clash with itself.
+     * DB::table() also checks soft-deleted rows.
      */
-    protected function messages(): array
+    protected function urlConflictMessage(string $value, string $currentTable, ?int $currentId = null): ?string
     {
-        return [
-            'category_url.regex'  => 'Use only lowercase letters, numbers and hyphens (e.g. web-design).',
-            'category_url.unique' => 'This category URL is already taken.',
+        $sources = [
+            'blogs'      => ['column' => 'url',          'label' => 'blog'],
+            'categories' => ['column' => 'category_url', 'label' => 'category'],
+            'products'   => ['column' => 'product_url',  'label' => 'product'],
         ];
+
+        foreach ($sources as $table => $source) {
+            $query = DB::table($table)->where($source['column'], $value);
+
+            if ($table === $currentTable && $currentId) {
+                $query->where('id', '!=', $currentId);
+            }
+
+            if ($query->exists()) {
+                return $table === $currentTable
+                    ? 'This URL is already used by another ' . $source['label'] . '.'
+                    : 'This URL is already used by a ' . $source['label'] . '.';
+            }
+        }
+
+        return null;
     }
 
     /**
