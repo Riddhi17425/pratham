@@ -19,7 +19,7 @@
                 <span>All Products</span>
                 @endif
             </div>
-            <h1 class="page_hero_title">{{ $category?->title . ' Products'?? 'Products' }}</h1>
+            <h1 class="page_hero_title">{{ $category ? $category->title . ' Products' : 'Products' }}</h1>
         </div>
     </div>
 </section>
@@ -44,7 +44,7 @@
 
         <div class="product_grid_list" id="productGridList">
             @foreach ($products as $product)
-            <div class="product_list_card" data-name="{{ \Illuminate\Support\Str::lower($product->title . ' ' . $product->name . ' ' . $product->description) }}">
+            <div class="product_list_card" data-name="{{ \Illuminate\Support\Str::lower($product->title . ' ' . $product->name . ' ' . html_entity_decode(strip_tags($product->description))) }}">
                 <div class="product_list_img_wrap product_img_stretch">
                     <a href="{{ route('product.details', $product->product_url) }}"><img src="{{ $product->image ? asset('admin-assets/products/image/' . $product->image) : asset('front/img/figma/products/prod-spun-cartridge.jpg') }}" alt="{{ $product->image_alt ?: $product->name }}"></a>
                 </div>
@@ -53,14 +53,9 @@
                     @if ($product->name !== $product->title)
                       <a href="{{ route('product.details', $product->product_url) }}"><p class="product_list_name">{{ $product->name }}</p></a>
                     @endif
-<<<<<<< HEAD
-                    <p class="product_list_desc">{{ html_entity_decode(strip_tags($product->description)) }}</p>
-                    <a href="{{ route('product.details', ['p' => $product->product_url]) }}" class="dark-btn product_know_more">Know More</a>                </div>
-=======
-                    <p class="product_list_desc">{{ $product->description }}</p>
+                    <p class="product_list_desc">{{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($product->description)), 150) }}</p>
                     <a href="{{ route('product.details', $product->product_url) }}" class="dark-btn product_know_more">Know More</a>
                 </div>
->>>>>>> eebc9ff31fdfc9b99680186a13a58c1a8e062b9e
             </div>
             @endforeach
         </div>

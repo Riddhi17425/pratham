@@ -36,7 +36,7 @@
             @endif
             <h2 class="title mb-0">{{ $product->name ?: $product->title }}</h2>
             @if ($product->description)
-                <p class="sub_text_p16">{{ $product->description }}</p>
+                <div class="sub_text_p16 product_description">{!! $product->description !!}</div>
             @endif
             <div class="product_detail_actions">
                 @if ($product->catalogue)
@@ -100,9 +100,7 @@
             <p class="products_eyebrow">Technical Data</p>
             <h2 class="product_spec_title">{{ $product->title }} Specifications</h2>
             <span class="products_accent_line mb-4"></span>
-            @if ($product->technical_details)
-                <div class="product_technical_details">{!! $product->technical_details !!}</div>
-            @endif
+            <div class="product_technical_details">{!! $product->technical_details !!}</div>
         </div>
     </section>
 @endif
@@ -118,6 +116,15 @@
     </div>
 </section>
 @endsection
+
+@push('styles')
+    <style>
+        .product_description p { margin-bottom: 1rem; }
+        .product_description p:last-child { margin-bottom: 0; }
+        .product_description ul,
+        .product_description ol { padding-left: 1.25rem; margin-bottom: 1rem; }
+    </style>
+@endpush
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.22.1/dist/jquery.validate.min.js"></script>
