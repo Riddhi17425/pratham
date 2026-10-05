@@ -38,8 +38,14 @@
             </div>
         </div>
 
-        @if ($category?->description)
-        <p class="sub_text_p16 mb-4">{{ $category->description }}</p>
+        @php
+            $plainDescription = $category
+                ? preg_replace('/[\s\x{00A0}]+/u', '', html_entity_decode(strip_tags($category->description ?? '')))
+                : '';
+        @endphp
+
+        @if ($plainDescription !== '')
+        <div class="sub_text_p16 mb-4 category_description">{!! $category->description !!}</div>
         @endif
 
         <div class="product_grid_list" id="productGridList">
@@ -101,3 +107,12 @@
 })();
 </script>
 @endsection
+
+@push('styles')
+    <style>
+        .category_description p { margin-bottom: 1rem; }
+        .category_description p:last-child { margin-bottom: 0; }
+        .category_description ul,
+        .category_description ol { padding-left: 1.25rem; margin-bottom: 1rem; }
+    </style>
+@endpush
