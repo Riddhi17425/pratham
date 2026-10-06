@@ -7,6 +7,13 @@
 <section class="hero_area">
     <div class="hero_slider">
         @foreach ($banners as $banner)
+        @php
+            // category_id NULL => All Categories => all products list
+            // otherwise => that category's product list
+            $exploreUrl = ($banner->category && $banner->category->category_url)
+                ? route('category.products', $banner->category->category_url)
+                : route('products');
+        @endphp
         <div class="hero_slide" style="background: linear-gradient(135deg, #F6F2F2 0%, #D9D9D9 100%);">
             <div class="container-fluid">
                 <div class="row align-items-center">
@@ -14,7 +21,7 @@
                         <div class="hero_content">
                             <h1 class="hero_title">{{ $banner->title }}</h1>
                             <p class="sub_text_p16">{{ $banner->description }}</p>
-                            <a class="purple-btn" href="{{ route('products') }}">Explore Products</a>
+                            <a class="purple-btn" href="{{ $exploreUrl }}">Explore Products</a>
                         </div>
                     </div>
                     <div class="col-lg-6">

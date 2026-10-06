@@ -8,7 +8,6 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class BannersController extends Controller
@@ -40,7 +39,14 @@ class BannersController extends Controller
                 $url = asset($this->imagePath . $row->image);
                 return '<img src="' . $url . '" alt="' . e($row->image_alt) . '" style="max-width:80px;max-height:60px;">';
             })
-            ->addColumn('category', fn ($row) => e($row->category->title ?? '-'))
+            ->addColumn('category', function ($row) {
+                // category_id NULL => All Categories
+                if (is_null($row->category_id)) {
+                    return 'All Categories';
+                }
+
+                return e($row->category->title ?? '-');
+            })
             ->editColumn('title', function ($row) {
                 return e($row->title);
             })
@@ -81,6 +87,9 @@ class BannersController extends Controller
     {
         $validated = $request->validate($this->rules());
 
+        // "all" => NULL (All Categories)
+        $validated['category_id'] = $validated['category_id'] === 'all' ? null : $validated['category_id'];
+
         $validated['image'] = $this->uploadImage($request, 'image', $this->imagePath);
 
         Banner::create($validated);
@@ -108,6 +117,9 @@ class BannersController extends Controller
         $banner = Banner::findOrFail($id);
 
         $validated = $request->validate($this->rules($banner));
+
+        // "all" => NULL (All Categories)
+        $validated['category_id'] = $validated['category_id'] === 'all' ? null : $validated['category_id'];
 
         if ($request->hasFile('image')) {
             $this->deleteImage($banner->image);
@@ -160,16 +172,27 @@ class BannersController extends Controller
         return [
             'category_id' => [
                 'required',
-                Rule::exists('categories', 'id')->where(function ($query) use ($banner) {
-                    // only Active categories (plus the one already saved on this banner)
-                    $query->where(function ($q) use ($banner) {
-                        $q->where('status', 'Active');
+                function ($attribute, $value, $fail) use ($banner) {
+                    // "all" = All Categories (allowed)
+                    if ($value === 'all') {
+                        return;
+                    }
 
-                        if ($banner?->category_id) {
-                            $q->orWhere('id', $banner->category_id);
-                        }
-                    });
-                }),
+                    // only Active categories (plus the one already saved on this banner)
+                    $exists = Category::where('id', $value)
+                        ->where(function ($q) use ($banner) {
+                            $q->where('status', 'Active');
+
+                            if ($banner?->category_id) {
+                                $q->orWhere('id', $banner->category_id);
+                            }
+                        })
+                        ->exists();
+
+                    if (! $exists) {
+                        $fail('The selected category is invalid.');
+                    }
+                },
             ],
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
