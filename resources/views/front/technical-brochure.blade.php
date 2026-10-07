@@ -22,6 +22,8 @@
     <div class="container">
         <div class="brochure_header">
             <h2 class="title mb-0">Latest Sheets</h2>
+
+            {{-- Category filter dropdown (temporarily hidden)
             <div class="dropdown brochure_filter_dropdown">
                 <button class="brochure_filter" type="button" id="brochureFilterBtn" data-bs-toggle="dropdown" aria-expanded="false">
                     <span id="brochureFilterLabel">All Categories</span>
@@ -34,6 +36,7 @@
                     @endforeach
                 </ul>
             </div>
+            --}}
         </div>
 
         <div class="brochure_grid" id="brochureGrid">
@@ -42,7 +45,7 @@
                     <a href="{{ asset('admin-assets/technical-data-sheets/brochure/' . $sheet->brochure) }}"
                        class="brochure_card" target="_blank" download data-cat="{{ $sheet->category_id }}">
                         <img src="{{ asset('front/img/figma/pdf-icon.svg') }}" alt="PDF" class="brochure_pdf_icon">
-                        <span>{{ $sheet->category->title }}</span>
+                        <span>{{ $sheet->category->title ?? 'Technical Datasheet' }}</span>
                     </a>
                 @endif
             @empty
@@ -58,7 +61,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var items    = document.querySelectorAll('.brochure_filter_item');
+    var items = document.querySelectorAll('.brochure_filter_item');
+    if (!items.length) return; // dropdown hidden hai to kuch na karo
+
     var cards    = document.querySelectorAll('#brochureGrid .brochure_card');
     var label    = document.getElementById('brochureFilterLabel');
     var emptyMsg = document.getElementById('brochureEmpty');

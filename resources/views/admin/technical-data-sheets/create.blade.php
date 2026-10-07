@@ -30,9 +30,9 @@
                                 <div class="card-body row">
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Category <span class="required-star">*</span></label>
+                                        <label class="form-label">Category</label>
                                         <select name="category_id" class="form-control @error('category_id') is-invalid @enderror">
-                                            <option value="">Select Category</option>
+                                            <option value="">Select Category (Optional)</option>
                                             @foreach($categories as $category)
                                                 <option value="{{ $category->id }}" {{ old('category_id', '') == $category->id ? 'selected' : '' }}>{{ $category->title }}</option>
                                             @endforeach
@@ -86,12 +86,10 @@
         highlight: function (el) { $(el).addClass('is-invalid'); },
         unhighlight: function (el) { $(el).removeClass('is-invalid'); },
         rules: {
-            category_id: { required: true },
             brochure: $.extend({ required: true }, pdfRules),
             status: { required: true }
         },
         messages: {
-            category_id: { required: 'Please select the category.' },
             brochure: $.extend({ required: 'Please select the brochure PDF.' }, pdfMessages),
             status: { required: 'Please select the status.' }
         }
