@@ -194,10 +194,6 @@
                         url: true,
                         maxlength: 255
                     },
-                    whatsapp_url: {
-                        url: true,
-                        maxlength: 255
-                    },
                     facebook_url: {
                         url: true,
                         maxlength: 255
@@ -225,9 +221,6 @@
                         url: urlMsg
                     },
                     twitter_url: {
-                        url: urlMsg
-                    },
-                    whatsapp_url: {
                         url: urlMsg
                     },
                     facebook_url: {
