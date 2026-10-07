@@ -99,7 +99,7 @@
             <div class="founder_details">
                 <p class="sub_text_p16">Ajay Kumar Shroff started Pratham Filter Industries in 2003 with a single small office in Mumbai. What began as a modest water filter trading business grew steadily, driven by hard work and a clear focus on quality. Over the next 15 years, he expanded into Chennai, Kolkata, Pune, Delhi, Ahmedabad, Guwahati, Surat and Hyderabad, building a strong, trusted presence across India, one city at a time.</p>
                 <p class="sub_text_p16">Alongside this growth, Ajay began manufacturing water filters in 2005 and went on to build partnerships with respected global brands, including Pentair in 2013, DuPont in 2019 and Tata in 2022. With a background in commerce, technology and finance, he continues to attend major water industry expos, staying close to new ideas and changing customer needs. His approach has stayed simple: build products people can rely on, and grow the business the right way.</p>
-                <p class="founder_signoff mt-3">- Ajay Shah</p>
+                <p class="founder_signoff mt-3">- Ajay Shroff</p>
             </div>
             <div class="founder_visual">
                 <img src="{{ asset('front/img/figma/about/founder-wordmark.svg') }}" alt="" class="founder_wordmark">
