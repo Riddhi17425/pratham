@@ -141,7 +141,6 @@
             linkedin_url: { url: true, maxlength: 255 },
             instagram_url: { url: true, maxlength: 255 },
             twitter_url: { url: true, maxlength: 255 },
-            whatsapp_url: { url: true, maxlength: 255 },
             facebook_url: { url: true, maxlength: 255 },
             status: { required: true }
         },
@@ -153,7 +152,6 @@
             linkedin_url: { url: urlMsg },
             instagram_url: { url: urlMsg },
             twitter_url: { url: urlMsg },
-            whatsapp_url: { url: urlMsg },
             facebook_url: { url: urlMsg },
             status: { required: 'Please select the status.' }
         }
