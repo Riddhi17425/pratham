@@ -82,6 +82,10 @@ class ProductsController extends Controller
         // add page par remove flag ki zarurat nahi
         unset($validated['remove_catalogue']);
 
+        // basket se pehle hi upload ho chuki PDF (temp file)
+        $tempCatalogue = $validated['catalogue_temp'] ?? null;
+        unset($validated['catalogue_temp']);
+
         // URL khali ho to name se bana do (aur teeno modules me unique check karo)
         if (empty($validated['product_url'])) {
             $validated['product_url'] = Str::slug($validated['name']);
@@ -92,7 +96,9 @@ class ProductsController extends Controller
         }
 
         $validated['image']     = $this->uploadFile($request, 'image', $this->imagePath);
-        $validated['catalogue'] = $this->uploadFile($request, 'catalogue', $this->cataloguePath);
+        $validated['catalogue'] = $request->hasFile('catalogue')
+            ? $this->uploadFile($request, 'catalogue', $this->cataloguePath)
+            : $this->takeTempCatalogue($tempCatalogue);
 
         Product::create($validated);
 
@@ -119,6 +125,10 @@ class ProductsController extends Controller
 
         $validated = $request->validate($this->rules($product));
 
+        // basket se pehle hi upload ho chuki PDF (temp file)
+        $tempCatalogue = $validated['catalogue_temp'] ?? null;
+        unset($validated['catalogue_temp']);
+
         // URL khali ho to name se bana do (aur teeno modules me unique check karo)
         if (empty($validated['product_url'])) {
             $validated['product_url'] = Str::slug($validated['name']);
@@ -139,6 +149,10 @@ class ProductsController extends Controller
             // naya PDF aaya => purana delete karke naya save
             $this->deleteFile($product->catalogue, $this->cataloguePath);
             $validated['catalogue'] = $this->uploadFile($request, 'catalogue', $this->cataloguePath);
+        } elseif ($tempCatalogue && ($newCatalogue = $this->takeTempCatalogue($tempCatalogue))) {
+            // basket me upload ho chuki PDF => purani delete karke ye lagao
+            $this->deleteFile($product->catalogue, $this->cataloguePath);
+            $validated['catalogue'] = $newCatalogue;
         } elseif ($request->input('remove_catalogue') == '1') {
             // sirf remove kiya => file delete + DB me null
             $this->deleteFile($product->catalogue, $this->cataloguePath);
@@ -165,6 +179,39 @@ class ProductsController extends Controller
         $product->delete();
 
         return response()->json(['success' => true, 'message' => 'Product deleted successfully.']);
+    }
+
+    /**
+     * Basket me PDF girte hi ajax se upload hoti hai (temp folder me).
+     * Product save hone par takeTempCatalogue() isko final folder me le jata hai.
+     */
+    public function uploadCatalogue(Request $request)
+    {
+        $request->validate([
+            'catalogue' => 'required|file|mimes:pdf|max:2097152', // 2 GB (KB me)
+        ]);
+
+        $dir = $this->tempCataloguePath();
+        File::ensureDirectoryExists($dir);
+
+        // 1 din se purani adhuri temp files saaf karo
+        $limit = now()->subDay()->getTimestamp();
+        foreach (File::files($dir) as $old) {
+            if ($old->getMTime() < $limit) {
+                File::delete($old->getPathname());
+            }
+        }
+
+        $file = $request->file('catalogue');
+        $base = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) ?: 'catalogue';
+        $name = $base . '_' . time() . '_' . Str::random(6) . '.pdf';
+
+        $file->move($dir, $name);
+
+        return response()->json([
+            'success' => true,
+            'temp'    => $name,
+        ]);
     }
 
     /**
@@ -222,6 +269,7 @@ class ProductsController extends Controller
             'description'       => 'required|string',
             'catalogue'         => 'nullable|file|mimes:pdf|max:2097152', // 2 GB (KB me)
             'remove_catalogue'  => 'nullable|in:0,1',
+            'catalogue_temp'    => ['nullable', 'string', 'regex:/^[a-z0-9\-]+_\d+_[A-Za-z0-9]{6}\.pdf$/'],
             'technical_details' => 'nullable|string',
             'status'            => 'required|in:Active,In-Active',
         ];
@@ -268,6 +316,41 @@ class ProductsController extends Controller
             ->when($product?->category_id, fn ($q) => $q->orWhere('id', $product->category_id))
             ->orderBy('title')
             ->get(['id', 'title']);
+    }
+
+    /**
+     * Temp upload folder (public nahi hai, sirf server ke andar).
+     */
+    protected function tempCataloguePath(): string
+    {
+        return storage_path('app/tmp-catalogue');
+    }
+
+    /**
+     * Temp me upload hui PDF ko final catalogue folder me le jao.
+     * Final filename return karta hai, file na mile to null.
+     */
+    protected function takeTempCatalogue(?string $temp): ?string
+    {
+        if (! $temp) {
+            return null;
+        }
+
+        $src = $this->tempCataloguePath() . DIRECTORY_SEPARATOR . $temp;
+
+        if (! File::exists($src)) {
+            return null;
+        }
+
+        File::ensureDirectoryExists(public_path($this->cataloguePath));
+        $dst = public_path($this->cataloguePath . $temp);
+
+        if (! @rename($src, $dst)) {
+            File::copy($src, $dst);
+            File::delete($src);
+        }
+
+        return $temp;
     }
 
     /**

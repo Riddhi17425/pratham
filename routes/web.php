@@ -84,6 +84,8 @@ Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->group(fu
     
     // Products
     Route::get('products/get-data', [ProductsController::class, 'getProductsData'])->name('getProductsData');
+    Route::post('products/upload-catalogue', [ProductsController::class, 'uploadCatalogue'])
+    ->name('products.upload-catalogue');
     Route::post('products/{id}/toggle-status', [ProductsController::class, 'toggleStatus'])->name('products.toggle-status');
     Route::resource('products', ProductsController::class)->except('show');
     
