@@ -10,7 +10,8 @@
             </div>
             <div class="col-md-6 text-center text-md-end">
                 <div class="footer_social ">
-                    <a href="{{ $siteSetting->linkedin_url ?: '#' }}" target="_blank" rel="noopener noreferrer"
+                    @if(isset($siteSetting->linkedin_url) && $siteSetting->linkedin_url != '')
+                    <a href="{{ $siteSetting->linkedin_url ?: '#' }}" target="_blank"  rel="noopener noreferrer"  style="background:#0a66c2;"
                         aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
                             viewBox="0 0 34 34" fill="none">
                             <g clip-path="url(#clip0_41_312)">
@@ -24,21 +25,27 @@
                                 </clipPath>
                             </defs>
                         </svg></a>
-                    <a href="{{ $siteSetting->twitter_url ?: '#' }}" target="_blank" rel="noopener noreferrer"
+                    @endif
+                    @if(isset($siteSetting->twitter_url) && $siteSetting->twitter_url != '')
+                    <a href="{{ $siteSetting->twitter_url ?: '#' }}" target="_blank"  rel="noopener noreferrer" style="background:#182b3a;"
                         aria-label="X (Twitter)"><svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
                             viewBox="0 0 34 34" fill="none">
                             <path fill-rule="evenodd" clip-rule="evenodd"
                                 d="M22.5894 32.5834L14.7277 21.3777L4.88589 32.5834H0.722168L12.8805 18.7441L0.722168 1.41675H11.4123L18.8218 11.978L28.1056 1.41675H32.2693L20.6753 14.6151L33.2795 32.5834H22.5894ZM27.2262 29.4243H24.423L6.68399 4.57591H9.48757L16.5922 14.5254L17.8207 16.2519L27.2262 29.4243Z"
                                 fill="#181818" />
                         </svg></a>
-                    <a href="{{ $siteSetting->whatsapp_url ?: '#' }}" target="_blank" rel="noopener noreferrer"
+                    @endif
+                    @if(isset($siteSetting->whatsapp_url) && $siteSetting->whatsapp_url != '')
+                    <a href="{{ $siteSetting->whatsapp_url ?: '#' }}" target="_blank"  rel="noopener noreferrer" style="background:#08a45a;"
                         aria-label="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
                             viewBox="0 0 36 36" fill="none">
                             <path fill-rule="evenodd" clip-rule="evenodd"
                                 d="M15.6047 0.0927316C13.4128 0.389688 10.8068 1.3043 8.84131 2.46655C4.25749 5.17689 1.05443 9.8848 0.180668 15.1957C-0.146253 17.1833 -0.0173502 20.3176 0.469144 22.2038C1.38659 25.7619 3.09242 28.6856 5.66016 31.1011C9.0772 34.3157 13.3498 36.0127 18.0075 36.0054C21.0598 36.0006 23.4749 35.4231 26.1537 34.0577C30.7916 31.6936 34.1554 27.5172 35.4977 22.4563C35.9182 20.8711 35.94 20.6568 35.9487 18.0342C35.9572 15.4408 35.9339 15.1862 35.5528 13.7233C33.7445 6.78111 28.485 1.75179 21.5043 0.28976C20.1894 0.0142877 16.9757 -0.0929899 15.6047 0.0927316ZM20.9757 8.00526C24.4515 9.09047 27.0178 11.7009 27.9928 15.1431C28.445 16.7394 28.4468 19.0772 27.9972 20.6427C26.7626 24.9417 23.1003 27.9098 18.7142 28.1662C16.9784 28.2675 15.6897 28.066 14.1785 27.4567L13.0492 27.0013L11.5707 27.3888C8.69233 28.1435 7.73687 28.3755 7.70267 28.3288C7.68359 28.3027 7.98394 27.1278 8.36994 25.7178L9.07197 23.154L8.62845 22.0886C7.17561 18.599 7.52995 15.0931 9.64992 11.9803C11.0808 9.87943 13.3376 8.38758 16.0097 7.77628C17.2474 7.49304 19.6971 7.60611 20.9757 8.00526ZM17.1595 9.36594C15.2114 9.66389 13.5112 10.4714 12.1789 11.7317C11.0784 12.7727 10.4386 13.7615 9.91507 15.2307C9.59748 16.1217 9.54589 16.496 9.54744 17.8929C9.54942 19.6731 9.79465 20.66 10.5869 22.077L10.9901 22.7981L10.5792 24.3292C10.3534 25.1715 10.185 25.8769 10.2052 25.8971C10.2253 25.9173 10.9341 25.7482 11.7802 25.5212L13.3184 25.1084L14.3202 25.5951C16.8598 26.8288 19.8096 26.7354 22.3101 25.3421C24.09 24.3502 25.8167 22.0955 26.3427 20.0763C26.6214 19.0062 26.6214 16.7795 26.3427 15.7094C25.6049 12.8768 23.0783 10.3549 20.269 9.64678C19.3122 9.40566 17.7955 9.26856 17.1595 9.36594ZM15.2911 13.0531C15.5964 13.3905 16.3594 15.5089 16.2706 15.7728C16.2313 15.8894 16.0177 16.1937 15.796 16.4491C15.5742 16.7043 15.3927 16.9995 15.3927 17.1049C15.3927 17.4202 16.5832 18.9387 17.2473 19.4702C18.11 20.1608 18.8375 20.5783 19.1782 20.5783C19.344 20.5783 19.7067 20.3067 20.0274 19.9423C20.3354 19.5925 20.6649 19.3063 20.7597 19.3063C20.8545 19.3063 21.4667 19.5976 22.12 19.9538C23.204 20.5447 23.3078 20.6384 23.3078 21.0278C23.3078 21.6633 22.9469 22.3013 22.3629 22.6985C21.9135 23.0042 21.6894 23.0514 20.7027 23.0488C19.6295 23.046 19.4789 23.0053 18.1489 22.359C16.9633 21.7827 16.5513 21.487 15.5923 20.5245C13.1275 18.0502 12.169 15.6857 12.9837 14.0888C13.5544 12.97 14.7359 12.4397 15.2911 13.0531Z"
                                 fill="black" />
                         </svg></a>
-                    <a href="{{ $siteSetting->facebook_url ?: '#' }}" target="_blank" rel="noopener noreferrer"
+                    @endif
+                    @if(isset($siteSetting->facebook_url) && $siteSetting->facebook_url != '')   
+                    <a href="{{ $siteSetting->facebook_url ?: '#' }}" target="_blank"  rel="noopener noreferrer" style="background:#1769c2;"
                         aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
                             viewBox="0 0 34 34" fill="none">
                             <g clip-path="url(#clip0_41_315)">
@@ -52,7 +59,9 @@
                                 </clipPath>
                             </defs>
                         </svg></a>
-                    <a href="{{ $siteSetting->instagram_url ?: '#' }}" target="_blank" rel="noopener noreferrer"
+                    @endif
+                    @if(isset($siteSetting->instagram_url) && $siteSetting->instagram_url != '')
+                    <a href="{{ $siteSetting->instagram_url ?: '#' }}" target="_blank"  rel="noopener noreferrer" style="background:linear-gradient(135deg,#7939d8,#df1688 55%,#ff9b34);"
                         aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="34" height="34"
                             viewBox="0 0 34 34" fill="none">
                             <g clip-path="url(#clip0_41_316)">
@@ -72,6 +81,7 @@
                                 </clipPath>
                             </defs>
                         </svg></a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -104,11 +114,11 @@
                                     <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg></a></li>
-                        <li><a href="{{ route('blog') }}">Blog <svg class="footer_chevron" width="16"
+                        <!-- <li><a href="{{ route('blog') }}">Blog <svg class="footer_chevron" width="16"
                                     height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                     <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round" />
-                                </svg></a></li>
+                                </svg></a></li> -->
                         <li><a href="{{ route('contact') }}">Contact Us <svg class="footer_chevron" width="16"
                                     height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                     <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2"
@@ -122,14 +132,21 @@
                         @forelse ($productCategories as $productCategory)
                             <li>
                                 <a href="{{ route('category.products', $productCategory->category_url) }}">
-                                    <span class="solution_icon img-fluid">
+                                    <!-- <span class="solution_icon img-fluid">
                                         @if ($productCategory->thumbnail)
                                             <img src="{{ asset('admin-assets/categories/thumbnail/' . $productCategory->thumbnail) }}"
                                                 alt="{{ $productCategory->thumbnail_alt ?: $productCategory->title }}">
                                         @else
                                             <i class="fa-solid fa-droplet" aria-hidden="true"></i>
                                         @endif
-                                    </span>{{ $productCategory->title }}
+                                    </span> -->
+
+                                    <svg class="footer_chevron" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                    {{ $productCategory->title }}
                                 </a>
                             </li>
                         @empty

@@ -39,7 +39,7 @@ class FrontController extends Controller
 
         $partners = Partner::where('status', 'Active')->latest()->get();
         $brands = OurBrand::where('status', 'Active')->latest()->get();
-        $blogs = Blog::where('status', 'Active')->orderByDesc('id')->take(4)->get();
+        $blogs = Blog::where('status', 'Active')->orderByDesc('created_at')->take(4)->get();
 
         return view('front.home', compact('metaTitle', 'metaDescription', 'banners', 'partners', 'brands', 'blogs'));
     }
@@ -54,7 +54,7 @@ class FrontController extends Controller
     public function getBlogs(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        $blogs = Blog::where('status', 'Active')->orderByDesc('id')->get();
+        $blogs = Blog::where('status', 'Active')->orderByDesc('created_at')->get();
         return view('front.blogs', compact('metaTitle', 'metaDescription', 'blogs'));
     }
 
@@ -69,7 +69,7 @@ class FrontController extends Controller
     public function contact(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-         $locators = Locator::where('status', 'Active')->orderBy('id')->get();
+         $locators = Locator::where('status', 'Active')->orderBy('created_at', 'desc')->get();
         $siteSetting = Setting::first() ?? new Setting();
 
         return view('front.contact', compact('metaTitle', 'metaDescription','locators','siteSetting'));
@@ -270,7 +270,7 @@ class FrontController extends Controller
         $category = null;
         $query = Product::with('category')
             ->where('status', 'Active')
-            ->orderBy('name');
+            ->orderBy('created_at', 'desc');
 
         if ($search = trim((string) $requesr->query('q'))) {
             $query->where(function ($products) use ($search) {
@@ -292,7 +292,7 @@ class FrontController extends Controller
             ->firstOrFail();
         $products = Product::where('category_id', $category->id)
             ->where('status', 'Active')
-            ->orderBy('name')
+            ->orderBy('created_at', 'desc')
             ->get();
         $metaTitle = $category->meta_title ?: $category->title;
         $metaDescription = $category->meta_description ?: $category->description;
