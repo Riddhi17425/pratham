@@ -255,8 +255,8 @@ class FrontController extends Controller
 
     $sheets = TechnicalDataSheet::with('category')
         ->where('status', 'Active')
-        ->whereHas('category', fn ($q) => $q->where('status', 'Active'))
-        ->latest('id')
+        //->whereHas('category', fn ($q) => $q->where('status', 'Active'))
+        ->latest('created_at')
         ->get();
 
     $categories = $sheets->pluck('category')->unique('id')->sortBy('title')->values();
@@ -270,7 +270,7 @@ class FrontController extends Controller
         $category = null;
         $query = Product::with('category')
             ->where('status', 'Active')
-            ->orderBy('name');
+            ->orderBy('created_at', 'desc');
 
         if ($search = trim((string) $requesr->query('q'))) {
             $query->where(function ($products) use ($search) {

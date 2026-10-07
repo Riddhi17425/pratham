@@ -77,8 +77,8 @@
                     </div>
                     <div class="vmp_panel_text">
                         <h3 class="vmp_panel_title">Purpose</h3>
-                        <p class="sub_text_p16">Our purpose is to help industries work better by making clean, reliable filtration simple and accessible. We believe good filtration is not just about removing impurities; it is about protecting equipment, improving processes, saving resources, and helping businesses operate with confidence every day.</p>
-                        <p class="sub_text_p16">We are committed to creating filtration solutions that make a real difference in the industries we serve. By combining practical experience, dependable products, and a clear understanding of customer needs, we aim to make water treatment easier, more efficient, and more reliable. Whether it is a small requirement or a large industrial application, our purpose is to provide solutions that customers can trust today and depend on for years to come.</p>
+                        <p class="sub_text_p16">Our purpose is to help industries work better with clean, reliable, and accessible filtration solutions. We focus on protecting equipment, improving processes, and saving resources.</p>
+                        <p class="sub_text_p16">By combining practical experience, dependable products, and customer-focused solutions, we make water treatment simpler and more efficient. Whether small or large-scale, our solutions are built to deliver reliable performance and long-term value.</p>
                     </div>
                 </div>
             </div>

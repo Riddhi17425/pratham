@@ -427,7 +427,7 @@
     .blog_featured_arrow{ right: 24px; bottom: 15px; width: 44px; height: 44px; }
 
     .event_grid{ grid-template-columns: 1fr; }
-    .event_card_img_wrap{ height: 260px; }
+    /* .event_card_img_wrap{ height: 260px; } */
 
     .brochure_grid{ grid-template-columns: repeat(3, 1fr); gap: 30px 20px; }
     .brochure_header{ flex-direction: column; align-items: flex-start; }
@@ -466,8 +466,25 @@
     height: 80px;
 }
 
+.product_technical_details table {
+    min-width: 430px;
+}
+
+.product_technical_details th, .product_technical_details td {
+    padding: 15px 15px;
+}
+
 .product_spec_note {
     margin: 24px 0 24px;
+}
+
+
+.img_pos_sscartridge {
+    left: 26.11%;
+}
+
+.img_pos_plastichousing {
+    top: 25.9%;
 }
 
 }
@@ -497,8 +514,13 @@
     .articles_card:nth-child(even) { margin-left: 0; }
 
     .brands_slider .brand_item {
-margin: 0 10px;
+margin: 0 0px;
     }
+
+    .brands_slider .brand_item.slick-slide {
+    height: auto !important;
+
+}
 
     .products_header
  {
@@ -674,6 +696,7 @@ img:not([class]) { height: auto; }
     .breadcrumb_row{ flex-wrap: nowrap; justify-content: center; gap: 6px; max-width: 100%; font-size: 14px; line-height: 20px; }
     .breadcrumb_row a, .breadcrumb_row i{ flex: 0 0 auto; white-space: nowrap; }
     .breadcrumb_row span{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 }
 
 @media only screen and (max-width: 575px) {

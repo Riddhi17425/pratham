@@ -94,10 +94,10 @@ class TechnicalDataSheetsController extends Controller
     {
         $sheet = TechnicalDataSheet::findOrFail($id);
 
-<<<<<<< HEAD
-        $this->deleteFile($sheet->brochure, $this->brochurePath);
-=======
->>>>>>> eebc9ff31fdfc9b99680186a13a58c1a8e062b9e
+        // Merge conflict resolved: file delete line removed because the module
+        // has a Trash (soft delete) feature, so the file must stay for restore.
+        // If you do NOT use soft delete, add this line back:
+        // $this->deleteFile($sheet->brochure, $this->brochurePath);
         $sheet->delete();
 
         return response()->json(['success' => true, 'message' => 'Technical data sheet deleted successfully.']);
@@ -123,8 +123,9 @@ class TechnicalDataSheetsController extends Controller
         $brochure = ($sheet ? 'nullable' : 'required') . '|file|mimes:pdf|mimetypes:application/pdf|max:2097152';
 
         return [
+            // Category is optional now
             'category_id' => [
-                'required',
+                'nullable',
                 Rule::exists('categories', 'id')->where(function ($query) use ($sheet) {
                     $query->where(function ($q) use ($sheet) {
                         $q->where('status', 'Active');

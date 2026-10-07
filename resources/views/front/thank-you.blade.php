@@ -31,7 +31,7 @@
             <p class="thank_you_text">{{ session('contact_status', 'Your inquiry has been received. Our team will get back to you soon.') }}</p>
             <div class="thank_you_actions">
                 <a href="{{ route('home') }}" class="purple-btn">Back to Home</a>
-                <a href="{{ route('products') }}" class="thank_you_secondary_link">Explore Products <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                <a href="{{ route('products') }}" class="purple-btn-solid">Explore Products <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
             </div>
         </div>
     </div>
