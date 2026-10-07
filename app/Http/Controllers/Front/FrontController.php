@@ -270,7 +270,7 @@ class FrontController extends Controller
         $category = null;
         $query = Product::with('category')
             ->where('status', 'Active')
-            ->orderBy('name');
+            ->orderBy('created_at', 'desc');
 
         if ($search = trim((string) $requesr->query('q'))) {
             $query->where(function ($products) use ($search) {

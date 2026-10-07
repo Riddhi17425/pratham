@@ -67,9 +67,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('news.events') }}">Events</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('blog') }}">Blogs</a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('contact') }}">Contact Us</a>
                     </li>
