@@ -10,9 +10,14 @@
         @php
             // category_id NULL => All Categories => all products list
             // otherwise => that category's product list
-            $exploreUrl = ($banner->category && $banner->category->category_url)
+            $hasCategory = $banner->category && $banner->category->category_url;
+            $exploreUrl  = $hasCategory
                 ? route('category.products', $banner->category->category_url)
                 : route('products');
+            // Button text: "Explore <Category> Products" or "Explore All Products"
+            $exploreText = $hasCategory
+                ? 'Explore ' . $banner->category->title . ' Products'
+                : 'Explore All Products';
         @endphp
         <div class="hero_slide" style="background: linear-gradient(135deg, #F6F2F2 0%, #D9D9D9 100%);">
             <div class="container-fluid">
@@ -21,7 +26,7 @@
                         <div class="hero_content">
                             <h1 class="hero_title">{{ $banner->title }}</h1>
                             <p class="sub_text_p16">{{ $banner->description }}</p>
-                            <a class="purple-btn" href="{{ $exploreUrl }}">Explore Products</a>
+                            <a class="purple-btn" href="{{ $exploreUrl }}">{{ $exploreText }}</a>
                         </div>
                     </div>
                     <div class="col-lg-6">
