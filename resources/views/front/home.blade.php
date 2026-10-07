@@ -25,7 +25,7 @@
                     <div class="col-lg-6">
                         <div class="hero_content">
                             <h1 class="hero_title">{{ $banner->title }}</h1>
-                            <p class="sub_text_p16">{{ $banner->description }}</p>
+                            <div class="sub_text_p16">{!! strip_tags($banner->description, '<p><br><strong><b><em><i><u><ul><ol><li><a>') !!}</div>
                             <a class="purple-btn" href="{{ $exploreUrl }}">{{ $exploreText }}</a>
                         </div>
                     </div>

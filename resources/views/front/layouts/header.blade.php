@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- <meta name="theme-color" content="#393185"> -->
+
     <title>Pratham Filter Industries</title>
     <!-- favicon -->
     <link rel="icon" href="{{ asset('front/img/favicon.ico') }}" sizes="any">
