@@ -142,15 +142,33 @@
                                             <input type="file" name="catalogue" id="product_catalogue"
                                                 accept="application/pdf"
                                                 class="form-control @error('catalogue') is-invalid @enderror">
-                                            <small class="text-muted">max 10 MB.</small>
+                                            <small class="text-muted">max 2 GB.</small>
                                             @error('catalogue')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+
+                                            {{-- hidden flag: 1 => purani PDF delete karni hai --}}
+                                            <input type="hidden" name="remove_catalogue" id="remove_catalogue"
+                                                value="0">
+
+                                            {{-- naya select kiya hua PDF (cross ke saath) --}}
+                                            <div id="catalogue_new_box" class="d-none mt-2 align-items-center">
+                                                <i class="bi bi-file-earmark-pdf me-1"></i>
+                                                <span id="catalogue_new_name" class="me-2"></span>
+                                                <button type="button" id="remove_new_catalogue" class="btn-close"
+                                                    aria-label="Remove"></button>
+                                            </div>
+
+                                            {{-- purani saved PDF (cross ke saath) --}}
                                             @if ($product->catalogue)
-                                                <a href="{{ asset('admin-assets/products/catalogue/' . $product->catalogue) }}"
-                                                    target="_blank" class="d-inline-block mt-2">
-                                                    <i class="bi bi-file-earmark-pdf"></i> View current catalogue
-                                                </a>
+                                                <div id="catalogue_current_box" class="d-flex align-items-center mt-2">
+                                                    <a href="{{ asset('admin-assets/products/catalogue/' . $product->catalogue) }}"
+                                                        target="_blank" class="me-2">
+                                                        <i class="bi bi-file-earmark-pdf"></i> View current catalogue
+                                                    </a>
+                                                    <button type="button" id="remove_current_catalogue"
+                                                        class="btn-close" aria-label="Remove"></button>
+                                                </div>
                                             @endif
                                         </div>
 
@@ -196,11 +214,11 @@
             };
             var pdfRules = {
                 fileExt: 'pdf',
-                maxFileSize: 10240
+                maxFileSize: 2097152
             };
             var pdfMessages = {
                 fileExt: 'Only PDF files are allowed.',
-                maxFileSize: 'The catalogue may not be greater than 10 MB.'
+                maxFileSize: 'The catalogue may not be greater than 2 GB.'
             };
 
             $('#productForm').validate({
@@ -230,7 +248,7 @@
                         required: true,
                         maxlength: 255
                     },
-                   
+
                     image: imageRules,
                     image_alt: {
                         required: true,
@@ -256,7 +274,7 @@
                         required: 'Please enter the product name.',
                         maxlength: 'The name may not be greater than 255 characters.'
                     },
-                    
+
                     image: imageMessages,
                     image_alt: {
                         required: 'Please enter the alt text.',

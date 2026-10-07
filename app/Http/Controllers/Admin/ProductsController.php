@@ -79,6 +79,9 @@ class ProductsController extends Controller
     {
         $validated = $request->validate($this->rules());
 
+        // add page par remove flag ki zarurat nahi
+        unset($validated['remove_catalogue']);
+
         // URL khali ho to name se bana do (aur teeno modules me unique check karo)
         if (empty($validated['product_url'])) {
             $validated['product_url'] = Str::slug($validated['name']);
@@ -133,11 +136,19 @@ class ProductsController extends Controller
         }
 
         if ($request->hasFile('catalogue')) {
+            // naya PDF aaya => purana delete karke naya save
             $this->deleteFile($product->catalogue, $this->cataloguePath);
             $validated['catalogue'] = $this->uploadFile($request, 'catalogue', $this->cataloguePath);
+        } elseif ($request->input('remove_catalogue') == '1') {
+            // sirf remove kiya => file delete + DB me null
+            $this->deleteFile($product->catalogue, $this->cataloguePath);
+            $validated['catalogue'] = null;
         } else {
             unset($validated['catalogue']);
         }
+
+        // ye sirf form flag hai, DB column nahi
+        unset($validated['remove_catalogue']);
 
         $product->update($validated);
 
@@ -209,7 +220,8 @@ class ProductsController extends Controller
             'image'             => ($product ? 'nullable|' : 'required|') . $image,
             'image_alt'         => 'required|string|max:255',
             'description'       => 'required|string',
-            'catalogue'         => 'nullable|file|mimes:pdf|max:2097152',
+            'catalogue'         => 'nullable|file|mimes:pdf|max:2097152', // 2 GB (KB me)
+            'remove_catalogue'  => 'nullable|in:0,1',
             'technical_details' => 'nullable|string',
             'status'            => 'required|in:Active,In-Active',
         ];

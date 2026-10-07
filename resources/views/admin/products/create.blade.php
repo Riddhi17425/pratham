@@ -136,6 +136,14 @@
                                             @error('catalogue')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+
+                                            {{-- selected PDF (cross ke saath) --}}
+                                            <div id="catalogue_new_box" class="d-none mt-2 align-items-center">
+                                                <i class="bi bi-file-earmark-pdf me-1"></i>
+                                                <span id="catalogue_new_name" class="me-2"></span>
+                                                <button type="button" id="remove_new_catalogue" class="btn-close"
+                                                    aria-label="Remove"></button>
+                                            </div>
                                         </div>
 
                                         <div class="col-md-12 mb-3">

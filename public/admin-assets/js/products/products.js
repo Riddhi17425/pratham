@@ -71,42 +71,43 @@ $(document).ready(function () {
     }
 
     // ---------------------------------------------------------------
-// 2. Summernote editors (add / edit pages)
-// ---------------------------------------------------------------
-function initEditor(selector, height, placeholder) {
-    var $el = $(selector);
+    // 2. Summernote editors (add / edit pages)
+    // ---------------------------------------------------------------
+    function initEditor(selector, height, placeholder) {
+        var $el = $(selector);
 
-    if (!$el.length || !$.fn.summernote) {
-        return;
-    }
+        if (!$el.length || !$.fn.summernote) {
+            return;
+        }
 
-    $el.summernote({
-        height: height,
-        placeholder: placeholder,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'italic', 'underline', 'clear']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link']],
-            ['view', ['codeview']]
-        ],
-        callbacks: {
-            // keep the hidden textarea in sync (empty editor => empty value,
-            // so the "required" rule works and "<p><br></p>" is not saved)
-            onChange: function (contents) {
-                $el.val($el.summernote('isEmpty') ? '' : contents);
+        $el.summernote({
+            height: height,
+            placeholder: placeholder,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link']],
+                ['view', ['codeview']]
+            ],
+            callbacks: {
+                // keep the hidden textarea in sync (empty editor => empty value,
+                // so the "required" rule works and "<p><br></p>" is not saved)
+                onChange: function (contents) {
+                    $el.val($el.summernote('isEmpty') ? '' : contents);
 
-                if ($el.closest('form').data('validator')) {
-                    $el.valid();
+                    if ($el.closest('form').data('validator')) {
+                        $el.valid();
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
-initEditor('#product_description', 200, 'Enter Description');
-initEditor('#product_technical_details', 300, 'Enter Technical Details');
+    initEditor('#product_description', 200, 'Enter Description');
+    initEditor('#product_technical_details', 300, 'Enter Technical Details');
+
     // ---------------------------------------------------------------
     // 3. Image preview (add / edit pages)
     // ---------------------------------------------------------------
@@ -122,8 +123,45 @@ initEditor('#product_technical_details', 300, 'Enter Technical Details');
             reader.readAsDataURL(input.files[0]);
         }
     });
-   
-            // ---------------------------------------------------------------
+
+    // ---------------------------------------------------------------
+    // 3b. Catalogue PDF: selected file dikhao + cross se remove karo
+    //     (add + edit dono pages)
+    // ---------------------------------------------------------------
+    var $catalogueInput = $('#product_catalogue');
+    var $newBox         = $('#catalogue_new_box');
+    var $newName        = $('#catalogue_new_name');
+
+    // naya file select hua => naam + cross dikhao
+    $catalogueInput.on('change', function () {
+        if (this.files && this.files[0]) {
+            $newName.text(this.files[0].name);
+            $newBox.removeClass('d-none').addClass('d-flex');
+            // naya file chuna to purani wali replace ho jayegi, remove flag ki zarurat nahi
+            $('#remove_catalogue').val('0');
+        } else {
+            $newBox.addClass('d-none').removeClass('d-flex');
+        }
+    });
+
+    // naya select kiya hua file hatao (add + edit dono)
+    $('#remove_new_catalogue').on('click', function () {
+        $catalogueInput.val('');
+        $newBox.addClass('d-none').removeClass('d-flex');
+        $catalogueInput.removeClass('is-invalid');
+        $catalogueInput.next('label.error').remove();
+    });
+
+    // purani saved PDF hatao (sirf edit page)
+    $('#remove_current_catalogue').on('click', function () {
+        if (!confirm('Remove the current catalogue?')) {
+            return;
+        }
+        $('#remove_catalogue').val('1');
+        $('#catalogue_current_box').remove();
+    });
+
+    // ---------------------------------------------------------------
     // 4. Auto-generate Product URL from Product Name (add / edit pages)
     //    - Name likhte hi URL auto bharega
     //    - User URL khud change kare to auto-fill band ho jayega
@@ -162,7 +200,7 @@ initEditor('#product_technical_details', 300, 'Enter Technical Details');
             urlEdited = $.trim($(this).val()) !== '';
         });
     }
-     
+
     // ---------------------------------------------------------------
     // Helper: show a dismissible message in the #message-pop-up alert
     // ---------------------------------------------------------------
