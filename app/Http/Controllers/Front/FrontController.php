@@ -25,7 +25,18 @@ class FrontController extends Controller
     public function home(Request $requesr){
         $metaTitle = '';
         $metaDescription = '';
-        $banners = Banner::where('status', 'Active')->latest()->get();
+
+        // category_id NULL            => "All Categories" banner (always shown)
+        // category_id has a value     => show only if that category is Active and not deleted
+        $banners = Banner::with('category')
+            ->where('status', 'Active')
+            ->where(function ($q) {
+                $q->whereNull('category_id')
+                  ->orWhereHas('category', fn ($c) => $c->where('status', 'Active'));
+            })
+            ->latest()
+            ->get();
+
         $partners = Partner::where('status', 'Active')->latest()->get();
         $brands = OurBrand::where('status', 'Active')->latest()->get();
         $blogs = Blog::where('status', 'Active')->orderByDesc('created_at')->take(4)->get();

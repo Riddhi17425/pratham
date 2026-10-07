@@ -664,7 +664,7 @@ img:not([class]) { height: auto; }
 /* About page Our Brands: same continuous logo slider as We Represent */
 .about_brands_logos{ min-width: 0; overflow: hidden; }
 @media only screen and (max-width: 991px) { .about_brands_logos{ flex: 0 0 100%; max-width: 100%; margin-top: 12px; } }
-.about_brands_logos .slider_item{ box-sizing: border-box; border: 1px solid #DDDDDD; padding: 8px; }
+.about_brands_logos .slider_item{ box-sizing: border-box; padding: 8px; }
 .about_brands_logos .slider_item img{ width: 100%; height: 100%; object-fit: contain; }
 .about_brands_logos{ padding-left: 24px; }
 @media only screen and (max-width: 991px){ .about_brands_logos{ padding-left: 12px; } }

@@ -40,8 +40,9 @@
                                         <label class="form-label">Category <span class="required-star">*</span></label>
                                         <select name="category_id" class="form-control @error('category_id') is-invalid @enderror">
                                             <option value="">Select Category</option>
+                                            <option value="all" {{ old('category_id') === 'all' ? 'selected' : '' }}>All Categories</option>
                                             @foreach($categories as $category)
-                                                <option value="{{ $category->id }}" {{ old('category_id', '') == $category->id ? 'selected' : '' }}>{{ $category->title }}</option>
+                                                <option value="{{ $category->id }}" {{ (string) old('category_id') === (string) $category->id ? 'selected' : '' }}>{{ $category->title }}</option>
                                             @endforeach
                                         </select>
                                         @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror

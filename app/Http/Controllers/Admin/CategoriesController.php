@@ -73,6 +73,7 @@ class CategoriesController extends Controller
     {
         $validated = $request->validate($this->rules());
 
+        $validated['description'] = $this->cleanDescription($validated['description'] ?? null);
         $validated['thumbnail'] = $this->uploadImage($request, 'thumbnail', $this->thumbnailPath);
 
         Category::create($validated);
@@ -98,6 +99,8 @@ class CategoriesController extends Controller
         $category = Category::findOrFail($id);
 
         $validated = $request->validate($this->rules($category));
+
+        $validated['description'] = $this->cleanDescription($validated['description'] ?? null);
 
         if ($request->hasFile('thumbnail')) {
             $this->deleteImage($category->thumbnail, $this->thumbnailPath);
@@ -166,6 +169,23 @@ class CategoriesController extends Controller
             'thumbnail_alt'    => 'required|string|max:255',
             'status'           => 'required|in:Active,In-Active',
         ];
+    }
+
+    /**
+     * Summernote khali hone par <p><br></p> bhejta hai; use null bana do.
+     * Sirf safe tags allow karo (script/style etc. hata do).
+     */
+    protected function cleanDescription(?string $html): ?string
+    {
+        if ($html === null) {
+            return null;
+        }
+
+        $html = strip_tags($html, '<p><br><strong><b><em><i><u><ul><ol><li><a><h1><h2><h3><h4><h5><h6>');
+
+        $plain = preg_replace('/[\s\x{00A0}]+/u', '', html_entity_decode(strip_tags($html)));
+
+        return $plain === '' ? null : $html;
     }
 
     /**

@@ -21,7 +21,7 @@
 
 <section class="section_padding">
     <div class="container about_intro">
-        <p class="sub_text_p16 about_intro_text">Since 2003, Pratham Filter Industries has grown from a small manufacturing unit into a trusted name in water and industrial filtration. What started as a focused effort to solve local filtration challenges has evolved into a full-scale operation serving industries across ETP, RO, desalination, food and beverage, pharma, and electroplating sectors.</p>
+        <p class="sub_text_p16 about_intro_text">Since 2003, Pratham Filter Industries has been helping industries meet their water filtration needs with reliable solutions. What started as a small water filter trading business in Mumbai has grown into a trusted name across India, with branches in Chennai, Kolkata, Pune, Delhi, Ahmedabad, Guwahati, Surat and Hyderabad. Today, we manufacture, wholesale, export and import a wide range of filtration products, from simple cartridges to complete RO systems built for demanding industrial use. Our customers span many industries, including food, pharma, chemicals and water treatment plants, and every product goes through careful quality checks before it reaches you. </p>
 
         <div class="about_video_wrap">
             <img src="{{ asset('front/img/figma/about/about-video-bg.webp') }}" alt="Pratham Filter Industries facility" class="w-100 about_video_img">
@@ -31,7 +31,7 @@
            
         </div>
 
-        <p class="sub_text_p16 about_intro_text">Today, we manufacture, wholesale, export, and import a complete range of filtration equipment &mdash; from filter housings and RO membranes to FRP pressure vessels certified to NSF and PED standards. Every product we ship reflects two decades of engineering discipline and an unwavering commitment to quality.</p>
+        <p class="sub_text_p16 about_intro_text">Every product that leaves our facility passes through careful checks. Our teams test each batch for strength, fit and performance, so what you install works the way it should, right from day one. This focus on quality is not a one-time step; it runs through every single stage, from raw material selection to final packing and dispatch. Two decades of doing this consistently is what lets industries trust Pratham with their filtration needs, project after project, and year after year, without fail, every time.</p>
     </div>
 </section>
 
@@ -51,8 +51,8 @@
                     </div>
                     <div class="vmp_panel_text">
                         <h3 class="vmp_panel_title">Vision</h3>
-                        <p class="sub_text_p16">To be the most trusted name in water and industrial filtration across India and beyond, recognized for engineering excellence, reliability, and a genuine commitment to sustainable water management.</p>
-                        <p class="sub_text_p16">We envision a future where clean water access is never a barrier to industrial growth &mdash; where every filtration system we manufacture plays a small part in that larger mission.</p>
+                        <p class="sub_text_p16">Our vision is simple: to become the most trusted filtration partner for industries across India and beyond. We want every business, big or small, to have access to filtration systems that are reliable, easy to maintain, and built to last, no matter how demanding or unpredictable the application is.</p>
+                        <p class="sub_text_p16">We see a future where clean water is never treated as a luxury, but as a standard every industry can count on. To get there, we keep investing in better technology, stronger partnerships with global brands, and a wider product range that covers every stage of water treatment, from the very first filter to the final, clean drop that reaches your process, your plant, or your people.</p>
                     </div>
                 </div>
             </div>
@@ -64,8 +64,8 @@
                     </div>
                     <div class="vmp_panel_text">
                         <h3 class="vmp_panel_title">Mission</h3>
-                        <p class="sub_text_p16">To design, manufacture, and deliver filtration solutions that meet the exact demands of our customers &mdash; with stringent quality control, responsive service, and continuous innovation in every product line we offer.</p>
-                        <p class="sub_text_p16">We are committed to building long-term partnerships with the industries we serve, backed by technical expertise and dependable after-sales support.</p>
+                        <p class="sub_text_p16">Our mission is to make reliable filtration accessible to every industry that needs it, without exception. We do this by manufacturing, testing, and delivering products that meet real-world demands, not just paper specifications, so our customers can run their daily operations without worry, delay, or downtime.</p>
+                        <p class="sub_text_p16">Every day, this means listening closely to what our customers actually need, choosing the right materials and partners, and standing firmly behind our products long after they leave our facility. We keep growing our product range and our reach across India, so that reliable filtration is always within reach, wherever your industry operates.</p>
                     </div>
                 </div>
             </div>
@@ -77,8 +77,8 @@
                     </div>
                     <div class="vmp_panel_text">
                         <h3 class="vmp_panel_title">Purpose</h3>
-                        <p class="sub_text_p16">We exist to make water treatment simpler, safer, and more accessible for the industries that depend on it &mdash; from small workshops to large-scale manufacturing plants.</p>
-                        <p class="sub_text_p16">Every filter housing, membrane, and pressure vessel we build carries forward our founding belief: that quality filtration should never be out of reach.</p>
+                        <p class="sub_text_p16">Our purpose is to help industries work better by making clean, reliable filtration simple and accessible. We believe good filtration is not just about removing impurities; it is about protecting equipment, improving processes, saving resources, and helping businesses operate with confidence every day.</p>
+                        <p class="sub_text_p16">We are committed to creating filtration solutions that make a real difference in the industries we serve. By combining practical experience, dependable products, and a clear understanding of customer needs, we aim to make water treatment easier, more efficient, and more reliable. Whether it is a small requirement or a large industrial application, our purpose is to provide solutions that customers can trust today and depend on for years to come.</p>
                     </div>
                 </div>
             </div>
@@ -94,12 +94,12 @@
 
 <section class="section_padding_top">
     <div class="container">
-        <h2 class="title mb-4">Built On Two Decades Of Trust</h2>
+        <h2 class="title mb-4">The Man Behind Pratham</h2>
         <div class="founder_row">
             <div class="founder_details">
-                <p class="sub_text_p16">Pratham Filter Industries was founded in 2003 with a simple goal &mdash; to bring reliable, high-quality filtration equipment to industries that couldn&rsquo;t compromise on water treatment. What began as a small manufacturing setup has since grown into a name trusted across ETP, RO, and industrial filtration sectors nationwide.</p>
-                <p class="sub_text_p16">Two decades on, that founding philosophy hasn&rsquo;t changed. Every product we manufacture is still held to the same standard: built to perform, built to last, and backed by a team that genuinely cares about getting it right.</p>
-                <p class="founder_signoff mt-3">- Ajay Shah</p>
+                <p class="sub_text_p16">Ajay Kumar Shroff started Pratham Filter Industries in 2003 with a single small office in Mumbai. What began as a modest water filter trading business grew steadily, driven by hard work and a clear focus on quality. Over the next 15 years, he expanded into Chennai, Kolkata, Pune, Delhi, Ahmedabad, Guwahati, Surat and Hyderabad, building a strong, trusted presence across India, one city at a time.</p>
+                <p class="sub_text_p16">Alongside this growth, Ajay began manufacturing water filters in 2005 and went on to build partnerships with respected global brands, including Pentair in 2013, DuPont in 2019 and Tata in 2022. With a background in commerce, technology and finance, he continues to attend major water industry expos, staying close to new ideas and changing customer needs. His approach has stayed simple: build products people can rely on, and grow the business the right way.</p>
+                <p class="founder_signoff mt-3">- Ajay Shroff</p>
             </div>
             <div class="founder_visual">
                 <img src="{{ asset('front/img/figma/about/founder-wordmark.svg') }}" alt="" class="founder_wordmark">
