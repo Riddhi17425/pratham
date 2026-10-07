@@ -32,14 +32,14 @@
         </div>
         <div class="product_detail_content">
             @if ($product->category)
-                <p class="products_eyebrow">{{ $product->category->title }}</p>
+                <!--<p class="products_eyebrow">{{ $product->category->title }}</p>-->
             @endif
-            <h2 class="title mb-0">{{ $product->name ?: $product->title }}</h2>
+            <h2 class="title mb-0">{{ $product->name ?? '' }}</h2>
             @if ($product->description)
                 <div class="sub_text_p16 product_description">{!! $product->description !!}</div>
             @endif
             <div class="product_detail_actions">
-                @if ($product->catalogue)
+                @if (isset($product->catalogue) && $product->catalogue != '')
                     <a href="{{ asset('admin-assets/products/catalogue/' . $product->catalogue) }}"
                        class="purple-btn-solid product_download_btn" download>
                         <i class="fa-solid fa-download"></i> Download Catalogue
@@ -111,7 +111,7 @@
         <p class="product_cta_text">Talk to our team and get a recommendation tailored to your exact filtration requirements.</p>
         <div class="product_cta_actions">
             <a href="{{ route('contact') }}" class="product_cta_btn_outline">Talk to Our Experts</a>
-            <a href="{{ route('products') }}" class="product_cta_btn_solid">Explore Water Filter Products</a>
+            <a href="{{ route('products') }}" class="product_cta_btn_solid">Explore Our Products</a>
         </div>
     </div>
 </section>
