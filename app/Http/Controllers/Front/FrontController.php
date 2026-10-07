@@ -255,8 +255,8 @@ class FrontController extends Controller
 
     $sheets = TechnicalDataSheet::with('category')
         ->where('status', 'Active')
-        ->whereHas('category', fn ($q) => $q->where('status', 'Active'))
-        ->latest('id')
+        //->whereHas('category', fn ($q) => $q->where('status', 'Active'))
+        ->latest('created_at')
         ->get();
 
     $categories = $sheets->pluck('category')->unique('id')->sortBy('title')->values();
