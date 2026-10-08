@@ -32,10 +32,12 @@
                 <h2 class="title mb-0">{{ $category ? 'Explore ' . $category->title : 'Explore Our Range' }}</h2>
                 <span class="products_accent_line"></span>
             </div>
+            @if(isset($products) && $products->count() > 1)
             <div class="products_search">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="search" placeholder="Search products..." id="productSearch" aria-label="Search products">
             </div>
+            @endif
         </div>
 
         @php
