@@ -9,6 +9,19 @@ document.getElementById("hamburgerToggle").addEventListener("click", function ()
         icon.classList.add("fa-bars"); // Change back to menu icon
     }
 });
+// Mobile: tapping the "Products" text opens the products page (normal link),
+// tapping the down arrow toggles the category dropdown instead.
+document.addEventListener("DOMContentLoaded", function () {
+    const btn = document.getElementById("productsDropdownBtn");
+    const menu = document.getElementById("productsDropdownMenu");
+    if (!btn || !menu) return;
+
+    btn.addEventListener("click", function () {
+        const open = menu.classList.toggle("show");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+});
+
 //sticky header
 document.addEventListener("DOMContentLoaded", function () {
     const header = document.getElementById("header");

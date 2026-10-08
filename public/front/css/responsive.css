@@ -39,6 +39,7 @@
 /* Desktop nav: hover-driven Products dropdown + full-width spacing. The
    max-width:1399.98px tier further down resets this back to a normal
    click-to-open Bootstrap collapse menu for the hamburger nav. */
+.dropdown_toggle_btn{ display: none; }
 .dropdown > .dropdown-menu {
     display: block;
     margin-top: 0;
@@ -236,15 +237,44 @@
     /* Undo the hover-driven dropdown from the base layer so the collapsed
        menu uses Bootstrap's normal click-to-open .show toggle instead. */
     .dropdown > .dropdown-menu {
-        display: none;
+        display: block;
         position: static;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: none;
+        max-height: 0;
+        overflow: hidden;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin: 0;
+        border-width: 0;
+        flex: 0 0 100%;
+        transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.35s ease, margin 0.35s ease, visibility 0s linear 0.35s;
+    }
+    .dropdown > .dropdown-menu.show {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transform: none;
-        transition: none;
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        margin: 4px 0 8px;
+        border-width: 1px;
+        transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.35s ease, margin 0.35s ease, visibility 0s;
     }
-    .dropdown > .dropdown-menu.show { display: block; }
+    /* Products row: text link on the left, separate arrow button on the right */
+    .navbar-nav .nav-item.dropdown{ display: flex; flex-wrap: wrap; align-items: center; }
+    .navbar-nav .nav-item.dropdown > .nav-link{ flex: 1 1 auto; }
+    .navbar-nav .nav-item.dropdown > .nav-link .dropdown_arrow{ display: none; }
+    .dropdown_toggle_btn{
+        display: flex; align-items: center; justify-content: center;
+        width: 44px; height: 44px; padding: 0; margin-left: 8px;
+        background: transparent; border: 0; color: var(--wb-light-black); cursor: pointer;
+    }
+    .dropdown_toggle_btn .dropdown_arrow_btn{ transition: transform 0.25s ease; }
+    .dropdown_toggle_btn[aria-expanded="true"] .dropdown_arrow_btn{ transform: rotate(180deg); }
     /* Touch devices keep :hover "stuck" after a tap, which would leave the
        arrow flipped even after the dropdown closes. Drive the arrow purely
        off aria-expanded (set by Bootstrap's click toggle) on mobile. */
