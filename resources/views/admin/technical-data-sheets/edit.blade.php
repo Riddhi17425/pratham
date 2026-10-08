@@ -52,14 +52,31 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Brochure (PDF)</label>
-                                        <input type="file" name="brochure" id="sheet_brochure" accept="application/pdf"
-                                            class="form-control @error('brochure') is-invalid @enderror">
-                                        <small class="text-muted">Only PDF, max 2 GB. Leave empty to keep the current file.</small>
-                                        @error('brochure')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                        <div class="input-group">
+                                            <input type="file" name="brochure" id="sheet_brochure" accept="application/pdf"
+                                                class="form-control @error('brochure') is-invalid @enderror">
+                                            <button type="button" id="clearBrochure" class="btn btn-outline-danger d-none" title="Remove selected file">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </div>
+                                        <small class="text-muted d-block">Only PDF, max 2 MB. Leave empty to keep the current file.</small>
+                                        @error('brochure')<div class="text-danger small">{{ $message }}</div>@enderror
                                         @if($sheet->brochure)
-                                            <a href="{{ asset('admin-assets/technical-data-sheets/brochure/' . $sheet->brochure) }}" target="_blank" class="d-inline-block mt-2">
-                                                <i class="bi bi-file-earmark-pdf"></i> View current file
-                                            </a>
+                                            <input type="hidden" name="remove_brochure" id="remove_brochure" value="{{ old('remove_brochure', '0') }}">
+
+                                            <div id="currentFileBox" class="d-flex align-items-center gap-2 mt-2 {{ old('remove_brochure') == '1' ? 'd-none' : '' }}">
+                                                <a href="{{ asset('admin-assets/technical-data-sheets/brochure/' . $sheet->brochure) }}" target="_blank">
+                                                    <i class="bi bi-file-earmark-pdf"></i> View current file
+                                                </a>
+                                                <button type="button" id="removeCurrentFile" class="btn btn-sm btn-outline-danger py-0 px-2" title="Remove current file">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </div>
+
+                                            <div id="removedNotice" class="small text-danger mt-2 {{ old('remove_brochure') == '1' ? '' : 'd-none' }}">
+                                                Current file removed. Please upload a new PDF.
+                                                <a href="#" id="undoRemoveFile">Undo</a>
+                                            </div>
                                         @endif
                                     </div>
 
@@ -81,24 +98,50 @@
 @push('scripts')
 <script src="{{ asset('admin-assets/js/technical-data-sheets/technical-data-sheets.js') }}"></script>
 <script>
-    var pdfRules = { fileExt: 'pdf', maxFileSize: 2097152 }; // KB (2 GB)
+    var pdfRules = { fileExt: 'pdf', maxFileSize: 2048 }; // KB (2 MB)
     var pdfMessages = {
         fileExt: 'Only PDF files are allowed.',
-        maxFileSize: 'The file may not be greater than 2 GB.'
+        maxFileSize: 'The file may not be greater than 2 MB.'
     };
 
     $('#sheetForm').validate({
         ignore: ':disabled',
+        errorPlacement: function (error, el) {
+            if (el.closest('.input-group').length) {
+                error.insertAfter(el.closest('.input-group'));
+            } else {
+                error.insertAfter(el);
+            }
+        },
         highlight: function (el) { $(el).addClass('is-invalid'); },
         unhighlight: function (el) { $(el).removeClass('is-invalid'); },
         rules: {
-            brochure: pdfRules,
+            brochure: $.extend({
+                // required only after the current file was removed
+                required: function () { return $('#remove_brochure').val() === '1'; }
+            }, pdfRules),
             status: { required: true }
         },
         messages: {
-            brochure: pdfMessages,
+            brochure: $.extend({ required: 'Please upload a new PDF, the current file was removed.' }, pdfMessages),
             status: { required: 'Please select the status.' }
         }
+    });
+
+    // Remove / undo the current (already saved) file
+    $('#removeCurrentFile').on('click', function () {
+        $('#remove_brochure').val('1');
+        $('#currentFileBox').addClass('d-none');
+        $('#removedNotice').removeClass('d-none');
+    });
+
+    $('#undoRemoveFile').on('click', function (e) {
+        e.preventDefault();
+        $('#remove_brochure').val('0');
+        $('#removedNotice').addClass('d-none');
+        $('#currentFileBox').removeClass('d-none');
+        $('#sheet_brochure').removeClass('is-invalid');
+        $('#sheetForm').validate().element('#sheet_brochure');
     });
 </script>
 @endpush

@@ -68,6 +68,30 @@ $(document).ready(function () {
     }
 
     // ---------------------------------------------------------------
+    // 2. Add/Edit pages: show a cross button to remove the chosen PDF
+    // ---------------------------------------------------------------
+    var $brochure = $('#sheet_brochure');
+    var $clearBtn = $('#clearBrochure');
+
+    if ($brochure.length && $clearBtn.length) {
+        $brochure.on('change', function () {
+            $clearBtn.toggleClass('d-none', !this.files.length);
+        });
+
+        $clearBtn.on('click', function () {
+            $brochure.val('');
+            $clearBtn.addClass('d-none');
+            $brochure.removeClass('is-invalid');
+
+            // Add page: "required" error will show. Edit page: nothing (field is optional).
+            var $form = $brochure.closest('form');
+            if ($.fn.validate && $form.data('validator')) {
+                $form.validate().element($brochure);
+            }
+        });
+    }
+
+    // ---------------------------------------------------------------
     // Helper: show a dismissible message in the #message-pop-up alert
     // ---------------------------------------------------------------
     function showMessage(message, type) {

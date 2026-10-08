@@ -51,10 +51,15 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Brochure (PDF) <span class="required-star">*</span></label>
-                                        <input type="file" name="brochure" id="sheet_brochure" accept="application/pdf"
-                                            class="form-control @error('brochure') is-invalid @enderror">
-                                        <small class="text-muted">Only PDF, max 2 GB.</small>
-                                        @error('brochure')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                        <div class="input-group">
+                                            <input type="file" name="brochure" id="sheet_brochure" accept="application/pdf"
+                                                class="form-control @error('brochure') is-invalid @enderror">
+                                            <button type="button" id="clearBrochure" class="btn btn-outline-danger d-none" title="Remove selected file">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </div>
+                                        <small class="text-muted d-block">Only PDF, max 2 MB.</small>
+                                        @error('brochure')<div class="text-danger small">{{ $message }}</div>@enderror
                                     </div>
 
                                 </div>
@@ -75,14 +80,21 @@
 @push('scripts')
 <script src="{{ asset('admin-assets/js/technical-data-sheets/technical-data-sheets.js') }}"></script>
 <script>
-    var pdfRules = { fileExt: 'pdf', maxFileSize: 2097152 }; // KB (2 GB)
+    var pdfRules = { fileExt: 'pdf', maxFileSize: 2048 }; // KB (2 MB)
     var pdfMessages = {
         fileExt: 'Only PDF files are allowed.',
-        maxFileSize: 'The file may not be greater than 2 GB.'
+        maxFileSize: 'The file may not be greater than 2 MB.'
     };
 
     $('#sheetForm').validate({
         ignore: ':disabled',
+        errorPlacement: function (error, el) {
+            if (el.closest('.input-group').length) {
+                error.insertAfter(el.closest('.input-group'));
+            } else {
+                error.insertAfter(el);
+            }
+        },
         highlight: function (el) { $(el).addClass('is-invalid'); },
         unhighlight: function (el) { $(el).removeClass('is-invalid'); },
         rules: {
