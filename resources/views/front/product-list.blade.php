@@ -75,7 +75,7 @@
 
 <section class="product_cta_banner" style="background-image: linear-gradient(-1deg, rgba(57,49,133,0.92) 0%, rgba(57,50,133,0.92) 38%, rgba(0,160,227,0.92) 100%), url('{{ asset('front/img/figma/products/product-cta-bg.jpg') }}');">
     <div class="container">
-        <h2 class="product_cta_title">Can&rsquo;t Find What You&rsquo;re Looking For?</h2>
+        <h2 class="product_cta_title">Can't Find What You're Looking For?</h2>
         <p class="product_cta_text">Our engineering team can design a custom filtration solution built around your exact process requirements.</p>
         <a href="{{ route('contact') }}" class="product_cta_btn_solid">Request for Quote</a>
     </div>
