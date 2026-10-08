@@ -182,7 +182,7 @@ body{font-family: var(--wb-body-typography-font-family); color: var(--wb-light-b
 .img_pos_ppfilter{ position: absolute; left: 14.33%; top: 0.65%; width: 85.67%; height: 102.26%; object-fit: cover; }
 .img_pos_romembrane{ position: absolute; left: 18.24%; top: 8.57%; width: 88.27%; height: 87.86%; object-fit: cover; }
 .filter_card .overlay {position: absolute;top: 0;left: 0;width: 100%;height: 100%;background: rgba(233, 231, 231, 0.80); /* Background color with opacity */backdrop-filter: blur(1px); /* Blur effect */ display: flex;  justify-content: center; align-items: center; opacity: 0; /* Hidden initially */  transition: opacity 0.3s ease-in-out; /* Smooth hover effect */}
-.filter_card .overlay p { font-size: 25px;color:var(--wb-black); /* Text color */ font-weight: 400;margin: 0;text-align: center;text-transform: capitalize;}
+.filter_card .overlay p { font-size: 20px;color:var(--wb-black); /* Text color */ font-weight: 400;margin: 0;text-align: center;text-transform: capitalize;}
 .filter_card:hover .overlay {opacity: 1; /* Show overlay on hover */}
  /***** End  filter_card section  *****/
 
