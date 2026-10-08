@@ -55,7 +55,8 @@ class TechnicalDataSheetsController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate($this->rules());
+        $validated = $request->validate($this->rules(), $this->messages());
+        unset($validated['remove_brochure']);
 
         $validated['brochure'] = $this->uploadFile($request, 'brochure', $this->brochurePath);
 
@@ -76,7 +77,8 @@ class TechnicalDataSheetsController extends Controller
     {
         $sheet = TechnicalDataSheet::findOrFail($id);
 
-        $validated = $request->validate($this->rules($sheet));
+        $validated = $request->validate($this->rules($sheet), $this->messages());
+        unset($validated['remove_brochure']); // only a UI flag, not a DB column
 
         if ($request->hasFile('brochure')) {
             $this->deleteFile($sheet->brochure, $this->brochurePath);
@@ -119,11 +121,15 @@ class TechnicalDataSheetsController extends Controller
 
     protected function rules(?TechnicalDataSheet $sheet = null): array
     {
-        // 2 GB = 2097152 KB (Laravel `max` KB me hota hai)
-        $brochure = ($sheet ? 'nullable' : 'required') . '|file|mimes:pdf|mimetypes:application/pdf|max:2097152';
+        // Edit page: optional, unless the user removed the current file (then a new one is required)
+        $isOptional = $sheet && ! request()->boolean('remove_brochure');
+
+        // 2 MB = 2048 KB (Laravel `max` KB me hota hai)
+        $brochure = ($isOptional ? 'nullable' : 'required') . '|file|mimes:pdf|mimetypes:application/pdf|max:2048';
 
         return [
-            // Category is optional now
+            'remove_brochure' => 'nullable|boolean',
+            // Category is optional
             'category_id' => [
                 'nullable',
                 Rule::exists('categories', 'id')->where(function ($query) use ($sheet) {
@@ -138,6 +144,17 @@ class TechnicalDataSheetsController extends Controller
             ],
             'brochure' => $brochure,
             'status'   => 'required|in:Active,In-Active',
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'brochure.required'  => 'Please select the brochure PDF.',
+            'brochure.max'       => 'The brochure may not be greater than 2 MB.',
+            'brochure.mimes'     => 'Only PDF files are allowed.',
+            'brochure.mimetypes' => 'Only PDF files are allowed.',
+            'brochure.uploaded'  => 'The brochure failed to upload. Please make sure it is a PDF of max 2 MB.',
         ];
     }
 

@@ -43,7 +43,7 @@
             @forelse($sheets as $sheet)
                 @if($sheet->brochure)
                     <a href="{{ asset('admin-assets/technical-data-sheets/brochure/' . $sheet->brochure) }}"
-                       class="brochure_card" target="_blank" download data-cat="{{ $sheet->category_id }}">
+                       class="brochure_card" target="_blank" download="{{ $sheet->brochure }}" data-cat="{{ $sheet->category_id }}">
                         <img src="{{ asset('front/img/figma/pdf-icon.svg') }}" alt="PDF" class="brochure_pdf_icon">
                         <span>{{ $sheet->category->title ?? 'Technical Datasheet' }}</span>
                     </a>
