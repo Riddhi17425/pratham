@@ -10,8 +10,8 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@pratham.test'],
-            ['name' => 'Pratham Admin', 'password' => 'password123', 'role' => User::ROLE_SUPER_ADMIN, 'status' => true]
+            ['email' => 'admin@pratham.com'],
+            ['name' => 'Pratham Admin', 'password' => 'pRaThaM@98anSa', 'role' => User::ROLE_SUPER_ADMIN, 'status' => true]
         );
     }
 }

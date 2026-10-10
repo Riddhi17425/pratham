@@ -46,22 +46,27 @@
                         <a class="nav-link" href="{{ route('about') }}">About Us</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle no-caret" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle no-caret" href="{{ route('products') }}" id="navbarDropdown" role="button" data-bs-toggle="" aria-expanded="false">
                         Products
                         <svg class="dropdown_arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M19.92 8.95L13.4 15.47C12.63 16.24 11.37 16.24 10.6 15.47L4.08002 8.95" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <button class="dropdown_toggle_btn" id="productsDropdownBtn" type="button" aria-label="Show product categories" aria-expanded="false" aria-controls="productsDropdownMenu">
+                            <svg class="dropdown_arrow_btn" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M19.92 8.95L13.4 15.47C12.63 16.24 11.37 16.24 10.6 15.47L4.08002 8.95" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu" id="productsDropdownMenu" aria-labelledby="navbarDropdown">
                             @forelse ($productCategories as $productCategory)
                             <li><a class="dropdown-item" href="{{ route('category.products', $productCategory->category_url) }}">{{ $productCategory->title }}</a></li>
                             @empty
                             <li><span class="dropdown-item text-muted">No categories available</span></li>
                             @endforelse
-                            <li>
+                            <!-- <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="{{ route('products') }}">All Products</a></li>
+                            <li><a class="dropdown-item" href="{{ route('products') }}">All Products</a></li> -->
                         </ul>
                     </li>
                     <li class="nav-item">
