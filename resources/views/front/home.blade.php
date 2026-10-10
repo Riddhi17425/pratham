@@ -119,7 +119,7 @@
             <div class="collage_col collage_col_pp">
                 <div class="collage_stack">
                     <div class="filter_card">
-                        <img src="{{ asset('front/img/figma/collage-pp-filter.webp') }}" alt="PP Filter" class="img_pos_ppfilter">
+                        <img src="{{ asset('front/img/figma/pp-filter.webp') }}" alt="PP Filter" class="img_pos_ppfilter">
                         <div class="overlay"><p>Pleated PP High Efficiency</p></div>
                     </div>
                     <div class="filter_card">
