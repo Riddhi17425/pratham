@@ -120,6 +120,14 @@ body{font-family: var(--wb-body-typography-font-family); color: var(--wb-light-b
  .footer_bottom_inner p+p{padding:10px 0 10px 34px;border-left:1px solid #89a0bc;font-size:14px;}
  .ft_border{position: relative; padding: 0 30px 0 0;}
  .ft_border::after{content: ""; position: absolute; top: 0; right: 0; width: 1px; height: 100%; background: linear-gradient(180deg, rgba(124, 124, 124, 0) 0%, #7c7c7c 49.92%, rgba(124, 124, 124, 0) 100%);}
+ .wa-container {position: fixed;bottom: 30px;right: 30px;z-index: 9999;}
+ .wa-button {width: 60px;height: 60px;border-radius: 50%;background: #25D366;color: #fff;display: flex;justify-content: center;align-items: center;cursor: pointer;border: none;position: relative;box-shadow: 0 8px 25px rgba(37, 211, 102, .4);transition: .3s ease;animation: waBounce 2s infinite;text-decoration: none;}
+ .wa-button:hover {transform: scale(1.08);}
+/* Pulse Ring */
+ .wa-button::before {content: "";position: absolute;top: -6px;left: -6px;right: -6px;bottom: -6px;border-radius: 50%;border: 2px solid rgba(37, 211, 102, .7);animation: waPulse 2s infinite;pointer-events: none;}
+ .wa-button::after {content: "";position: absolute;top: -12px;left: -12px;right: -12px;bottom: -12px; border-radius: 50%;border: 2px solid rgba(37, 211, 102, .35);animation: waPulse 2s infinite .8s;pointer-events: none; }
+
+  
  /***** End footer Section *****/
 
  /***** index page *****/
