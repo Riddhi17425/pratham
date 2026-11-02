@@ -144,7 +144,7 @@
 
 <div class="wa-container">
     <a
-        href="https://wa.me/919820246044?text=Hello, I'm interested in Pratham's products. Could you please assist me?"
+        href="https://wa.me/919820246044?text=Hello, I'm interested in Pratham's products. Could you please assist me?" target="_blank" rel="noopener noreferrer"
         class="wa-button"
         target="_blank"
         rel="noopener noreferrer"
