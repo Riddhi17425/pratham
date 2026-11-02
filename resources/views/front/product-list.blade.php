@@ -1,70 +1,79 @@
 @extends('front.app')
 
-@section('title', $category ? $category->title . ' | Pratham Filter Industries' : 'Pratham Filter Industries | products')
+@section('title', $category ? $category->title . ' | Pratham Filter Industries' : 'Products | Pratham Filter Industries')
 @section('meta_description', $metaDescription)
 
 @section('content')
-<section class="page_hero" style="background-image: url('{{ asset('front/img/figma/about/page-hero-bg.jpg') }}');">
-    <div class="page_hero_overlay"></div>
-    <div class="container position-relative">
-        <div class="page_hero_content">
-            <div class="breadcrumb_row">
-                <a href="{{ route('home') }}">Home</a>
-                <i class="fa-solid fa-chevron-right"></i>
-                @if ($category)
-                <!-- <a href="{{ route('products') }}">Water Filter Products</a>
-                <i class="fa-solid fa-chevron-right"></i> -->
-                <span>{{ $category->title }}</span>
-                @else
-                <span>All Products</span>
-                @endif
-            </div>
-            <h1 class="page_hero_title">{{ $category ? $category->title . ' Products' : 'Products' }}</h1>
-        </div>
-    </div>
-</section>
+@include('front.partials.page-hero', [
+    'image' => asset('front/img/banners/products-banner.webp'),
+    'banner' => true,
+    'title' => $category ? $category->title . ' Products' : 'Products',
+    'crumbs' => $category
+        ? [['label' => 'Products', 'url' => route('products')], ['label' => $category->title]]
+        : [['label' => 'All Products']],
+    'subtitle' => $category ? null : 'Filtration equipment, cartridges, housings, membranes and components for every stage of water treatment.',
+])
+
+@php
+    $plainDescription = $category
+        ? preg_replace('/[\s\x{00A0}]+/u', '', html_entity_decode(strip_tags($category->description ?? '')))
+        : '';
+    // Category chips for the all-products page, built from the products already loaded on it
+    $filterCategories = $category
+        ? collect()
+        : $products->pluck('category')->filter()->unique('id')->sortBy('title')->values();
+@endphp
 
 <section class="section_padding">
     <div class="container">
         <div class="products_header">
             <div class="products_header_title">
                 <p class="products_eyebrow">{{ $category?->title ?? 'Our Products' }}</p>
-                <h2 class="title mb-0">{{ $category ? 'Explore ' . $category->title : 'Explore Our Range' }}</h2>
-                <span class="products_accent_line"></span>
+                <h2 class="title">{{ $category ? 'Explore ' . $category->title : 'Explore Our Range' }}</h2>
             </div>
             @if(isset($products) && $products->count() > 1)
             <div class="products_search">
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                 <input type="search" placeholder="Search products..." id="productSearch" aria-label="Search products">
             </div>
             @endif
         </div>
 
-        @php
-            $plainDescription = $category
-                ? preg_replace('/[\s\x{00A0}]+/u', '', html_entity_decode(strip_tags($category->description ?? '')))
-                : '';
-        @endphp
-
         @if ($plainDescription !== '')
-        <div class="sub_text_p16 mb-4 category_description">{!! $category->description !!}</div>
+        <div class="sub_text_p16 rich_text category_description">{!! $category->description !!}</div>
+        @endif
+
+        @if ($filterCategories->count() > 1)
+        <div class="product_filters" role="group" aria-label="Filter products by category">
+            <button type="button" class="product_filter active" data-filter="all" aria-pressed="true">All <span>{{ $products->count() }}</span></button>
+            @foreach ($filterCategories as $filterCategory)
+            <button type="button" class="product_filter" data-filter="{{ $filterCategory->id }}" aria-pressed="false">{{ $filterCategory->title }} <span>{{ $products->where('category_id', $filterCategory->id)->count() }}</span></button>
+            @endforeach
+        </div>
+        @endif
+
+        @if ($products->isNotEmpty())
+        <p class="products_count" aria-live="polite">Showing <strong id="productCount">{{ $products->count() }}</strong> <span id="productCountLabel">{{ $products->count() === 1 ? 'product' : 'products' }}</span></p>
         @endif
 
         <div class="product_grid_list" id="productGridList">
             @foreach ($products as $product)
-            <div class="product_list_card" data-name="{{ \Illuminate\Support\Str::lower($product->title . ' ' . $product->name . ' ' . html_entity_decode(strip_tags($product->description))) }}">
-                <div class="product_list_img_wrap product_img_stretch">
-                    <a href="{{ route('product.details', $product->product_url) }}"><img src="{{ $product->image ? asset('admin-assets/products/image/' . $product->image) : asset('front/img/figma/products/prod-spun-cartridge.jpg') }}" alt="{{ $product->image_alt ?: $product->name }}"></a>
-                </div>
+            <article class="product_list_card" data-name="{{ \Illuminate\Support\Str::lower($product->title . ' ' . $product->name . ' ' . html_entity_decode(strip_tags($product->description))) }}" data-category="{{ $product->category_id }}">
+                <a href="{{ route('product.details', $product->product_url) }}" class="product_list_img_wrap" tabindex="-1" aria-hidden="true">
+                    <img src="{{ $product->image ? asset('admin-assets/products/image/' . $product->image) : asset('front/img/figma/products/prod-spun-cartridge.jpg') }}" alt="{{ $product->image_alt ?: $product->name }}" loading="lazy" decoding="async">
+                </a>
                 <div class="product_list_info">
-                    <a href="{{ route('product.details', $product->product_url) }}"><h3 class="product_list_title">{{ $product->title }}</h3></a>
+                    @if (!$category && $product->category)
+                    <span class="product_list_cat">{{ $product->category->title }}</span>
+                    @endif
+                    <h3 class="product_list_title"><a href="{{ route('product.details', $product->product_url) }}">{{ $product->title }}</a></h3>
                     @if ($product->name !== $product->title)
-                      <a href="{{ route('product.details', $product->product_url) }}"><p class="product_list_name">{{ $product->name }}</p></a>
+                    <p class="product_list_name">{{ $product->name }}</p>
                     @endif
                     <p class="product_list_desc">{{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($product->description)), 150) }}</p>
-                    <a href="{{ route('product.details', $product->product_url) }}" class="dark-btn product_know_more">Know More</a>
+                    <a href="{{ route('product.details', $product->product_url) }}" class="product_know_more">Know More <svg class="btn_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
                 </div>
-            </div>
+            </article>
             @endforeach
         </div>
         <p class="product_no_results" id="productNoResults" @if ($products->isNotEmpty()) style="display:none;" @endif>
@@ -73,48 +82,58 @@
     </div>
 </section>
 
-<section class="product_cta_banner" style="background-image: linear-gradient(-1deg, rgba(57,49,133,0.92) 0%, rgba(57,50,133,0.92) 38%, rgba(0,160,227,0.92) 100%), url('{{ asset('front/img/figma/products/product-cta-bg.jpg') }}');">
-    <div class="container">
-        <h2 class="product_cta_title">Can't Find What You're Looking For?</h2>
-        <p class="product_cta_text">Our engineering team can design a custom filtration solution built around your exact process requirements.</p>
-        <a href="{{ route('contact') }}" class="product_cta_btn_solid">Request for Quote</a>
-    </div>
-</section>
+@include('front.partials.cta-banner', [
+    'title' => "Can't Find What You're Looking For?",
+    'text' => 'Our engineering team can design a custom filtration solution built around your exact process requirements.',
+    'actions' => [['label' => 'Request for Quote', 'url' => route('contact'), 'style' => 'solid']],
+])
 
 <script>
 (function () {
     var search = document.getElementById('productSearch');
     var cards = document.querySelectorAll('#productGridList .product_list_card');
     var noResults = document.getElementById('productNoResults');
+    var count = document.getElementById('productCount');
+    var countLabel = document.getElementById('productCountLabel');
+    var filters = document.querySelectorAll('.product_filter');
+    var activeFilter = 'all';
+    if (!cards.length) return;
 
     function filterProducts() {
-        var query = search.value.trim().toLowerCase();
+        var query = search ? search.value.trim().toLowerCase() : '';
         var visible = 0;
 
         cards.forEach(function (card) {
-            var matches = card.dataset.name.indexOf(query) !== -1;
+            var matches = card.dataset.name.indexOf(query) !== -1 &&
+                (activeFilter === 'all' || card.dataset.category === activeFilter);
             card.style.display = matches ? '' : 'none';
             if (matches) visible++;
         });
 
         noResults.style.display = visible ? 'none' : 'block';
+        if (count) count.textContent = visible;
+        if (countLabel) countLabel.textContent = visible === 1 ? 'product' : 'products';
     }
 
-    search.addEventListener('input', filterProducts);
-    var initialQuery = new URLSearchParams(window.location.search).get('q');
-    if (initialQuery) {
-        search.value = initialQuery;
-        filterProducts();
+    filters.forEach(function (button) {
+        button.addEventListener('click', function () {
+            activeFilter = button.getAttribute('data-filter');
+            filters.forEach(function (other) {
+                other.classList.toggle('active', other === button);
+                other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+            });
+            filterProducts();
+        });
+    });
+
+    if (search) {
+        search.addEventListener('input', filterProducts);
+        var initialQuery = new URLSearchParams(window.location.search).get('q');
+        if (initialQuery) {
+            search.value = initialQuery;
+            filterProducts();
+        }
     }
 })();
 </script>
 @endsection
-
-@push('styles')
-    <style>
-        .category_description p { margin-bottom: 1rem; }
-        .category_description p:last-child { margin-bottom: 0; }
-        .category_description ul,
-        .category_description ol { padding-left: 1.25rem; margin-bottom: 1rem; }
-    </style>
-@endpush

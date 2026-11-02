@@ -38,7 +38,8 @@
         noResults.style.display = matches.length ? 'none' : 'block';
         pagination.innerHTML = '';
 
-        for (var page = 1; page <= pageCount; page++) {
+        // A single page needs no pagination controls
+        for (var page = 1; pageCount > 1 && page <= pageCount; page++) {
             (function (pageNumber) {
                 var button = document.createElement('button');
                 button.type = 'button';

@@ -4,51 +4,51 @@
 @section('meta_description', $metaDescription)
 
 @section('content')
-<section class="page_hero" style="background-image: url('{{ asset('front/img/figma/about/page-hero-bg.jpg') }}');">
-    <div class="page_hero_overlay"></div>
-    <div class="container position-relative">
-        <div class="page_hero_content">
-            <div class="breadcrumb_row">
-                <a href="{{ route('home') }}">Home</a>
-                <!-- <i class="fa-solid fa-chevron-right"></i> -->
-                <!-- <a href="{{ route('products') }}">Water Filter Products</a> -->
-                @if ($product->category)
-                    <i class="fa-solid fa-chevron-right"></i>
-                    <a href="{{ route('category.products', $product->category->category_url) }}">{{ $product->category->title }}</a>
-                @endif
-                <i class="fa-solid fa-chevron-right"></i>
-                <span>{{ $product->title }}</span>
-            </div>
-            <h1 class="page_hero_title product_detail_hero_title">{{ $product->title }}</h1>
-        </div>
-    </div>
-</section>
+@php
+    $productCrumbs = [['label' => 'Products', 'url' => route('products')]];
+    if ($product->category) {
+        $productCrumbs[] = ['label' => $product->category->title, 'url' => route('category.products', $product->category->category_url)];
+    }
+    $productCrumbs[] = ['label' => $product->title];
+@endphp
+
+@include('front.partials.page-hero', [
+    'title' => $product->title,
+    'subtitle' => ($product->name && $product->name !== $product->title) ? $product->name : optional($product->category)->title,
+    'crumbs' => $productCrumbs,
+    'image' => asset('front/img/banners/products-banner.webp'),
+    'banner' => true,
+])
 
 <section class="section_padding">
     <div class="container product_detail_feature">
         <div class="product_detail_visual">
-            <img src="{{ $product->image ? asset('admin-assets/products/image/' . $product->image) : asset('front/img/figma/products/prod-spun-cartridge.jpg') }}"
-                 alt="{{ $product->image_alt ?: $product->name }}">
+            <div class="product_detail_frame">
+                <img src="{{ $product->image ? asset('admin-assets/products/image/' . $product->image) : asset('front/img/figma/products/prod-spun-cartridge.jpg') }}"
+                     alt="{{ $product->image_alt ?: $product->name }}">
+            </div>
         </div>
         <div class="product_detail_content">
-            @if ($product->category)
-                <!--<p class="products_eyebrow">{{ $product->category->title }}</p>-->
-            @endif
-            <h2 class="title mb-0">{{ $product->name ?? '' }}</h2>
+            <span class="eyebrow">Product Overview</span>
             @if ($product->description)
-                <div class="sub_text_p16 product_description">{!! $product->description !!}</div>
+                <div class="sub_text_p16 rich_text product_description">{!! $product->description !!}</div>
             @endif
             <div class="product_detail_actions">
+                <a href="#productInquiryModal" class="product_enquire_btn js-open-product-inquiry" aria-haspopup="dialog">
+                    Enquire Now <svg class="btn_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
                 @if (isset($product->catalogue) && $product->catalogue != '')
                     <a href="{{ asset('admin-assets/products/catalogue/' . $product->catalogue) }}"
-                       class="purple-btn-solid product_download_btn" download>
-                        <i class="fa-solid fa-download"></i> Download Catalogue
+                       class="product_download_btn" download>
+                        <i class="fa-solid fa-download" aria-hidden="true"></i> Download Catalogue
                     </a>
                 @endif
-                <a href="#productInquiryModal" class="product_enquire_btn js-open-product-inquiry" aria-haspopup="dialog">
-                    Enquire Now
-                </a>
             </div>
+            <ul class="product_assurance">
+                <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Quality-checked before dispatch</li>
+                <li><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Branches across India</li>
+                <li><i class="fa-solid fa-headset" aria-hidden="true"></i> Expert technical guidance</li>
+            </ul>
         </div>
     </div>
 </section>
@@ -56,81 +56,86 @@
 <div class="quote_modal_backdrop @if ($errors->productInquiry->any()) active @endif" id="productInquiryBackdrop"></div>
 <div class="quote_modal @if ($errors->productInquiry->any()) active @endif" id="productInquiryModal" role="dialog" aria-modal="true" aria-labelledby="productInquiryTitle">
     <button class="quote_modal_close js-close-product-inquiry" type="button" aria-label="Close product inquiry">
-        <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M12 12L36 36M36 12L12 36" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
         </svg>
     </button>
     <div class="quote_modal_header">
+        <span class="eyebrow">Enquire Now</span>
         <h2 class="title quote_modal_title" id="productInquiryTitle">Product Inquiry</h2>
-        <span class="quote_modal_underline"></span>
+        <p class="quote_modal_text">Share your requirement and our team will get back to you about {{ $product->name ?: $product->title }}.</p>
     </div>
 
     <form class="quote_modal_form" id="productInquiryForm" action="{{ route('product-inquiry.submit') }}" method="post" novalidate>
         @csrf
         <input type="hidden" name="product_id" value="{{ $product->id }}">
-        <div class="contact_field">
-            <input type="text" name="name" placeholder="Name" value="{{ old('name') }}" minlength="2" maxlength="120" required>
+        <div class="contact_input_group">
+            <div class="contact_field">
+                <label for="inquiryName">Name <span class="req">*</span></label>
+                <input type="text" name="name" id="inquiryName" placeholder="Your full name" value="{{ old('name') }}" minlength="2" maxlength="120" autocomplete="name" required @class(['contact_error' => $errors->productInquiry->has('name')])>
+            </div>
+            @error('name', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
         </div>
-        @error('name', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
-        <div class="contact_field">
-            <input type="email" name="email" placeholder="Email ID" value="{{ old('email') }}" maxlength="255" required>
+        <div class="contact_input_group">
+            <div class="contact_field">
+                <label for="inquiryEmail">Email ID <span class="req">*</span></label>
+                <input type="email" name="email" id="inquiryEmail" placeholder="you@company.com" value="{{ old('email') }}" maxlength="255" autocomplete="email" required @class(['contact_error' => $errors->productInquiry->has('email')])>
+            </div>
+            @error('email', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
         </div>
-        @error('email', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
-        <div class="contact_field">
-            <input type="tel" name="phone" placeholder="Phone Number" value="{{ old('phone') }}" maxlength="15" inputmode="numeric">
+        <div class="contact_input_group">
+            <div class="contact_field">
+                <label for="inquiryPhone">Phone Number</label>
+                <input type="tel" name="phone" id="inquiryPhone" placeholder="Phone number" value="{{ old('phone') }}" maxlength="15" inputmode="numeric" autocomplete="tel" @class(['contact_error' => $errors->productInquiry->has('phone')])>
+            </div>
+            @error('phone', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
         </div>
-        @error('phone', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
-        <div class="contact_field">
-            <input type="text" name="product" value="{{ $product->name ?: $product->title }}" readonly required aria-label="Selected product">
+        <div class="contact_input_group">
+            <div class="contact_field">
+                <label for="inquiryProduct">Product <span class="req">*</span></label>
+                <input type="text" name="product" id="inquiryProduct" value="{{ $product->name ?: $product->title }}" readonly required aria-label="Selected product">
+            </div>
+            @error('product', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
         </div>
-        @error('product', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
-        <div class="contact_field">
-            <textarea name="message" placeholder="Message" rows="4" maxlength="5000">{{ old('message') }}</textarea>
+        <div class="contact_input_group contact_input_group_full">
+            <div class="contact_field">
+                <label for="inquiryMessage">Message</label>
+                <textarea name="message" id="inquiryMessage" placeholder="Tell us about your requirement" rows="4" maxlength="5000" @class(['contact_error' => $errors->productInquiry->has('message')])>{{ old('message') }}</textarea>
+            </div>
+            @error('message', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
         </div>
-        @error('message', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
         @error('product_id', 'productInquiry')<small class="contact_error">{{ $message }}</small>@enderror
-        <button class="purple-btn quote_modal_submit" type="submit">Send Inquiry</button>
+        <button class="quote_modal_submit" type="submit">Send Inquiry</button>
     </form>
 </div>
 
 @if ($product->technical_details)
-    <hr class="product_detail_divider">
-    <section class="section_padding_top section_padding_bot">
+    <section class="section_padding section_tinted">
         <div class="container">
-            <p class="products_eyebrow">Technical Data</p>
-            <h2 class="product_spec_title">{{ $product->title }} Specifications</h2>
-            <span class="products_accent_line mb-4"></span>
+            <div class="section_head">
+                <p class="products_eyebrow">Technical Data</p>
+                <h2 class="product_spec_title">{{ $product->title }} Specifications</h2>
+            </div>
             <div class="product_technical_details">{!! $product->technical_details !!}</div>
         </div>
     </section>
 @endif
 
-<section class="product_cta_banner" style="background-image: linear-gradient(-1deg, rgba(57,49,133,0.92) 0%, rgba(57,50,133,0.92) 38%, rgba(0,160,227,0.92) 100%), url('{{ asset('front/img/figma/products/product-cta-bg.jpg') }}');">
-    <div class="container">
-        <h2 class="product_cta_title">Need Help Choosing The Right Filter?</h2>
-        <p class="product_cta_text">Talk to our team and get a recommendation tailored to your exact filtration requirements.</p>
-        <div class="product_cta_actions">
-            <a href="{{ route('contact') }}" class="product_cta_btn_outline">Talk to Our Experts</a>
-            <a href="{{ route('products') }}" class="product_cta_btn_solid">Explore Our Products</a>
-        </div>
-    </div>
-</section>
+@include('front.partials.cta-banner', [
+    'title' => 'Need Help Choosing The Right Filter?',
+    'text' => 'Talk to our team and get a recommendation tailored to your exact filtration requirements.',
+    'actions' => [
+        ['label' => 'Talk to Our Experts', 'url' => route('contact'), 'style' => 'outline'],
+        ['label' => 'Explore Our Products', 'url' => route('products'), 'style' => 'solid'],
+    ],
+])
 @endsection
-
-@push('styles')
-    <style>
-        .product_description p { margin-bottom: 1rem; }
-        .product_description p:last-child { margin-bottom: 0; }
-        .product_description ul,
-        .product_description ol { padding-left: 1.25rem; margin-bottom: 1rem; }
-    </style>
-@endpush
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.22.1/dist/jquery.validate.min.js"></script>
     <script>
         $.validator.addMethod('inquiryNamePattern', function(value, element) {
-            return this.optional(element) || /^[\p{L}\p{M}][\p{L}\p{M}0-9\s.'\u2019-]{1,119}$/u.test(value.trim());
+            return this.optional(element) || /^[\p{L}\p{M}][\p{L}\p{M}0-9\s.'’-]{1,119}$/u.test(value.trim());
         }, 'Enter a valid name.');
         $.validator.addMethod('inquiryPhonePattern', function(value, element) {
             return this.optional(element) || /^[0-9]{7,15}$/.test(value);
