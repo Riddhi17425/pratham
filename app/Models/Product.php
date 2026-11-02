@@ -21,6 +21,7 @@ class Product extends Model
         'catalogue',
         'technical_details',
         'status',
+        'sort_order',
     ];
 
     public function category()

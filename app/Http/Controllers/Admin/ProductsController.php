@@ -26,9 +26,7 @@ class ProductsController extends Controller
         return view('admin.products.index');
     }
 
-    /**
-     * DataTable ajax feed for the products list.
-     */
+    
     public function getProductsData()
     {
         $products = Product::with('category')->select('products.*');
@@ -45,6 +43,22 @@ class ProductsController extends Controller
             ->addColumn('category', fn ($row) => e($row->category->title ?? '-'))
             ->editColumn('title', fn ($row) => e($row->title))
             ->editColumn('name', fn ($row) => e($row->name))
+            ->editColumn('sort_order', function ($row) {
+    return '<input type="number" min="0" max="99999"
+                class="form-control form-control-sm sort-input"
+                style="width:90px"
+                data-id="' . $row->id . '"
+                data-old="' . (int) $row->sort_order . '"
+                value="' . (int) $row->sort_order . '">';
+})
+->order(function ($query) {
+    $sort = request('sort_filter');
+    if (in_array($sort, ['asc', 'desc'])) {
+        $query->orderBy('sort_order', $sort)->orderBy('id', 'desc');
+    } else {
+        $query->orderBy('id', 'desc');   // All (Default) = newest first
+    }
+})
             ->addColumn('status', function ($row) {
                 $checked = $row->status === 'Active' ? 'checked' : '';
                 return '<div class="form-check form-switch">
@@ -58,13 +72,11 @@ class ProductsController extends Controller
                     <button type="button" class="btn btn-sm btn-danger btn-delete-product" data-id="' . $row->id . '"><i class="bi bi-trash"></i> Delete</button>
                 ';
             })
-            ->rawColumns(['image', 'status', 'action'])
+            ->rawColumns(['image','sort_order', 'status', 'action'])
             ->make(true);
     }
 
-    /**
-     * Show add product form.
-     */
+    
     public function create()
     {
         $categories = $this->categoryOptions();
@@ -72,21 +84,16 @@ class ProductsController extends Controller
         return view('admin.products.create', compact('categories'));
     }
 
-    /**
-     * Store a new product.
-     */
+    
     public function store(Request $request)
     {
         $validated = $request->validate($this->rules());
 
-        // add page par remove flag ki zarurat nahi
         unset($validated['remove_catalogue']);
 
-        // basket se pehle hi upload ho chuki PDF (temp file)
         $tempCatalogue = $validated['catalogue_temp'] ?? null;
         unset($validated['catalogue_temp']);
 
-        // URL khali ho to name se bana do (aur teeno modules me unique check karo)
         if (empty($validated['product_url'])) {
             $validated['product_url'] = Str::slug($validated['name']);
 
@@ -99,15 +106,13 @@ class ProductsController extends Controller
         $validated['catalogue'] = $request->hasFile('catalogue')
             ? $this->uploadFile($request, 'catalogue', $this->cataloguePath)
             : $this->takeTempCatalogue($tempCatalogue);
-
+       $validated['sort_order'] = $validated['sort_order'] ?? 9999;
         Product::create($validated);
 
         return redirect()->route('products.index')->with('toast_success', 'Product created successfully.');
     }
 
-    /**
-     * Show edit product form.
-     */
+   
     public function edit($id)
     {
         $product    = Product::findOrFail($id);
@@ -116,20 +121,16 @@ class ProductsController extends Controller
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update an existing product.
-     */
+    
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
 
         $validated = $request->validate($this->rules($product));
 
-        // basket se pehle hi upload ho chuki PDF (temp file)
         $tempCatalogue = $validated['catalogue_temp'] ?? null;
         unset($validated['catalogue_temp']);
 
-        // URL khali ho to name se bana do (aur teeno modules me unique check karo)
         if (empty($validated['product_url'])) {
             $validated['product_url'] = Str::slug($validated['name']);
 
@@ -146,24 +147,20 @@ class ProductsController extends Controller
         }
 
         if ($request->hasFile('catalogue')) {
-            // naya PDF aaya => purana delete karke naya save
             $this->deleteFile($product->catalogue, $this->cataloguePath);
             $validated['catalogue'] = $this->uploadFile($request, 'catalogue', $this->cataloguePath);
         } elseif ($tempCatalogue && ($newCatalogue = $this->takeTempCatalogue($tempCatalogue))) {
-            // basket me upload ho chuki PDF => purani delete karke ye lagao
             $this->deleteFile($product->catalogue, $this->cataloguePath);
             $validated['catalogue'] = $newCatalogue;
         } elseif ($request->input('remove_catalogue') == '1') {
-            // sirf remove kiya => file delete + DB me null
             $this->deleteFile($product->catalogue, $this->cataloguePath);
             $validated['catalogue'] = null;
         } else {
             unset($validated['catalogue']);
         }
 
-        // ye sirf form flag hai, DB column nahi
         unset($validated['remove_catalogue']);
-
+        $validated['sort_order'] = $validated['sort_order'] ?? 9999;
         $product->update($validated);
 
         return redirect()->route('products.index')->with('toast_success', 'Product updated successfully.');
@@ -181,10 +178,7 @@ class ProductsController extends Controller
         return response()->json(['success' => true, 'message' => 'Product deleted successfully.']);
     }
 
-    /**
-     * Basket me PDF girte hi ajax se upload hoti hai (temp folder me).
-     * Product save hone par takeTempCatalogue() isko final folder me le jata hai.
-     */
+    
     public function uploadCatalogue(Request $request)
     {
         $request->validate([
@@ -214,9 +208,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    /**
-     * Switch Active / In-Active from the list page (ajax).
-     */
+    
     public function toggleStatus($id)
     {
         $product = Product::findOrFail($id);
@@ -231,9 +223,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    /**
-     * Server-side validation rules.
-     */
+    
     protected function rules(?Product $product = null): array
     {
         $image = 'image|mimes:jpg,jpeg,png,webp|max:2048';
@@ -272,15 +262,10 @@ class ProductsController extends Controller
             'catalogue_temp'    => ['nullable', 'string', 'regex:/^[a-z0-9\-]+_\d+_[A-Za-z0-9]{6}\.pdf$/'],
             'technical_details' => 'nullable|string',
             'status'            => 'required|in:Active,In-Active',
+            'sort_order' => 'nullable|integer|min:0|max:99999',
         ];
     }
 
-    /**
-     * Check if a URL is already used in blogs, categories or products.
-     * Returns an error message naming the module that already has it, or null if free.
-     * The current record (on edit) is ignored so it doesn't clash with itself.
-     * DB::table() also checks soft-deleted rows.
-     */
     protected function urlConflictMessage(string $value, string $currentTable, ?int $currentId = null): ?string
     {
         $sources = [
@@ -353,9 +338,7 @@ class ProductsController extends Controller
         return $temp;
     }
 
-    /**
-     * Upload a file to the given public path and return the stored filename.
-     */
+    
     protected function uploadFile(Request $request, string $field, string $path): ?string
     {
         if (! $request->hasFile($field)) {
@@ -386,4 +369,14 @@ class ProductsController extends Controller
             File::delete($fullPath);
         }
     }
+    public function updateSort(Request $request, $id)
+{
+    $request->validate(['sort_order' => 'required|integer|min:0|max:99999']);
+
+    $product = Product::findOrFail($id);
+    $product->sort_order = $request->sort_order;
+    $product->save();
+
+    return response()->json(['success' => true, 'message' => 'Sort order updated successfully.']);
+}
 }

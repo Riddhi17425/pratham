@@ -87,6 +87,7 @@ Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->group(fu
     Route::post('products/upload-catalogue', [ProductsController::class, 'uploadCatalogue'])
     ->name('products.upload-catalogue');
     Route::post('products/{id}/toggle-status', [ProductsController::class, 'toggleStatus'])->name('products.toggle-status');
+    Route::post('products/{id}/update-sort', [ProductsController::class, 'updateSort'])->name('products.update-sort');
     Route::resource('products', ProductsController::class)->except('show');
     
     // Technical Data Sheets

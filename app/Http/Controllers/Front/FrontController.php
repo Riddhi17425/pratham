@@ -270,6 +270,7 @@ class FrontController extends Controller
         $category = null;
         $query = Product::with('category')
             ->where('status', 'Active')
+            ->orderBy('sort_order', 'asc')
             ->orderBy('created_at', 'desc');
 
         if ($search = trim((string) $requesr->query('q'))) {
@@ -292,6 +293,7 @@ class FrontController extends Controller
             ->firstOrFail();
         $products = Product::where('category_id', $category->id)
             ->where('status', 'Active')
+            ->orderBy('sort_order', 'asc') 
             ->orderBy('created_at', 'desc')
             ->get();
         $metaTitle = $category->meta_title ?: $category->title;

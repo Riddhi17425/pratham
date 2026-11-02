@@ -1,33 +1,63 @@
-/**
- * Products module scripts (list page + add/edit pages).
- * Needs: jQuery. List page also needs DataTables.
- * Add/Edit pages need jQuery Validate + Summernote.
- */
+
 
 $(document).ready(function () {
 
-    // ---------------------------------------------------------------
-    // 1. DataTable (only on the list page, where #products_table exists)
-    // ---------------------------------------------------------------
+    
     if ($('#products_table').length && typeof window.APP_URLS !== 'undefined') {
 
         var productsTable = $('#products_table').DataTable({
-            processing: true,
-            serverSide: true,
-            order: [[0, 'desc']],
-            ajax: window.APP_URLS.getProductsData,
-            columns: [
-                { data: 'id', name: 'id' },
-                { data: 'image', name: 'image', orderable: false, searchable: false },
-                { data: 'category', name: 'category', orderable: false, searchable: false },
-                { data: 'title', name: 'title' },
-                { data: 'name', name: 'name' },
-                { data: 'status', name: 'status', orderable: false, searchable: false },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ]
-        });
+    processing: true,
+    serverSide: true,
+    order: [[0, 'desc']],
+    ajax: {
+        url: window.APP_URLS.getProductsData,
+        data: function (d) {
+            d.sort_filter = $('#sortFilter').val();   // "All" / asc / desc
+        }
+    },
+    columns: [
+        { data: 'id', name: 'id' },
+        { data: 'image', name: 'image', orderable: false, searchable: false },
+        { data: 'category', name: 'category', orderable: false, searchable: false },
+        { data: 'title', name: 'title' },
+        { data: 'name', name: 'name' },
+        { data: 'sort_order', name: 'sort_order', orderable: false, searchable: false },
+        { data: 'status', name: 'status', orderable: false, searchable: false },
+        { data: 'action', name: 'action', orderable: false, searchable: false }
+    ]
+});
 
-        // Toggle status (switch on the list page)
+// Sort By dropdown badalte hi table reload
+$('#sortFilter').on('change', function () {
+    productsTable.ajax.reload();
+});
+
+// Sort Order number badalte hi save
+$('#products_table').on('change', '.sort-input', function () {
+    var $input = $(this);
+    var value = parseInt($input.val(), 10);
+
+    if (isNaN(value) || value < 0) {
+        $input.val($input.data('old'));
+        return;
+    }
+
+    $.ajax({
+        url: window.APP_URLS.updateProductSort.replace(':id', $input.data('id')),
+        type: 'POST',
+        data: { _token: window.APP_URLS.csrfToken, sort_order: value },
+        success: function (response) {
+            $input.data('old', value);
+            showMessage(response.message || 'Sort order updated successfully.', 'success');
+            productsTable.ajax.reload(null, false);
+        },
+        error: function () {
+            $input.val($input.data('old'));
+            showMessage('Could not update sort order.', 'danger');
+        }
+    });
+});
+
         $('#products_table').on('change', '.toggle-status', function () {
             var $switch = $(this);
             var id = $switch.data('id');
@@ -40,14 +70,12 @@ $(document).ready(function () {
                     showMessage(response.message || 'Status updated successfully.', 'success');
                 },
                 error: function () {
-                    // request failed: put the switch back to its old state
                     $switch.prop('checked', !$switch.prop('checked'));
                     showMessage('Something went wrong while updating the status.', 'danger');
                 }
             });
         });
 
-        // Delete product
         $('#products_table').on('click', '.btn-delete-product', function () {
             var id = $(this).data('id');
 
@@ -70,9 +98,7 @@ $(document).ready(function () {
         });
     }
 
-    // ---------------------------------------------------------------
-    // 2. Summernote editors (add / edit pages)
-    // ---------------------------------------------------------------
+    
     function initEditor(selector, height, placeholder) {
         var $el = $(selector);
 
@@ -92,8 +118,7 @@ $(document).ready(function () {
                 ['view', ['codeview']]
             ],
             callbacks: {
-                // keep the hidden textarea in sync (empty editor => empty value,
-                // so the "required" rule works and "<p><br></p>" is not saved)
+                
                 onChange: function (contents) {
                     $el.val($el.summernote('isEmpty') ? '' : contents);
 
@@ -108,9 +133,7 @@ $(document).ready(function () {
     initEditor('#product_description', 200, 'Enter Description');
     initEditor('#product_technical_details', 300, 'Enter Technical Details');
 
-    // ---------------------------------------------------------------
-    // 3. Image preview (add / edit pages)
-    // ---------------------------------------------------------------
+    
     $(document).on('change', '#product_image', function () {
         var input = this;
         var $preview = $('#preview_product_image');
@@ -124,10 +147,7 @@ $(document).ready(function () {
         }
     });
 
-    // ---------------------------------------------------------------
-    // 3b. Catalogue PDF: basket animation + turant upload + cross se remove
-    //     (add + edit dono pages)
-    // ---------------------------------------------------------------
+    
     var BALL_W = 30, BALL_H = 38;
     var RIM_X = 170, RIM_Y = 112, NET_BOTTOM = 160, SCENE_H = 230;
     var MAX_PDF = 2147483648; // 2 GB
@@ -210,7 +230,6 @@ $(document).ready(function () {
         setHint('', '');
     }
 
-    // PDF ko seedha basket me rakh do (bina animation ke)
     function placeBall() {
         var ball = document.getElementById('cb_ball');
         if (!ball) { return; }
@@ -225,11 +244,11 @@ $(document).ready(function () {
 
         resetBall();
 
-        var sx = 8, sy = SCENE_H - BALL_H - 14;          // start (neeche left, ghaas par)
-        var rx = RIM_X - BALL_W / 2, ry = RIM_Y - BALL_H - 6; // rim ke thik upar
-        var ey = NET_BOTTOM - BALL_H + 6;                // net ke andar rukne ki jagah
+        var sx = 8, sy = SCENE_H - BALL_H - 14;          
+        var rx = RIM_X - BALL_W / 2, ry = RIM_Y - BALL_H - 6; 
+        var ey = NET_BOTTOM - BALL_H + 6;                
         var peak = 4;
-        var cy = 2 * peak - 0.5 * (sy + ry);             // arc ka control point
+        var cy = 2 * peak - 0.5 * (sy + ry);            
 
         var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (!ball.animate || reduced) {
@@ -288,7 +307,7 @@ $(document).ready(function () {
 
     function startUpload(file) {
         var url = $catalogueInput.data('uploadUrl');
-        if (!url) { return; } // route nahi hai => file form ke saath hi jayegi
+        if (!url) { return; } 
 
         var fd = new FormData();
         fd.append('_token', $('#productForm input[name="_token"]').val());
@@ -370,16 +389,13 @@ $(document).ready(function () {
 
         $newName.text(file.name + ' (' + formatSize(file.size) + ')');
         $newBox.removeClass('d-none').addClass('d-flex');
-        // naya file chuna to purani wali replace ho jayegi, remove flag ki zarurat nahi
         $('#remove_catalogue').val('0');
 
-        // pehle basket dikhao, phir PDF girte hi upload shuru
         showStage(function () {
             throwBall(function () { startUpload(file); });
         });
     });
 
-    // naya select kiya hua file hatao (add + edit dono)
     $('#remove_new_catalogue').on('click', function () {
         abortUpload();
         resetBall();
@@ -392,7 +408,6 @@ $(document).ready(function () {
         $catalogueInput.next('label.error').remove();
     });
 
-    // purani saved PDF hatao (sirf edit page)
     $('#remove_current_catalogue').on('click', function () {
         if (!confirm('Remove the current catalogue?')) {
             return;
@@ -401,7 +416,6 @@ $(document).ready(function () {
         $('#catalogue_current_box').remove();
     });
 
-    // validation error ke baad page wapas aaye aur PDF pehle upload ho chuki thi
     if ($temp.length && $temp.val()) {
         $('#cb_stage').show();
         placeBall();
@@ -410,12 +424,7 @@ $(document).ready(function () {
         $newBox.removeClass('d-none').addClass('d-flex');
     }
 
-    // ---------------------------------------------------------------
-    // 4. Auto-generate Product URL from Product Name (add / edit pages)
-    //    - Name likhte hi URL auto bharega
-    //    - User URL khud change kare to auto-fill band ho jayega
-    //    - URL khali kar do to auto-fill wapas shuru
-    // ---------------------------------------------------------------
+    
     function slugify(text) {
         return text
             .toString()
@@ -431,7 +440,6 @@ $(document).ready(function () {
     var $urlInput  = $('input[name="product_url"]');
 
     if ($nameInput.length && $urlInput.length) {
-        // Edit page par agar saved URL custom hai (name se alag), to usko overwrite mat karo
         var urlEdited = $.trim($urlInput.val()) !== '' &&
                         $urlInput.val() !== slugify($nameInput.val());
 
@@ -445,14 +453,11 @@ $(document).ready(function () {
         });
 
         $urlInput.on('input', function () {
-            // user ne khud type kiya => auto band; khali kiya => auto wapas chalu
             urlEdited = $.trim($(this).val()) !== '';
         });
     }
 
-    // ---------------------------------------------------------------
-    // Helper: show a dismissible message in the #message-pop-up alert
-    // ---------------------------------------------------------------
+    
     function showMessage(message, type) {
         var $popup = $('#message-pop-up');
 
