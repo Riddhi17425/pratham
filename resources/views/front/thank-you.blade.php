@@ -31,7 +31,7 @@
             <p class="thank_you_text">{{ session('contact_status', 'Your inquiry has been received. Our team will get back to you soon.') }}</p>
             <div class="thank_you_actions">
                 <a href="{{ route('home') }}" class="purple-btn">Back to Home</a>
-                <a href="{{ route('products') }}" class="purple-btn-solid">Explore Products <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                <a href="{{ route('products') }}" class="purple-btn-solid">Explore Products <svg class="btn_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
         </div>
     </div>

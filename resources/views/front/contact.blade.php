@@ -1,180 +1,195 @@
 @extends('front.app')
 
-@section('title', 'Pratham Filter Industries | contact')
+@section('title', 'Contact Us | Pratham Filter Industries')
 
 @section('content')
 
-
-    <section class="page_hero" style="background-image: url('{{ asset('front/img/figma/about/page-hero-bg.jpg') }}');">
-        <div class="page_hero_overlay"></div>
-        <div class="container position-relative">
-            <div class="page_hero_content">
-                <div class="breadcrumb_row">
-                    <a href="{{ url('/') }}">Home</a>
-                    <i class="fa-solid fa-chevron-right"></i>
-                    <span>Contact us</span>
-                </div>
-                <h1 class="page_hero_title">Contact Us</h1>
-            </div>
-        </div>
-    </section>
+    @include('front.partials.page-hero', [
+        'title' => 'Contact Us',
+        'crumbs' => [['label' => 'Contact Us']],
+        'subtitle' => 'Talk to our team about your filtration requirements.',
+    ])
 
     <section class="section_padding">
         <div class="container">
-            <h2 class="title mb-3">Get in touch with us</h2>
-            <p class="sub_text_p16 mb-5">Please complete the form below. If you have any questions, feel free to get in
-                touch with us.</p>
-
             <div class="contact_grid">
-                <span class="vmp_border_line vmp_border_top"></span>
-                <span class="vmp_border_line vmp_border_bottom"></span>
-                <span class="vmp_border_side vmp_border_left"></span>
-                <span class="vmp_border_side vmp_border_right"></span>
-                <span class="contact_grid_divider"></span>
+                <div class="contact_form_card">
+                    <span class="eyebrow">Send a Message</span>
+                    <h2 class="title">Get in touch with us</h2>
+                    <p class="sub_text_p16">Please complete the form below. If you have any questions, feel free to get in touch with us.</p>
 
-                <form class="contact_form" id="contactForm" action="{{ route('contact.submit') }}" method="post"
-                    novalidate>
-                    @csrf
-                    <div class="contact_input_group">
-                        <div class="contact_field">
-                            <input type="text" name="name" placeholder="Name" value="{{ old('name') }}"
-                                minlength="2" maxlength="120" required>
+                    <form class="contact_form" id="contactForm" action="{{ route('contact.submit') }}" method="post" novalidate>
+                        @csrf
+                        <div class="contact_form_grid">
+                            <div class="contact_input_group">
+                                <div class="contact_field">
+                                    <label for="contactName">Name <span class="req">*</span></label>
+                                    <input type="text" name="name" id="contactName" placeholder="Your full name" value="{{ old('name') }}"
+                                        minlength="2" maxlength="120" autocomplete="name" required @class(['contact_error' => $errors->has('name')])>
+                                </div>
+                                @error('name')
+                                    <small class="contact_error">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="contact_input_group">
+                                <div class="contact_field">
+                                    <label for="contactEmail">Email ID <span class="req">*</span></label>
+                                    <input type="email" name="email" id="contactEmail" placeholder="you@company.com" value="{{ old('email') }}"
+                                        maxlength="255" autocomplete="email" required @class(['contact_error' => $errors->has('email')])>
+                                </div>
+                                @error('email')
+                                    <small class="contact_error">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="contact_input_group contact_input_group_full">
+                                <div class="contact_field">
+                                    <label for="contactPhone">Phone Number</label>
+                                    <input type="tel" name="phone" id="contactPhone" placeholder="Phone number" value="{{ old('phone') }}"
+                                        maxlength="30" autocomplete="tel" @class(['contact_error' => $errors->has('phone')])>
+                                </div>
+                                @error('phone')
+                                    <small class="contact_error">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="contact_input_group contact_input_group_full">
+                                <div class="contact_field">
+                                    <label for="contactMessage">Message <span class="req">*</span></label>
+                                    <textarea name="message" id="contactMessage" placeholder="Tell us about your requirement" rows="5" minlength="10" maxlength="5000" required @class(['contact_error' => $errors->has('message')])>{{ old('message') }}</textarea>
+                                </div>
+                                @error('message')
+                                    <small class="contact_error">{{ $message }}</small>
+                                @enderror
+                            </div>
                         </div>
-                        @error('name')
-                            <small class="contact_error">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <div class="contact_input_group">
-                        <div class="contact_field">
-                            <input type="email" name="email" placeholder="Email ID" value="{{ old('email') }}"
-                                maxlength="255" required>
+                        <div class="contact_actions">
+                            <button class="purple-btn-solid" type="submit">Contact us</button>
+                            <span class="contact_actions_note">Fields marked * are required.</span>
                         </div>
-                        @error('email')
-                            <small class="contact_error">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <div class="contact_input_group">
-                        <div class="contact_field">
-                            <input type="tel" name="phone" placeholder="Phone Number" value="{{ old('phone') }}"
-                                maxlength="30">
-                        </div>
-                        @error('phone')
-                            <small class="contact_error">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <div class="contact_input_group">
-                        <div class="contact_field">
-                            <textarea name="message" placeholder="Message" rows="4" minlength="10" maxlength="5000" required>{{ old('message') }}</textarea>
-                        </div>
-                        @error('message')
-                            <small class="contact_error">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <div class="contact_field border-0"><button class="purple-btn" type="submit">Contact us</button></div>
-                </form>
-
-                
-                <div class="contact_info">
-    @if ($siteSetting->address)
-        <div class="contact_info_block">
-            <div class="contact_info_label">
-                <img src="{{ asset('front/img/figma/contact/icon-headquarters.svg') }}"
-                    alt=""><span>Headquarters</span>
-            </div>
-            <p class="contact_info_value">{{ $siteSetting->address }}</p>
-        </div>
-    @endif
-
-    @if ($siteSetting->phone || $siteSetting->email)
-        <div class="contact_info_row">
-            @if ($siteSetting->phone)
-                <div class="contact_info_block">
-                    <div class="contact_info_label">
-                        <img src="{{ asset('front/img/figma/contact/icon-branch-phone.svg') }}"
-                            alt=""><span>Contact Us</span>
-                    </div>
-                    <p class="contact_info_value">
-                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $siteSetting->phone) }}">{{ $siteSetting->phone }}</a>
-                    </p>
+                    </form>
                 </div>
-            @endif
 
-            @if ($siteSetting->email)
-                <div class="contact_info_block">
-                    <div class="contact_info_label">
-                        <img src="{{ asset('front/img/figma/contact/icon-email.svg') }}" alt=""><span>Email Us</span>
-                    </div>
-                    <p class="contact_info_value">
-                        <a href="mailto:{{ $siteSetting->email }}">{{ $siteSetting->email }}</a>
-                    </p>
-                </div>
-            @endif
-        </div>
-    @endif
+                <aside class="contact_info" aria-label="Contact information">
+                    <h3 class="contact_info_heading">Contact Information</h3>
+                    <p class="contact_info_intro">Prefer to reach us directly? Our team is happy to help.</p>
 
-    @php
-        $officeNumbers = array_filter(array_map('trim', explode(',', $siteSetting->office_number ?? '')));
-    @endphp
-    @if (count($officeNumbers))
-        <div class="contact_info_block">
-            <div class="contact_info_label">
-                <img src="{{ asset('front/img/figma/contact/icon-office-lines.svg') }}"
-                    alt=""><span>Office Lines</span>
-            </div>
-            <p class="contact_info_value">
-                @foreach ($officeNumbers as $number)
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $number) }}">{{ $number }}</a>
-                    @if (!$loop->last)
-                        &nbsp;|&nbsp;
+                    <ul class="contact_info_list">
+                        @if ($siteSetting->address)
+                            <li class="contact_info_block">
+                                <span class="contact_info_icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
+                                <div>
+                                    <p class="contact_info_label">Headquarters</p>
+                                    <p class="contact_info_value">{{ $siteSetting->address }}</p>
+                                </div>
+                            </li>
+                        @endif
+
+                        @if ($siteSetting->phone)
+                            <li class="contact_info_block">
+                                <span class="contact_info_icon"><i class="fa-solid fa-phone" aria-hidden="true"></i></span>
+                                <div>
+                                    <p class="contact_info_label">Contact Us</p>
+                                    <p class="contact_info_value">
+                                        {{-- The admin can enter two mobile numbers separated by a comma, slash or "|" --}}
+                                        @foreach (array_filter(array_map('trim', preg_split('/[,\/|]/', $siteSetting->phone))) as $mobile)
+                                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $mobile) }}">{{ $mobile }}</a>@if (!$loop->last)<span class="contact_info_sep">|</span>@endif
+                                        @endforeach
+                                    </p>
+                                </div>
+                            </li>
+                        @endif
+
+                        @if ($siteSetting->email)
+                            <li class="contact_info_block">
+                                <span class="contact_info_icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
+                                <div>
+                                    <p class="contact_info_label">Email Us</p>
+                                    <p class="contact_info_value">
+                                        <a href="mailto:{{ $siteSetting->email }}">{{ $siteSetting->email }}</a>
+                                    </p>
+                                </div>
+                            </li>
+                        @endif
+
+                        @php
+                            $officeNumbers = array_filter(array_map('trim', explode(',', $siteSetting->office_number ?? '')));
+                        @endphp
+                        @if (count($officeNumbers))
+                            <li class="contact_info_block">
+                                <span class="contact_info_icon"><i class="fa-solid fa-headset" aria-hidden="true"></i></span>
+                                <div>
+                                    <p class="contact_info_label">Office Lines</p>
+                                    <p class="contact_info_value">
+                                        @foreach ($officeNumbers as $number)
+                                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $number) }}">{{ $number }}</a>@if (!$loop->last)<span class="contact_info_sep">|</span>@endif
+                                        @endforeach
+                                    </p>
+                                </div>
+                            </li>
+                        @endif
+                    </ul>
+
+                    @if ($siteSetting->linkedin_url || $siteSetting->twitter_url || $siteSetting->whatsapp_url || $siteSetting->facebook_url || $siteSetting->instagram_url)
+                        <div class="contact_info_social">
+                            @if ($siteSetting->linkedin_url)
+                                <a href="{{ $siteSetting->linkedin_url }}" target="_blank" rel="noopener noreferrer" style="--social: #0a66c2;" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+                            @endif
+                            @if ($siteSetting->twitter_url)
+                                <a href="{{ $siteSetting->twitter_url }}" target="_blank" rel="noopener noreferrer" style="--social: #000000;" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+                            @endif
+                            @if ($siteSetting->whatsapp_url)
+                                <a href="{{ $siteSetting->whatsapp_url }}" target="_blank" rel="noopener noreferrer" style="--social: #25D366;" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+                            @endif
+                            @if ($siteSetting->facebook_url)
+                                <a href="{{ $siteSetting->facebook_url }}" target="_blank" rel="noopener noreferrer" style="--social: #1877F2;" aria-label="Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
+                            @endif
+                            @if ($siteSetting->instagram_url)
+                                <a href="{{ $siteSetting->instagram_url }}" target="_blank" rel="noopener noreferrer" style="--social: linear-gradient(45deg, #FEDA75 0%, #FA7E1E 25%, #D62976 50%, #962FBF 75%, #4F5BD5 100%);" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+                            @endif
+                        </div>
                     @endif
-                @endforeach
-            </p>
-        </div>
-    @endif
-</div>
+                </aside>
             </div>
         </div>
     </section>
 
-    <section>
+    <section class="section_padding_bot">
         <div class="container">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29386.132594725917!2d72.45635881083984!3d22.977222899999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9a95007cb573%3A0xc4b5bda7e22253c!2spratham%20filter%20industries!5e0!3m2!1sen!2sin!4v1790145958860!5m2!1sen!2sin"
-                width="100%" height="550" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <div class="contact_map">
+                <iframe
+                    src="https://www.google.com/maps?q={{ urlencode($siteSetting->address ?: 'Pratham Filter Industries, Andheri East, Mumbai') }}&output=embed"
+                    title="Pratham Filter Industries on Google Maps" allowfullscreen="" loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
         </div>
     </section>
 
     @if ($locators->count())
-        <section class="section_padding">
+        <section class="section_padding section_tinted">
             <div class="container">
-                <h2 class="title mb-5 text-center">Locate us</h2>
+                <div class="section_head text-center">
+                    <span class="eyebrow">Our Network</span>
+                    <h2 class="title">Locate us</h2>
+                </div>
                 <div class="branch_grid">
                     @foreach ($locators as $locator)
-                        <div class="branch_card">
-                            <span class="vmp_border_line vmp_border_top"></span>
-                            <span class="vmp_border_line vmp_border_bottom"></span>
-                            <span class="vmp_border_side vmp_border_left"></span>
-                            <span class="vmp_border_side vmp_border_right"></span>
-                            <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($locator->address) }}"
-                                target="_blank" rel="noopener noreferrer"
-                                aria-label="View {{ $locator->city }} office on Google Maps" class="d-block">
-                                <img src="{{ asset('front/img/figma/contact/branch-photo.jpg') }}"
-                                    alt="{{ strtoupper($locator->city) }} office" class="w-100 branch_card_img">
-                            </a>
-                            <div class="branch_card_body">
+                        <article class="branch_card">
+                            <div class="branch_card_head">
+                                <span class="branch_card_icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
                                 <h3 class="branch_card_title">{{ strtoupper($locator->city) }}</h3>
-                                <p class="branch_card_address">{{ $locator->address }}</p>
-                                <p class="branch_card_phone"><img
-                                        src="{{ asset('front/img/figma/contact/icon-branch-phone.svg') }}"
-                                        alt=""> <a
-                                        href="tel:{{ preg_replace('/[^0-9+]/', '', $locator->phone) }}">{{ $locator->phone }}</a>
-                                </p>
-                                <p class="branch_card_email"><img
-                                        src="{{ asset('front/img/figma/contact/icon-email.svg') }}" alt=""> <a
-                                        href="mailto:{{ $locator->email }}">{{ $locator->email }}</a></p>
                             </div>
-                        </div>
+                            <p class="branch_card_address">{{ $locator->address }}</p>
+                            <ul class="branch_card_meta">
+                                @if ($locator->phone)
+                                    <li class="branch_card_phone"><i class="fa-solid fa-phone" aria-hidden="true"></i><a href="tel:{{ preg_replace('/[^0-9+]/', '', $locator->phone) }}">{{ $locator->phone }}</a></li>
+                                @endif
+                                @if ($locator->email)
+                                    <li class="branch_card_email"><i class="fa-solid fa-envelope" aria-hidden="true"></i><a href="mailto:{{ $locator->email }}">{{ $locator->email }}</a></li>
+                                @endif
+                            </ul>
+                            <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($locator->address) }}"
+                                target="_blank" rel="noopener noreferrer" class="text_link branch_card_map"
+                                aria-label="View {{ $locator->city }} office on Google Maps">View on map <svg class="btn_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                        </article>
                     @endforeach
                 </div>
             </div>
@@ -189,7 +204,7 @@
                 return this.optional(element) || /^[0-9+().\s-]{7,30}$/.test(value);
             }, 'Enter a valid phone number.');
             $.validator.addMethod('namePattern', function(value, element) {
-                return this.optional(element) || /^[\p{L}\p{M}][\p{L}\p{M}0-9\s.'\u2019-]{1,119}$/u.test(value.trim());
+                return this.optional(element) || /^[\p{L}\p{M}][\p{L}\p{M}0-9\s.'’-]{1,119}$/u.test(value.trim());
             }, 'Enter a valid name.');
 
             $('#contactForm').validate({

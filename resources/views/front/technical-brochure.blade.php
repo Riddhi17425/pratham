@@ -1,55 +1,22 @@
 @extends('front.app')
 
-@section('title', 'Pratham Filter Industries | technical-brochure')
+@section('title', 'Technical Datasheet | Pratham Filter Industries')
 
 @section('content')
 
-<style>
-    /* ---------- Download basket popup ---------- */
-    .dl_overlay{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(15,23,42,.6);display:flex;align-items:center;justify-content:center;
-        opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;z-index:99999;padding:16px}
-    .dl_overlay.show{opacity:1;visibility:visible}
-    .dl_modal{position:relative;box-sizing:border-box;background:#fff;border-radius:16px;padding:20px 20px 24px;width:100%;max-width:400px;text-align:center;
-        transform:translateY(12px) scale(.97);transition:transform .25s;box-shadow:0 20px 50px rgba(0,0,0,.25)}
-    .dl_overlay.show .dl_modal{transform:none}
-    .dl_close{position:absolute;top:6px;right:12px;border:0;background:none;font-size:28px;line-height:1;color:#6c757d;cursor:pointer;z-index:5}
-    .dl_close:hover{color:#212529}
-    .dl_stage{position:relative;box-sizing:border-box;width:340px;max-width:100%;height:230px;margin:10px auto 0;overflow:hidden;
-        border-radius:12px;border:1px solid #dee2e6;background:#f8f9fa}
-    .dl_scene{position:relative;width:340px;height:230px;transform-origin:0 0}
-    .dl_bg,.dl_front{position:absolute;left:0;top:0;width:340px;height:230px;pointer-events:none}
-    .dl_bg{z-index:0}.dl_front{z-index:2}
-    .dl_ball{position:absolute;left:0;top:0;width:30px;height:38px;display:none;align-items:flex-end;justify-content:center;padding-bottom:6px;
-        font:700 10px/1 sans-serif;color:#fff;background:linear-gradient(160deg,#ff6b6b,#c92a2a);border-radius:3px;
-        clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,0 100%);z-index:1;transform:translate(8px,178px)}
-    .dl_ball::after{content:"";position:absolute;top:0;right:0;width:9px;height:9px;background:linear-gradient(to top right,#ffc9c9 50%,transparent 50%)}
-    .dl_net line{stroke:#868e96;stroke-width:1.4}
-    .dl_net{transform-origin:170px 112px}
-    .dl_net.swish{animation:dlSwish .6s ease}
-    @keyframes dlSwish{0%{transform:scale(1,1)}30%{transform:scale(1.12,.92)}60%{transform:scale(.94,1.06)}100%{transform:scale(1,1)}}
-    .dl_title{font-size:20px;font-weight:600;margin:16px 0 4px;color:#212529}
-    .dl_title.done{color:#2b8a3e}
-    .dl_name{margin:0;color:#6c757d;font-size:14px;word-break:break-word}
-</style>
-
-<section class="page_hero" style="background-image: url('{{ asset('front/img/figma/about/page-hero-bg.jpg') }}');">
-    <div class="page_hero_overlay"></div>
-    <div class="container position-relative">
-        <div class="page_hero_content">
-            <div class="breadcrumb_row">
-                <a href="{{ url('/') }}">Home</a>
-                <i class="fa-solid fa-chevron-right"></i>
-                <span>Technical Brochure</span>
-            </div>
-            <h1 class="page_hero_title">Technical Datasheet</h1>
-        </div>
-    </div>
-</section>
+@include('front.partials.page-hero', [
+    'title' => 'Technical Datasheet',
+    'crumbs' => [['label' => 'Technical Brochure']],
+    'subtitle' => 'Download technical datasheets for our filtration products.',
+])
 
 <section class="section_padding">
     <div class="container">
         <div class="brochure_header">
-            <h2 class="title mb-0">Latest Sheets</h2>
+            <div>
+                <p class="products_eyebrow">Downloads</p>
+                <h2 class="title">Latest Sheets</h2>
+            </div>
 
             {{-- Category filter dropdown (temporarily hidden)
             <div class="dropdown brochure_filter_dropdown">
@@ -72,16 +39,23 @@
                 @if($sheet->brochure)
                     <a href="{{ asset('admin-assets/technical-data-sheets/brochure/' . $sheet->brochure) }}"
                        class="brochure_card" target="_blank" download="{{ $sheet->brochure }}" data-cat="{{ $sheet->category_id }}">
-                        <img src="{{ asset('front/img/figma/pdf-icon.svg') }}" alt="PDF" class="brochure_pdf_icon">
-                        <span>{{ $sheet->category->title ?? 'Technical Datasheet' }}</span>
+                        <span class="brochure_card_icon"><img src="{{ asset('front/img/figma/pdf-icon.svg') }}" alt="" class="brochure_pdf_icon"></span>
+                        <span class="brochure_card_body">
+                            <span class="brochure_card_title">{{ $sheet->category->title ?? 'Technical Datasheet' }}</span>
+                            <small class="brochure_card_meta">PDF datasheet</small>
+                        </span>
+                        <span class="brochure_card_action" aria-hidden="true"><i class="fa-solid fa-download"></i></span>
                     </a>
                 @endif
             @empty
-                <p class="text-center w-100">No technical sheets available right now.</p>
+                <div class="empty_state brochure_empty_state">
+                    <i class="fa-regular fa-file-pdf" aria-hidden="true"></i>
+                    <h3>No technical sheets available right now.</h3>
+                </div>
             @endforelse
         </div>
 
-        <p id="brochureEmpty" class="text-center w-100 mt-4" style="display:none;">
+        <p id="brochureEmpty" class="product_no_results mt-4" style="display:none;">
             No technical sheets found in this category.
         </p>
     </div>
@@ -136,7 +110,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var items = document.querySelectorAll('.brochure_filter_item');
-    if (!items.length) return; // dropdown hidden hai to kuch na karo
+    if (!items.length) return;
 
     var cards    = document.querySelectorAll('#brochureGrid .brochure_card');
     var label    = document.getElementById('brochureFilterLabel');
@@ -168,9 +142,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// ---------------------------------------------------------------
-// Download: PDF basket me girti hai, phir download shuru hota hai
-// ---------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function () {
     var overlay = document.getElementById('dlOverlay');
     if (!overlay) return;
@@ -188,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var busy = false, runId = 0, closeTimer = null;
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // chhoti screen par scene ko fit karo
     function fitScene() {
         var s = Math.min(1, stage.clientWidth / 340);
         scene.style.transform = 'scale(' + s + ')';
@@ -270,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function startDownload(card) {
         busy = true;
         var run = ++runId;
-        var labelEl = card.querySelector('span');
+        var labelEl = card.querySelector('.brochure_card_title') || card.querySelector('span');
 
         nameEl.textContent = labelEl ? labelEl.textContent.trim() : '';
         title.innerHTML = 'Downloading your PDF&hellip;';
@@ -285,7 +255,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var fileName = card.getAttribute('download');
 
-        // file animation ke saath-saath load hoti hai, taaki "complete" sach me complete ho
         var filePromise = window.fetch
             ? fetch(card.href, { credentials: 'same-origin' }).then(function (res) {
                   if (!res.ok) { throw new Error('Download failed'); }
@@ -301,25 +270,23 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         setTimeout(function () {
-            if (run !== runId) return; // popup band ho chuka hai
+            if (run !== runId) return;
 
             throwBall(function () {
                 if (run !== runId) return;
 
-                // PDF basket me aa gayi, file poori load hote hi save karo
                 filePromise.then(function (blob) {
                     if (run !== runId) return;
 
                     var blobUrl = URL.createObjectURL(blob);
                     triggerDownload(blobUrl, fileName);
                     setTimeout(function () { URL.revokeObjectURL(blobUrl); }, 15000);
-                    finish('\u2713 Download complete');
+                    finish('✓ Download complete');
                 }).catch(function () {
                     if (run !== runId) return;
 
-                    // fallback: browser ka normal download (completion ka pata nahi chalta)
                     triggerDownload(card.href, fileName);
-                    finish('\u2713 Download started');
+                    finish('✓ Download started');
                 });
             });
         }, 300);
@@ -327,11 +294,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cards.forEach(function (card) {
         card.addEventListener('click', function (e) {
-            // new tab / shortcut clicks ko browser par chhod do
             if (e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
 
             e.preventDefault();
-            if (busy) return; // double click par dobara na chale
+            if (busy) return;
 
             startDownload(card);
         });

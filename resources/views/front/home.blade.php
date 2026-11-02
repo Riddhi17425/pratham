@@ -4,7 +4,14 @@
 
 @section('content')
 @if ($banners->isNotEmpty())
-<section class="hero_area">
+<section class="hero_area" aria-label="Featured solutions">
+    <div class="container hero_decor_wrap" aria-hidden="true">
+        <div class="hero_decor">
+            <span class="hero_ring"></span>
+            <span class="hero_ring hero_ring_2"></span>
+            <span class="hero_ring hero_ring_3"></span>
+        </div>
+    </div>
     <div class="hero_slider">
         @foreach ($banners as $banner)
         @php
@@ -18,258 +25,321 @@
             $exploreText = $hasCategory
                 ? 'Explore ' . $banner->category->title . ' Products'
                 : 'Explore All Products';
+            // The image comes from the admin banner. A wide picture (about 1.6:1 or wider) is
+            // used as the slide's background with the text on top; a square product shot
+            // keeps the original text-left / photo-right layout.
+            $bannerFile = $banner->image ? public_path('admin-assets/banners/image/' . $banner->image) : null;
+            $bannerSize = ($bannerFile && is_file($bannerFile)) ? @getimagesize($bannerFile) : null;
+            $isWideBanner = $bannerSize && $bannerSize[1] > 0 && ($bannerSize[0] / $bannerSize[1]) >= 1.6;
         @endphp
-        <div class="hero_slide" style="background: linear-gradient(135deg, #F6F2F2 0%, #D9D9D9 100%);">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <div class="hero_content">
-                            <h1 class="hero_title">{{ $banner->title }}</h1>
-                            <div class="sub_text_p16">{!! strip_tags($banner->description, '<p><br><strong><b><em><i><u><ul><ol><li><a>') !!}</div>
-                            <a class="purple-btn" href="{{ $exploreUrl }}">{{ $exploreText }}</a>
+        <div class="hero_slide{{ $isWideBanner ? ' hero_slide_banner' : '' }}">
+            @if ($isWideBanner)
+            <div class="hero_slide_bg" style="background-image: url('{{ asset('admin-assets/banners/image/' . $banner->image) }}');" role="img" aria-label="{{ $banner->image_alt ?: $banner->title }}"></div>
+            @endif
+            <div class="container">
+                <div class="hero_grid">
+                    <div class="hero_content">
+                        <span class="eyebrow hero_eyebrow">{{ $hasCategory ? $banner->category->title : 'Industrial & Water Filtration' }}</span>
+                        @if ($loop->first)
+                        <h1 class="hero_title">{{ $banner->title }}</h1>
+                        @else
+                        <h2 class="hero_title">{{ $banner->title }}</h2>
+                        @endif
+                        <div class="hero_text">{!! strip_tags($banner->description, '<p><br><strong><b><em><i><u><ul><ol><li><a>') !!}</div>
+                        <div class="hero_actions">
+                            <a class="purple-btn-solid" href="{{ $exploreUrl }}">{{ $exploreText }} <svg class="btn_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                            <button class="purple-btn js-open-quote" type="button">Request a Quote</button>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="hero_img_wrap">
-                            @if ($banner->image)
-                            <img src="{{ asset('admin-assets/banners/image/' . $banner->image) }}" alt="{{ $banner->image_alt ?: $banner->title }}" class="w-100">
-                            @endif
-                        </div>
+                    @unless ($isWideBanner)
+                    <div class="hero_img_wrap">
+                        @if ($banner->image)
+                        <img src="{{ asset('admin-assets/banners/image/' . $banner->image) }}" alt="{{ $banner->image_alt ?: $banner->title }}" @if ($loop->first) fetchpriority="high" @endif>
+                        @endif
                     </div>
+                    @endunless
                 </div>
             </div>
         </div>
         @endforeach
     </div>
-    <div class="hero_dots"></div>
+    @if ($banners->count() > 1)
+    <div class="container hero_controls">
+        <div class="hero_dots"></div>
+        <p class="hero_counter" aria-hidden="true">
+            <span class="hero_counter_current">01</span>
+            <span class="hero_counter_sep"></span>
+            <span class="hero_counter_total">{{ str_pad($banners->count(), 2, '0', STR_PAD_LEFT) }}</span>
+        </p>
+    </div>
+    @endif
 </section>
 @endif
+
+<section class="stats_strip" aria-label="Pratham Filter Industries at a glance">
+    <div class="container">
+        <ul class="stats_grid">
+            <li class="stat_item">
+                <span class="stat_value"><span data-count="20">20</span>+</span>
+                <span class="stat_label">Years of filtration expertise</span>
+            </li>
+            <li class="stat_item">
+                <span class="stat_value"><span data-count="8">8</span></span>
+                <span class="stat_label">Branches across India</span>
+            </li>
+            <li class="stat_item">
+                <span class="stat_value">NSF &amp; PED</span>
+                <span class="stat_label">Certified FRP pressure vessels</span>
+            </li>
+            <li class="stat_item">
+                <span class="stat_value"><span data-count="100">100</span>%</span>
+                <span class="stat_label">Quality-checked before dispatch</span>
+            </li>
+        </ul>
+    </div>
+</section>
 
 @if ($partners->isNotEmpty())
-<section class="section_padding">
-    <div class="container container_flush">
-        <div class="row align-items-center client_border we_represent_row">
-            <div class="col-md-3 we_represent_title">
-                <h2 class="client_title">We Represent</h2>
-                <p class="sub_text_p16 mt-2">Proud partners with global leaders in filtration and water treatment technology.</p>
-            </div>
-            <div class="col-md-9 we_represent_logos">
-                <div class="client client_slider">
-                    @foreach ($partners as $partner)
-                    @if ($partner->icon)
-                    <div class="slider_item">
-                        <img src="{{ asset('admin-assets/partners/icon/' . $partner->icon) }}" alt="{{ $partner->icon_alt }}" class="w-100">
-                    </div>
-                    @endif
-                    @endforeach
-                </div>
-            </div>
+<section class="partners_section">
+    <div class="container">
+        <div class="partners_intro we_represent_title">
+            <h2 class="partners_title">We Represent</h2>
+            <p>Proud partners with global leaders in filtration and water treatment technology.</p>
         </div>
+    </div>
+    <div class="client client_slider logo_slider_full">
+        @foreach ($partners as $partner)
+        @if ($partner->icon)
+        <div class="slider_item">
+            <img src="{{ asset('admin-assets/partners/icon/' . $partner->icon) }}" alt="{{ $partner->icon_alt }}">
+        </div>
+        @endif
+        @endforeach
     </div>
 </section>
 @endif
 
-<section>
-    <div class="container container_flush">
-        <div class="collage_grid_row1">
-            <div class="collage_col collage_col_empty">
-                <div class="filter_card h-100">
-                    <img src="{{ asset('front/img/figma/collage-bag-filter-assembly.webp') }}" alt="Bag Filter Assembly" class="img_pos_bagfilter">
-                    <div class="overlay"><p>PP Bag Filter Assembly</p></div>
-                </div>
+@php
+    // The seven range tiles from the client meeting. Each pulls the live product
+    // (image + link) by its URL slug, so admin edits show up here too.
+    $rangeSpec = [
+        ['FRP Pressure Vessel', 'frp-filter-vessel'],
+        ['RO Membrane', 'ro-membranes'],
+        ['RO Housing', 'frp-pressure-tubes'],
+        ['Filter Cartridge', 'spun-filter-cartridge'],
+        ['Filter Application', null],
+        ['MPV', 'multiport-valves'],
+        ['Media', 'filter-media'],
+    ];
+    $rangeProducts = \App\Models\Product::where('status', 'Active')
+        ->whereIn('product_url', array_filter(array_column($rangeSpec, 1)))
+        ->get()->keyBy('product_url');
+    $rangeItems = [];
+    foreach ($rangeSpec as [$label, $slug]) {
+        $p = $slug ? $rangeProducts->get($slug) : null;
+        $rangeItems[] = [
+            'label' => $label,
+            'url' => $p ? route('product.details', $p->product_url) : route('category.products', 'water-filters'),
+            'img' => $p && $p->image ? asset('admin-assets/products/image/' . $p->image) : asset('front/img/figma/collage-plastic-filter-housing.webp'),
+        ];
+    }
+@endphp
+<section class="range_section">
+    <div class="container">
+        <div class="range_head">
+            <div class="range_head_title">
+                <span class="range_kicker">Our Range</span>
+                <h2 class="range_title">Manufactured for ETP, RO, and&nbsp;beyond</h2>
             </div>
-            <div class="collage_col collage_col_cartridge">
-                <div class="filter_card h-100">
-                    <img src="{{ asset('front/img/figma/collage-ss-filter-cartridge.webp') }}" alt="SS Filter Cartridge" class="img_pos_sscartridge">
-                    <div class="overlay"><p>SS Filter Cartridge</p></div>
-                </div>
-            </div>
-            <div class="collage_col collage_col_title">
-                <div class="collage_title_card">
-                    <h2 class="title mb-0">Manufactured for ETP,<br>RO, and Beyond </h2>
-                    <!-- <button class="purple-btn" type="submit">Explore Products</button> -->
-                </div>
-            </div>
-        </div>
-        <div class="collage_grid_row2">
-            <div class="collage_col collage_col_stringwound">
-                <div class="filter_card h-100">
-                    <img src="{{ asset('front/img/figma/collage-string-wound.webp') }}" alt="String Wound Cartridge" class="img_pos_stringwound">
-                    <div class="overlay"><p>Wound PP Filter Cartridge</p></div>
-                </div>
-            </div>
-            <div class="collage_col collage_col_housing">
-                <div class="collage_stack">
-                    <div class="filter_card">
-                        <img src="{{ asset('front/img/figma/collage-plastic-filter-housing.webp') }}" alt="Plastic Filter Housing" class="img_pos_plastichousing">
-                        <div class="overlay"><p>Std PP Filter Housings</p></div>
-                    </div>
-                    <div class="filter_card">
-                        <img src="{{ asset('front/img/figma/collage-cartridges.webp') }}" alt="Cartridges" class="img_pos_cartridges">
-                        <div class="overlay"><p>Activated Carbon Cartridge</p></div>
-                    </div>
-                </div>
-            </div>
-            <div class="collage_col collage_col_filter">
-                <div class="filter_card h-100">
-                    <img src="{{ asset('front/img/figma/collage-filter-large.webp') }}" alt="Filter" class="img_pos_filterlarge">
-                    <div class="overlay"><p>Spun Filter Cartridge</p></div>
-                </div>
-            </div>
-            <div class="collage_col collage_col_pp">
-                <div class="collage_stack">
-                    <div class="filter_card">
-                        <img src="{{ asset('front/img/figma/pp-filter.webp') }}" alt="PP Filter" class="img_pos_ppfilter">
-                        <div class="overlay"><p>Pleated PP High Efficiency</p></div>
-                    </div>
-                    <div class="filter_card">
-                        <img src="{{ asset('front/img/figma/collage-ro-membrane.webp') }}" alt="RO Membrane" class="img_pos_romembrane">
-                        <div class="overlay"><p>RO Membrane</p></div>
-                    </div>
-                </div>
+            <div class="range_head_side">
+                <p>Filter cartridges, housings, membranes and vessels for industrial and water treatment applications.</p>
+                <a class="range_all" href="{{ route('products') }}">Explore Products <span aria-hidden="true">&rarr;</span></a>
             </div>
         </div>
+        <ul class="range_grid">
+            @foreach ($rangeItems as $item)
+            <li>
+                <a class="range_card" href="{{ $item['url'] }}">
+                    <span class="range_tile">
+                        <span class="range_num">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <img src="{{ $item['img'] }}" alt="{{ $item['label'] }}" loading="lazy">
+                    </span>
+                    <span class="range_info">
+                        <span class="range_name">{{ $item['label'] }}</span>
+                        <span class="range_go" aria-hidden="true">&rarr;</span>
+                    </span>
+                </a>
+            </li>
+            @endforeach
+        </ul>
     </div>
 </section>
 
-<section class="section_padding_top">
-    <div class="container container_flush about_container">
-        <div class="row align-items-center about_row">
-            <div class="col-md-6 about_text_col">
-                <h2 class="title">About us</h2>
-                <p class="sub_text_p16">Since 2003, Pratham Filter Industries has been a trusted name in water and industrial filtration. With a strong presence in manufacturing, wholesaling, exporting, and importing, we serve diverse industries with reliable, innovative filtration technology.</p>
-                <p class="sub_text_p16 mt-3">From filter housings to RO membranes, our range meets the demands of ETP, STP, desalination, food and beverage, pharma, and electroplating applications, backed by stringent quality control.</p>
-                <p class="sub_text_p16 mt-3">With over two decades of expertise, our customer-centric approach ensures every solution is tailored to the specific needs of the industries we serve. Our FRP pressure vessels are NSF and PED certified, reflecting our commitment to global quality standards.</p>
-                <a href="{{route('about')}}" class="purple-btn mt-4" type="submit">Know More </a>
+<section class="section_padding section_tinted industries_section">
+    <div class="container">
+        <div class="section_head section_head_split">
+            <div>
+                <span class="eyebrow">Industries We Serve</span>
+                <h2 class="title">Filtration built for demanding applications</h2>
             </div>
-            <div class="col-md-6 position-relative about_ring_col">
-                <div class="about_item ">
-                    <div class="item1">
-                        <h6>Innovation </h6>
+            <p class="section_lead">From ETP and STP to desalination, food and beverage, pharma and electroplating, every product is backed by stringent quality control.</p>
+        </div>
+        <ul class="industry_grid">
+            <li class="industry_card">
+                <span class="industry_icon"><i class="fa-solid fa-industry" aria-hidden="true"></i></span>
+                <div><h3>ETP &amp; STP</h3><p>Effluent and sewage treatment plants</p></div>
+            </li>
+            <li class="industry_card">
+                <span class="industry_icon"><i class="fa-solid fa-water" aria-hidden="true"></i></span>
+                <div><h3>Desalination</h3><p>RO and seawater treatment systems</p></div>
+            </li>
+            <li class="industry_card">
+                <span class="industry_icon"><i class="fa-solid fa-bottle-water" aria-hidden="true"></i></span>
+                <div><h3>Food &amp; Beverage</h3><p>Process water and liquid filtration</p></div>
+            </li>
+            <li class="industry_card">
+                <span class="industry_icon"><i class="fa-solid fa-capsules" aria-hidden="true"></i></span>
+                <div><h3>Pharmaceuticals</h3><p>Filtration for critical process water</p></div>
+            </li>
+            <li class="industry_card">
+                <span class="industry_icon"><i class="fa-solid fa-flask" aria-hidden="true"></i></span>
+                <div><h3>Chemicals</h3><p>Chemically resistant housings and media</p></div>
+            </li>
+            <li class="industry_card">
+                <span class="industry_icon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span>
+                <div><h3>Electroplating</h3><p>Plating and rinse water filtration</p></div>
+            </li>
+        </ul>
+    </div>
+</section>
 
-                        <img src="{{ asset('front/img/about_pointer.svg') }}" alt="">
+<section class="section_padding">
+    <div class="container">
+        <div class="about_row">
+            <div class="about_text_col">
+                <span class="eyebrow">About Us</span>
+                <h2 class="title">A trusted name in filtration since 2003</h2>
+                <p class="sub_text_p16">Since 2003, Pratham Filter Industries has been a trusted name in water and industrial filtration. With a strong presence in manufacturing, wholesaling, exporting, and importing, we serve diverse industries with reliable, innovative filtration technology.</p>
+                <p class="sub_text_p16">From filter housings to RO membranes, our range meets the demands of ETP, STP, desalination, food and beverage, pharma, and electroplating applications, backed by stringent quality control.</p>
+                <p class="sub_text_p16">With over two decades of expertise, our customer-centric approach ensures every solution is tailored to the specific needs of the industries we serve. Our FRP pressure vessels are NSF and PED certified, reflecting our commitment to global quality standards.</p>
+                <a href="{{ route('about') }}" class="purple-btn-solid">Know More <svg class="btn_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+            <div class="about_ring_col">
+                <div class="values_orbit">
+                    <span class="values_ring" aria-hidden="true"></span>
+                    <span class="values_ring values_ring_inner" aria-hidden="true"></span>
+                    <div class="values_core">
+                        <span>What we stand for</span>
+                        <h3>Our Values</h3>
                     </div>
-                    <div class="item2">
-                        <h6>Quality First</h6>
-
-                        <img src="{{ asset('front/img/about_pointer.svg') }}" alt="">
-                    </div>
-                    <div class="item3">
-                        <h6>Customer-Centric</h6>
-
-                        <img src="{{ asset('front/img/about_pointer.svg') }}" alt="">
-                    </div>
-                    <div class="item4">
-                        <h6>Our Values</h6>
-                    </div>
-                    <div class="item5">
-                        <h6>Reliability</h6>
-
-                        <img src="{{ asset('front/img/about_pointer.svg') }}" alt="">
-                    </div>
-                    <div class="item6">
-                        <h6>Sustainability</h6>
-
-                        <img src="{{ asset('front/img/about_pointer.svg') }}" alt="">
-                    </div>
-                    <div class="item7">
-                    <img src="{{ asset('front/img/about_pointer.svg') }}" alt="" class="mb-3">
-
-                        <h6>Global Standards</h6>
-
-                    </div>
+                    <ul class="values_list">
+                        <li class="value_item value_1"><span class="value_icon"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></span><span class="value_label">Innovation</span></li>
+                        <li class="value_item value_2"><span class="value_icon"><i class="fa-solid fa-handshake" aria-hidden="true"></i></span><span class="value_label">Customer-Centric</span></li>
+                        <li class="value_item value_3"><span class="value_icon"><i class="fa-solid fa-leaf" aria-hidden="true"></i></span><span class="value_label">Sustainability</span></li>
+                        <li class="value_item value_4"><span class="value_icon"><i class="fa-solid fa-earth-asia" aria-hidden="true"></i></span><span class="value_label">Global Standards</span></li>
+                        <li class="value_item value_5"><span class="value_icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span><span class="value_label">Reliability</span></li>
+                        <li class="value_item value_6"><span class="value_icon"><i class="fa-solid fa-award" aria-hidden="true"></i></span><span class="value_label">Quality First</span></li>
+                    </ul>
                 </div>
-                <div class="ring_wrapper ">
-                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="421.3px" height="500px" viewBox="0 0 421.3 437" style="enable-background:new 0 0 421.3 437;" xml:space="preserve">
-                            <defs>
-                            </defs>
-                            <g>
-
-                                <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="25.1367" y1="238.3458" x2="396.185" y2="238.3458" gradientTransform="matrix(1 0 0 -1 8.410366e-06 456.8455)">
-                                    <stop offset="0" style="stop-color:#2F2F2F;stop-opacity:0.3" />
-                                    <stop offset="0.4992" style="stop-color:#2F2F2F" />
-                                    <stop offset="1" style="stop-color:#2F2F2F;stop-opacity:0.7" />
-                                </linearGradient>
-                                <path class="st0" d="M189.2,26.8c83.2-3.2,165.4,38.5,193.5,117c30.8,85.9,8.6,186.2-66,238.6c-71.5,50.2-167.3,27.7-235.4-27.1
-                                c-58.3-46.9-67.8-127.1-44.5-198.2C60,87,115.4,29.7,189.2,26.8z" />
-
-                                <linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="0.5" y1="238.3459" x2="420.822" y2="238.3459" gradientTransform="matrix(1 0 0 -1 8.410366e-06 456.8455)">
-                                    <stop offset="0" style="stop-color:#2F2F2F;stop-opacity:0.3" />
-                                    <stop offset="0.4992" style="stop-color:#2F2F2F" />
-                                    <stop offset="1" style="stop-color:#2F2F2F;stop-opacity:0.7" />
-                                </linearGradient>
-                                <path class="st1" d="M227.8,17.8c80.6,2.4,152.2,49.8,178.9,125.9c28.8,82.1,14.9,176.9-54.1,229.9c-74.6,57.2-178.3,61.8-255,7.4
-                                C18.5,324.8-20.7,223.2,12.1,131.8C42.4,47.1,137.9,15.1,227.8,17.8z" />
-
-                                <linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="40.8145" y1="238.3454" x2="381.253" y2="238.3454" gradientTransform="matrix(1 0 0 -1 8.410366e-06 456.8455)">
-                                    <stop offset="0" style="stop-color:#2F2F2F;stop-opacity:0.3" />
-                                    <stop offset="0.4992" style="stop-color:#2F2F2F" />
-                                    <stop offset="1" style="stop-color:#2F2F2F;stop-opacity:0.7" />
-                                </linearGradient>
-                                <path class="st2" d="M207.1,24.4c79-0.2,133.8,69.1,158.6,144c25.3,76.5,24.9,166.9-39.8,215c-66.4,49.4-158.4,31.7-223.7-19.1
-                                C43.4,318.5,28.5,240.1,50.4,169C73.6,94,128.5,24.6,207.1,24.4z" />
-
-                                <linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="22.8965" y1="237.9721" x2="398.424" y2="237.9721" gradientTransform="matrix(1 0 0 -1 8.410366e-06 456.8455)">
-                                    <stop offset="0" style="stop-color:#2F2F2F;stop-opacity:0.3" />
-                                    <stop offset="0.4992" style="stop-color:#2F2F2F" />
-                                    <stop offset="1" style="stop-color:#2F2F2F;stop-opacity:0.7" />
-                                </linearGradient>
-                                <path class="st3" d="M209.3,19.9c79-0.8,150,47.9,176,122.6c28,80.3,11.7,171.8-55.3,223.9c-73.7,57.3-178.7,72.5-252.7,15.5
-                                C8,328.4,14.3,228.6,44.4,146.1C70.6,74.1,132.9,20.7,209.3,19.9z" />
-
-                                <linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="6.4727" y1="238.3454" x2="414.849" y2="238.3454" gradientTransform="matrix(1 0 0 -1 8.410366e-06 456.8455)">
-                                    <stop offset="0" style="stop-color:#2F2F2F;stop-opacity:0.3" />
-                                    <stop offset="0.4992" style="stop-color:#2F2F2F" />
-                                    <stop offset="1" style="stop-color:#2F2F2F;stop-opacity:0.7" />
-                                </linearGradient>
-                                <path class="st4" d="M218.4,0.5c88.8,1.7,152.7,75.6,180.5,160.2c28.2,85.8,23.2,186.1-49,240.2C275.1,457,172,442.6,96.9,387
-                                C23.8,332.9-11.7,240.4,15.7,153.5C43.8,64.1,124.9-1.2,218.4,0.5z" />
-                            </g>
-                        </svg>
-                    </div>
             </div>
         </div>
     </div>
 </section>
 
 @if ($brands->isNotEmpty())
-<section class="section_padding">
-        <h2 class="title_f27 text-center mb-3 mb-lg-5">Our Brands</h2>
-        <div class="brands_row brands_slider">
-            @foreach ($brands as $brand)
-            @if ($brand->icon)
-            <div class="brand_item"><img src="{{ asset('admin-assets/our-brands/icon/' . $brand->icon) }}" alt="{{ $brand->icon_alt }}"></div>
-            @endif
-            @endforeach
+<section class="section_padding_bot brands_section">
+    <div class="container">
+        <div class="section_head text-center">
+            <span class="eyebrow">Trusted Product Lines</span>
+            <h2 class="title">Our Brands</h2>
         </div>
+    </div>
+    <div class="brands_row brands_slider">
+        @foreach ($brands as $brand)
+        @if ($brand->icon)
+        <div class="brand_item"><img src="{{ asset('admin-assets/our-brands/icon/' . $brand->icon) }}" alt="{{ $brand->icon_alt }}"></div>
+        @endif
+        @endforeach
+    </div>
 </section>
 @endif
 
 @if(isset($blogs) && is_countable($blogs) && count($blogs) > 0)
 <section class="section_padding_bot">
     <div class="container">
-        <div class="justify-content-between d-flex align-items-center articles_head">
-            <h2 class="title">Latest Articles</h2>
-            <button class="purple-btn" type="submit">Explore Articles</button>
-        </div>
-        <div class="articles_items">
-            <div class="articles_grid">
-                <div class="articles_row">
-                    @foreach ($blogs as $blog)
-                    <a href="{{ route('blog.details', ['post' => $blog->url]) }}" class="articles_card">
-                        <img src="{{ asset('front/img/figma/article-card-frame.svg') }}" alt="" class="articles_frame">
-                        <p class="articles_date">{{ $blog->date ? \Carbon\Carbon::parse($blog->date)->format('F j, Y') : $blog->created_at->format('F j, Y') }}</p>
-                        <h3 class="articles_title">{{ $blog->title }}</h3>
-                        @if ($blog->front_image)
-                        <img src="{{ asset('admin-assets/blogs/front_image/' . $blog->front_image) }}" alt="{{ $blog->front_image_alt ?: $blog->title }}" class="articles_photo">
-                        @endif
-                    </a>
-                    @endforeach
-                </div>
+        <div class="section_head section_head_split articles_head">
+            <div>
+                <span class="eyebrow">Insights</span>
+                <h2 class="title">Latest Articles</h2>
             </div>
+            <a class="purple-btn" href="{{ route('blog') }}">Explore Articles <svg class="btn_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+        <div class="article_grid">
+            @foreach ($blogs as $blog)
+            <a href="{{ route('blog.details', ['post' => $blog->url]) }}" class="article_card">
+                <div class="article_card_media">
+                    @if ($blog->front_image)
+                    <img src="{{ asset('admin-assets/blogs/front_image/' . $blog->front_image) }}" alt="{{ $blog->front_image_alt ?: $blog->title }}" loading="lazy">
+                    @else
+                    <span class="article_card_placeholder"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>
+                    @endif
+                </div>
+                <div class="article_card_body">
+                    <p class="articles_date">{{ $blog->date ? \Carbon\Carbon::parse($blog->date)->format('F j, Y') : $blog->created_at->format('F j, Y') }}</p>
+                    <h3 class="articles_title">{{ $blog->title }}</h3>
+                    <span class="article_card_link">Read article <svg class="btn_arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+            </a>
+            @endforeach
         </div>
     </div>
 </section>
+@endif
+
+@php
+    // Latest active event, shown once per visit as a pop-up when the home page loads
+    $popupEvent = \App\Models\Event::where('status', 'Active')->orderByDesc('from_date')->orderByDesc('id')->first();
+@endphp
+@if ($popupEvent)
+<div class="event_popup" id="eventPopup" role="dialog" aria-modal="true" aria-labelledby="eventPopupTitle" hidden data-event="{{ $popupEvent->id }}">
+    <div class="event_popup_backdrop" data-popup-close></div>
+    <div class="event_popup_box">
+        <button class="event_popup_close" type="button" aria-label="Close" data-popup-close>&times;</button>
+        @if ($popupEvent->image)
+        <div class="event_popup_media"><img src="{{ asset('admin-assets/events/image/' . $popupEvent->image) }}" alt="{{ $popupEvent->image_alt ?: $popupEvent->title }}"></div>
+        @endif
+        <div class="event_popup_body">
+            <span class="event_popup_kicker">Upcoming Event</span>
+            <h2 id="eventPopupTitle">{{ $popupEvent->title }}</h2>
+            @if ($popupEvent->date_range)<p class="event_popup_meta"><i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ $popupEvent->date_range }}</p>@endif
+            @if ($popupEvent->location)<p class="event_popup_meta"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {{ $popupEvent->location }}</p>@endif
+            <a class="event_popup_btn" href="{{ route('news.events') }}">View all events</a>
+        </div>
+    </div>
+</div>
+@push('scripts')
+<script>
+(function () {
+    var popup = document.getElementById('eventPopup');
+    if (!popup) return;
+    var key = 'pratham_event_popup_' + popup.getAttribute('data-event');
+    try { if (sessionStorage.getItem(key)) return; } catch (e) {}
+    function close() {
+        popup.classList.remove('is-open');
+        document.body.style.overflow = '';
+        setTimeout(function () { popup.hidden = true; }, 300);
+        try { sessionStorage.setItem(key, '1'); } catch (e) {}
+    }
+    setTimeout(function () {
+        popup.hidden = false;
+        document.body.style.overflow = 'hidden';
+        requestAnimationFrame(function () { popup.classList.add('is-open'); popup.querySelector('.event_popup_close').focus(); });
+    }, 900);
+    popup.addEventListener('click', function (e) { if (e.target.hasAttribute('data-popup-close')) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !popup.hidden) close(); });
+})();
+</script>
+@endpush
 @endif
 
 @endsection
