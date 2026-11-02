@@ -107,7 +107,7 @@ class FrontController extends Controller
             'date'  => $timestamp,
         ];
         try {
-            $response = Http::withHeaders(['Content-Type' => 'application/json'])->post("https://script.google.com/macros/s/AKfycbzMzhwi18bHlO3k_TFqVPLfWpCp_ZsztpaPwQ4TVhzzOwd9OaYqnaiKw5JRmdqO7eTl/exec", $sheetsData);
+            $response = Http::withHeaders(['Content-Type' => 'application/json'])->post("https://script.google.com/macros/s/AKfycbycwg_r29EnMnqBZF8WbcE23f4-WZwQsorzQkVRYOrcXDx9zkhLAYr0SX0dZBDy5r9a/exec", $sheetsData);
 
             if ($response->failed()) {
                 \Log::error('Google Sheet request failed: ' . $response->body());
@@ -162,7 +162,7 @@ class FrontController extends Controller
 
     try {
         $response = Http::withHeaders(['Content-Type' => 'application/json'])
-            ->post("https://script.google.com/macros/s/AKfycbzMzhwi18bHlO3k_TFqVPLfWpCp_ZsztpaPwQ4TVhzzOwd9OaYqnaiKw5JRmdqO7eTl/exec", $sheetsData);
+            ->post("https://script.google.com/macros/s/AKfycbycwg_r29EnMnqBZF8WbcE23f4-WZwQsorzQkVRYOrcXDx9zkhLAYr0SX0dZBDy5r9a/exec", $sheetsData);
 
         if ($response->failed()) {
             Log::error('Google Sheet request failed (quote): ' . $response->body());
@@ -225,7 +225,7 @@ class FrontController extends Controller
 
         try {
             $response = Http::withHeaders(['Content-Type' => 'application/json'])
-                ->post('https://script.google.com/macros/s/AKfycbzMzhwi18bHlO3k_TFqVPLfWpCp_ZsztpaPwQ4TVhzzOwd9OaYqnaiKw5JRmdqO7eTl/exec', $sheetsData);
+                ->post('https://script.google.com/macros/s/AKfycbycwg_r29EnMnqBZF8WbcE23f4-WZwQsorzQkVRYOrcXDx9zkhLAYr0SX0dZBDy5r9a/exec', $sheetsData);
 
             if ($response->failed()) {
                 Log::error('Google Sheet request failed (product inquiry): ' . $response->body());
